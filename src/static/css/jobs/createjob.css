@@ -1,0 +1,58 @@
+.createJob-main-container {
+  background-color: #f7f7f7;
+  padding-top: 3%;
+}
+.createJob-main-container #job_form {
+  background: white;
+  font-size: 3rem;
+  margin: 2% auto;
+  width: 60%;
+  border: 0.5px solid;
+  border-radius: 0.5rem;
+  padding: 2%;
+}
+.createJob-main-container #job_form .input-wrapper {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 3%;
+}
+.createJob-main-container #job_form .input-wrapper .info {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+}
+.createJob-main-container #job_form .input-wrapper .info .label {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+.createJob-main-container #job_form .input-wrapper .info .descriptive {
+  font-size: 1rem;
+}
+.createJob-main-container #job_form .input-wrapper .info #thumbnail-input {
+  position: absolute !important;
+  margin-left: 14% !important;
+  width: 26.5% !important;
+}
+.createJob-main-container #job_form .input-wrapper input, .createJob-main-container #job_form .input-wrapper textarea {
+  background-color: unset;
+  margin-left: 5%;
+  color: black;
+  border: 1px solid;
+}
+.createJob-main-container #job_form .input-wrapper textarea {
+  height: 8rem;
+}
+.createJob-main-container #job_form .input-wrapper select {
+  font-size: 1rem;
+  height: 2rem;
+  margin-left: -5% !important;
+}
+.createJob-main-container #job_form .input-wrapper #price {
+  width: 30%;
+  margin-left: -5% !important;
+}
+.createJob-main-container #job_form .submit-btn {
+  width: 50%;
+  background-color: #3e7258;
+  margin-left: 25%;
+}/*# sourceMappingURL=createjob.css.map */

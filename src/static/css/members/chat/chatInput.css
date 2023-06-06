@@ -1,0 +1,82 @@
+.chatInput-main-container {
+  border: 1px solid;
+  bottom: 0;
+  height: 10%;
+  width: 98%;
+  border-radius: 5rem;
+  margin-left: 0.5%;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+.chatInput-main-container .emoji-container {
+  position: absolute;
+  margin-top: -38%;
+  cursor: pointer;
+}
+.chatInput-main-container .button-container {
+  width: 5%;
+  height: 100%;
+  margin-left: 2%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.chatInput-main-container .button-container .emoji {
+  color: grey;
+  font-size: 2rem;
+  cursor: pointer;
+}
+.chatInput-main-container .button-container .emoji:hover {
+  color: rgb(218, 141, 0);
+}
+.chatInput-main-container .input-container {
+  width: 100%;
+  border-radius: 2rem;
+  display: flex;
+  align-items: center;
+}
+.chatInput-main-container .input-container .message-box {
+  width: 100%;
+  height: 60%;
+  background-color: transparent;
+  color: black;
+  border: none;
+  padding-left: 1rem;
+  font-size: 1.2rem;
+}
+.chatInput-main-container .input-container .message-box:focus {
+  outline: none;
+}
+.chatInput-main-container .input-container .attachment {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.chatInput-main-container .input-container .attachment .paper-clip {
+  font-size: 2rem;
+  cursor: pointer;
+}
+.chatInput-main-container .input-container .attachment input {
+  display: none;
+}
+.chatInput-main-container .input-container .attachment .file-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 80px;
+}
+.chatInput-main-container .input-container button {
+  padding: 0.3rem 2.5rem;
+  border-radius: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  height: 100%;
+  background-color: #0073e0 !important;
+  color: white;
+}
+.chatInput-main-container .input-container button:focus {
+  outline: none;
+}/*# sourceMappingURL=chatInput.css.map */

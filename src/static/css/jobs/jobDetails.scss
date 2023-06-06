@@ -1,0 +1,295 @@
+.jobsDetails-main-container {
+    .card {
+      padding: 2% 0 0 10%;
+      display: flex;
+      flex-direction: row;
+      
+      .job{
+        width: 65%;
+        
+      // border: 5px solid green;
+
+        .job-title-container{
+          h1{
+            font-size: 2rem;
+          }
+          // border: 1px solid;
+          .flex-wrapper{
+            display: flex;
+            flex-direction: row;
+            height: 1%;
+            width: 50%;
+            display: relative;
+            // border: 1px solid;
+            .freelancer-profile-picture-container{
+              width: 50px;
+              height: 45px;
+              border-radius: 5rem;
+              overflow: hidden;
+              // border: 3px solid blue
+            }
+            #title-profile-picture{
+              width: 100%;
+              height: 100%;
+              border-radius: 50rem;
+
+            }
+  
+            .userRating{
+              margin-left: 5%;
+              margin-top: 2%;
+              width: 100%;
+              display: flex;
+              flex-direction: row;
+              gap: 2%;
+              // border: 2px solid;
+              #pipe{
+                color: grey;
+              }
+  
+              .starRatings{
+                color: grey;
+                margin-top: -1%;
+              }
+  
+            }
+          }
+        }
+  
+        .thumbnail-container{ 
+          width: 60%;
+          height: 25rem;
+          display: flex;
+          background-color: #f5f5f5; //LIGHT GREY
+          justify-content: center;
+  
+          .paper{
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 80%;
+            overflow: hidden;
+            #job-thumbnail{
+              width: 80%;
+              height: 90%;
+              object-fit: contain;
+              transition: transform 0.5s ease-in-out;
+  
+            }
+  
+              #job-thumbnail:hover {
+                opacity: 80%;
+                transform: scale(1.1);
+              }
+  
+          }
+         
+  
+        }
+  
+        .job-description{
+          width: 60%;
+          height: 100%;
+        }
+  
+          .ratings-list{
+            width: 30%;
+            margin-bottom: 3%;
+            .rating-form{
+              border: 2px solid #ccc;
+              padding: 2%;
+              border-radius:1rem;
+
+              button{
+                margin-bottom: 3%;
+              }
+
+              textarea{
+                border-bottom: 2px solid #ccc; 
+                border-top: 2px solid #ccc; 
+                border-top-left-radius: 1rem; 
+                border-top-right-radius: 1rem; 
+                border-bottom-left-radius: 1rem; 
+                border-bottom-right-radius: 1rem; 
+
+              }
+            }
+            .ratings-card{
+              border-bottom: 2px solid black;
+              margin-bottom: 2%;
+            }
+
+            .rating-section {
+              display: flex;
+              flex-direction: column;
+              margin-bottom: 10px;
+            }
+            
+            .star-rating {
+              display: flex;
+              align-items: center;
+            }
+            
+            .stars {
+              flex: 0 0 80px;
+            }
+            
+            .progress-bar {
+              flex: 1;
+              height: 10px;
+              background-color: #ddd;
+              border-radius: 5px;
+              overflow: hidden;
+            }
+            
+            .progress {
+              height: 100%;
+              background-color: #60d394;
+            }
+            
+            .count {
+              margin-left: 10px;
+            }
+            
+          }
+          
+      }
+
+      .payment-details{
+        display: flex;
+        flex-direction: column;
+        width: 30%;
+        height: 80vh;
+        border: 2px solid rgb(226, 226, 226);
+        background-color: rgb(250,250,250);
+        position: sticky;
+        position: -webkit-sticky; /* Safari */
+        top: 0;
+        .job-title{
+            display: flex;
+            flex-direction: row;
+            padding: 3%;
+            border-bottom: 1px solid rgb(220,220,220);
+            gap: 5%;
+            justify-content: left;
+            .job-thumbnail{
+                width: 30%;
+    
+                img{
+                    width: 100%;
+                }
+            }
+    
+    
+        }
+    
+        .job-description{
+            padding: 3%;
+            border-bottom: 1px solid rgb(220,220,220);
+            overflow-y: auto;
+        }
+    
+        .prices{
+            display: flex;
+            flex-direction: column;
+            padding: 3%;
+            height: 90%;
+            overflow-y: auto;
+            .job-fee{
+                font-size: 1.5rem;
+                font-style: oblique;
+                display: flex;
+                flex-direction: row;
+    
+                .cost-title{
+                    width: 90%;
+                }
+    
+            }
+    
+            .total-fee{
+                font-weight: bold;
+    
+            }
+    
+            
+        }
+    
+        .continue{
+            height: 3rem;
+            width: 80%;
+            margin: 0 auto;
+            margin-bottom: 3%;
+            
+                /* spinner/processing state, errors */
+                .spinner,
+                .spinner:before,
+                .spinner:after {
+                border-radius: 50%;
+                }
+    
+                .spinner {
+                color: #ffffff;
+                font-size: 22px;
+                text-indent: -99999px;
+                margin: 0px auto;
+                position: relative;
+                width: 20px;
+                height: 20px;
+                box-shadow: inset 0 0 0 2px;
+                -webkit-transform: translateZ(0);
+                -ms-transform: translateZ(0);
+                transform: translateZ(0);
+                }
+    
+                .spinner:before,
+                .spinner:after {
+                position: absolute;
+                content: '';
+                }
+    
+                .spinner:before {
+                width: 10.4px;
+                height: 20.4px;
+                background: #5469d4;
+                border-radius: 20.4px 0 0 20.4px;
+                top: -0.2px;
+                left: -0.2px;
+                -webkit-transform-origin: 10.4px 10.2px;
+                transform-origin: 10.4px 10.2px;
+                -webkit-animation: loading 2s infinite ease 1.5s;
+                animation: loading 2s infinite ease 1.5s;
+                }
+    
+                .spinner:after {
+                width: 10.4px;
+                height: 10.2px;
+                background: #5469d4;
+                border-radius: 0 10.2px 10.2px 0;
+                top: -0.1px;
+                left: 10.2px;
+                -webkit-transform-origin: 0px 10.2px;
+                transform-origin: 0px 10.2px;
+                -webkit-animation: loading 2s infinite ease;
+                animation: loading 2s infinite ease;
+                }
+    
+        }
+    
+        .ssl{
+            text-align: center;
+            margin-top: 3%;
+    
+            .fa-lock{
+                font-size: .8rem;
+                margin-right: 1%;
+            }
+        }
+    }
+
+    
+    }//END CARD 
+  }
+  

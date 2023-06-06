@@ -1,0 +1,225 @@
+.search-main-container{
+    margin: 0 auto;
+    width: 90%;
+
+    .top-no-padding, .top-padding{
+        // border: 1px solid green;
+        padding-left: 3%;
+        .search-form{
+            width: 100%;
+
+            .search-input-field{
+                width: 30%;
+                margin-left: 1%;
+                background-color: white;
+                color: black;
+            }
+            .search-btn{
+                background-color: #3e7258;
+                border-color: #3e7258;
+                margin-left: 2%;
+            }
+            .select-input-field{
+                margin-left: 1%;
+                font-size: 1rem;
+            }
+        }
+    }
+    
+    .top-no-padding{padding: unset}
+   
+    .job-list-flex {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        gap: 5%;
+        width: 100%;
+        margin-top: 5%;
+        // border: 1px solid;
+        justify-content: left;
+    
+        .job-card {
+            display: flex;
+            flex-direction: column;
+            width: 16%;
+            margin-bottom: 3%;
+            // border: 5px solid green;
+
+            overflow: hidden;
+            align-items: center;
+            justify-content: center;
+    
+            .thumbnail-container {
+                height: 50%;
+                width: 100%;  
+                padding: 2%;
+                border: 2px solid #b3b3b3;
+                border-top-left-radius: .5rem;
+                border-top-right-radius: .5rem;
+                img {
+                    height: 100%;
+                    width: 100%;
+                    object-fit: cover;
+                    transition: transform 0.5s ease-in-out;
+                    border-radius: .5rem;
+                    cursor: pointer;
+
+                }
+
+                img:hover {
+                    opacity: 80%;
+                    transform: scale(1.1);
+                }
+            }
+    
+            .details {
+                width: 100%;
+                padding: 3%;
+                border: 2px solid #b3b3b3;
+                border-top: none;
+                border-bottom-left-radius: .5rem;
+                border-bottom-right-radius: .5rem;
+                
+                .title {
+                    font-size: 1.1rem;
+                    cursor: pointer;
+
+                }
+    
+                .username {
+                    font-size: .9rem;
+                 cursor: pointer;
+
+                }
+    
+                .price {
+                    text-align: center;
+                }
+            } //end details
+        } //end job-card
+    }
+
+
+    @media (min-width: 384px) and (max-width: 600px) {
+        .top-no-padding, .top-padding{
+            h2{margin-left: 1%;}
+            .search-form{
+                width: 100%;
+                margin-left: .5%;
+                .search-input-field{width: 100%;}
+                .search-btn{margin-left: 5%;}
+            }
+        }
+        
+        .job-list-flex {
+            margin-top: 10%;
+        
+            .job-card {
+                flex-direction: row;
+                width: 100%;
+                margin-bottom: 10%;
+        
+                .thumbnail-container {
+                    height: 100%;
+                    padding: unset;
+                    border: 2px solid #b3b3b3;
+                    border-right: none;
+                    border-top-left-radius: .5rem;
+                    border-bottom-left-radius: .5rem;
+                }
+        
+                .details {
+                    height: 100%;
+                     .price {
+                        text-align: right;
+                    }
+                } //end details
+            } //end job-card
+        }
+    }
+
+    @media (min-width: 601px) and (max-width: 767px) {
+        .job-list-flex {
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            gap: 5%;
+            width: 100%;
+            margin-top: 5%;
+            justify-content: left;
+        
+            .job-card {
+                display: flex;
+                flex-direction: column;
+                width: 30%;
+                margin-bottom: 3%;
+                // border: 5px solid green;
+    
+                overflow: hidden;
+                align-items: center;
+                justify-content: center;
+        
+                .thumbnail-container {
+                    height: 50%;
+                    width: 100%;  
+                    padding: 2%;
+                    border: 2px solid #b3b3b3;
+                    border-top-left-radius: .5rem;
+                    border-top-right-radius: .5rem;
+                    img {
+                        height: 100%;
+                        width: 100%;
+                        object-fit: cover;
+                        transition: transform 0.5s ease-in-out;
+                        border-radius: .5rem;
+                        cursor: pointer;
+    
+                    }
+    
+                    img:hover {
+                        opacity: 80%;
+                        transform: scale(1.1);
+                    }
+                }
+        
+                .details {
+                    width: 100%;
+                    padding: 3%;
+                    border: 2px solid #b3b3b3;
+                    border-top: none;
+                    border-bottom-left-radius: .5rem;
+                    border-bottom-right-radius: .5rem;
+                    
+                    .title {
+                        font-size: 1.1rem;
+                        cursor: pointer;
+    
+                    }
+        
+                    .username {
+                        font-size: .9rem;
+                     cursor: pointer;
+    
+                    }
+        
+                    .price {
+                        text-align: center;
+                    }
+                } //end details
+            } //end job-card
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 1022px) {
+        .job-list-flex .job-card{
+            width: 20%;
+        }
+    }
+
+   
+    
+}
+
+.no-jobs{
+    height: 85vh;
+}

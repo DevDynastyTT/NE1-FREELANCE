@@ -17,3 +17,4 @@ yarn-error.log*
 *.pack
 # env
 apiServer/.env
+apiServer/node_modules

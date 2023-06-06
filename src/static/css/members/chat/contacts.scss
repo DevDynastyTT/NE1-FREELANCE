@@ -1,0 +1,93 @@
+.contacts-main-container{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    flex: 1;
+    border-right: 1px solid;
+    overflow-y: scroll;
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: #888 #f1f1f1; /* For Firefox */
+    
+    .logged-in-username{
+        border-bottom: 1px solid;
+        display: flex;
+        justify-content: left;
+        padding-left: 15%;
+        padding-top: 15%;
+        height: 6rem;
+    }
+    .profilePicture{
+            width: 50%;
+            height: 100%;
+            position: inherit;
+            border-radius: 5rem;
+
+            img{
+                width: 100%;
+                height: 100%;
+                border-radius: 5rem;
+            }
+        }
+        h3{
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            font-size: 1.2rem;
+        }
+
+
+
+    .contacts{
+        
+        width: 100%;
+        
+        .contact{
+            display: flex;
+            flex-direction: row;
+            margin-bottom: 10%;
+             .avatar{
+                width: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                img{
+                    width: 40%;
+                    height: 100%;
+                    border-radius: 50rem;
+                }
+            }
+
+            .username h2{
+
+                margin-top: 20%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width:80px; 
+                font-size: 1.3em;
+                text-align: left;
+
+                /* Set the maximum width for the name to fit */
+            }
+        }
+        .contact:hover{
+            opacity: 50%;
+            cursor: pointer;
+        }
+        
+    }
+}
+.contacts-main-container::-webkit-scrollbar {
+    width: 5px; /* Set the desired width for the scrollbar */
+  }
+  
+  .contacts-main-container::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* Replace with your desired color */
+  }
+  
+  .contacts-main-container::-webkit-scrollbar-thumb {
+    background-color: #888; /* Replace with your desired color */
+  }

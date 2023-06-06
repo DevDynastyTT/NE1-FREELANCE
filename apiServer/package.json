@@ -5,12 +5,12 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DrgnStudio/NE1-FREELANCE-OFFICAL.git"
+    "url": "git+https://github.com/DrgnStudio/NE1-FREELANCE.git"
   },
   "bugs": {
-    "url": "https://github.com/DrgnStudio/NE1-FREELANCE-OFFICAL/issues"
+    "url": "https://github.com/DrgnStudio/NE1-FREELANCE.git"
   },
-  "homepage": "https://github.com/DrgnStudio/NE1-FREELANCE-OFFICAL#readme",
+  "homepage": "https://github.com/DrgnStudio/NE1-FREELANCE.git#readme",
   "author": "Drgn Studio",
   "license": "MIT",
   "scripts": {

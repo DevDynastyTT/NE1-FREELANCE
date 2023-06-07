@@ -1,0 +1,79 @@
+<mxfile host="Electron" modified="2023-05-24T17:53:56.908Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.2.8 Chrome/112.0.5615.165 Electron/24.2.0 Safari/537.36" etag="JP0SnpGNvOUGWACzi8mD" version="21.2.8" type="device">
+  <diagram name="Page-1" id="VFz27hMHDYGpMim2dJtR">
+    <mxGraphModel dx="1016" dy="1754" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="UBF2wBD2h08HH9VRfb22-3" value="Nav" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="110" width="760" height="510" as="geometry" />
+        </mxCell>
+        <mxCell id="UBF2wBD2h08HH9VRfb22-4" value="10&lt;br&gt;Users" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="UBF2wBD2h08HH9VRfb22-3">
+          <mxGeometry x="50" y="20" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="UBF2wBD2h08HH9VRfb22-5" value="5&lt;br&gt;Clients" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="UBF2wBD2h08HH9VRfb22-3">
+          <mxGeometry x="230" y="20" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="UBF2wBD2h08HH9VRfb22-6" value="2&lt;br&gt;FreeLancers" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="UBF2wBD2h08HH9VRfb22-3">
+          <mxGeometry x="410" y="20" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="UBF2wBD2h08HH9VRfb22-7" value="2&lt;br&gt;Jobs" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="UBF2wBD2h08HH9VRfb22-3">
+          <mxGeometry x="590" y="20" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="UBF2wBD2h08HH9VRfb22-8" value="10&lt;br&gt;Invoices" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="UBF2wBD2h08HH9VRfb22-3">
+          <mxGeometry x="50" y="100" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="UBF2wBD2h08HH9VRfb22-9" value="" style="swimlane;startSize=0;" vertex="1" parent="UBF2wBD2h08HH9VRfb22-3">
+          <mxGeometry x="40" y="10" width="710" height="205" as="geometry" />
+        </mxCell>
+        <mxCell id="UBF2wBD2h08HH9VRfb22-10" value="padding: //maybe 2-5%;&lt;br&gt;Display: flex;&lt;br&gt;Flex-direction: row;&lt;br&gt;flex-wrap: wrap;&lt;br&gt;width: 100vw;&lt;br&gt;justify-content: left;&lt;br&gt;align-items:left;&lt;br&gt;gap: x%; //where x is a value of your choice" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="UBF2wBD2h08HH9VRfb22-9">
+          <mxGeometry x="420" y="75" width="250" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="UBF2wBD2h08HH9VRfb22-14" value="" style="swimlane;startSize=0;" vertex="1" parent="UBF2wBD2h08HH9VRfb22-3">
+          <mxGeometry x="50" y="370" width="690" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="UBF2wBD2h08HH9VRfb22-17" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="UBF2wBD2h08HH9VRfb22-14">
+          <mxGeometry x="30" y="60" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="UBF2wBD2h08HH9VRfb22-18" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="UBF2wBD2h08HH9VRfb22-14">
+          <mxGeometry x="110" y="20" width="90" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="UBF2wBD2h08HH9VRfb22-19" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="UBF2wBD2h08HH9VRfb22-14">
+          <mxGeometry x="240" y="70" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="UBF2wBD2h08HH9VRfb22-21" value="" style="swimlane;startSize=0;" vertex="1" parent="UBF2wBD2h08HH9VRfb22-3">
+          <mxGeometry x="50" y="230" width="690" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="UBF2wBD2h08HH9VRfb22-22" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="UBF2wBD2h08HH9VRfb22-21">
+          <mxGeometry x="30" y="60" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="UBF2wBD2h08HH9VRfb22-23" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="UBF2wBD2h08HH9VRfb22-21">
+          <mxGeometry x="110" y="20" width="90" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="UBF2wBD2h08HH9VRfb22-24" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="UBF2wBD2h08HH9VRfb22-21">
+          <mxGeometry x="240" y="70" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="UBF2wBD2h08HH9VRfb22-26" value="" style="swimlane;startSize=0;" vertex="1" parent="UBF2wBD2h08HH9VRfb22-3">
+          <mxGeometry x="40" y="220" width="710" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="UBF2wBD2h08HH9VRfb22-12" value="Note:&lt;br&gt;The rectangle around anything is just a border. Dont actually put it. well only if you want to when development to make life easier for you" style="shape=card;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="800" y="-70" width="180" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="UBF2wBD2h08HH9VRfb22-16" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="520" y="320" as="sourcePoint" />
+            <mxPoint x="570" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UBF2wBD2h08HH9VRfb22-20" value="Diagram 1 (money made)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="530" y="378" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="UBF2wBD2h08HH9VRfb22-25" value="Diagram 2(jobs/invoice/whatevery ou want)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="465" y="518" width="250" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="UBF2wBD2h08HH9VRfb22-28" value="Note:&lt;br&gt;For the container housign the diagrams, display flex, flex direction column, width 100vw,&lt;br&gt;padding: //maybe 2-5%&lt;br&gt;then target each diagram and give them a width of 100%" style="shape=card;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="430" y="-60" width="180" height="160" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

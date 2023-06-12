@@ -10,7 +10,7 @@ function GetStarted() {
         <div className="getStarted">
         
         <div className="signup-cta">
-            <h5>Unlock your business's <i>potential</i> <br/> 
+             <h5>Unlock your business&apos;s <i>potential</i> <br/> {/*&apos; == single quote */}
                 with the right talent!</h5>
                 <br/>
             <button className="getStarted-btn" title="get started button"

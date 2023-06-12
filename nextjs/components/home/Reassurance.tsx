@@ -49,7 +49,7 @@ function Reassurance(){
                                     <path d="M11.5303 5.46967C11.8232 5.76256 11.8232 6.23744 11.5303 6.53033L7.53033 10.5303C7.23744 10.8232 6.76256 10.8232 6.46967 10.5303L4.46967 8.53033C4.17678 8.23744 4.17678 7.76256 4.46967 7.46967C4.76256 7.17678 5.23744 7.17678 5.53033 7.46967L7 8.93934L10.4697 5.46967C10.7626 5.17678 11.2374 5.17678 11.5303 5.46967Z"></path>
                                 </svg> 24/7 assistance
                             </p>
-                            <p className="info">Have queries? Our round-the-clock support team is on hand to assist you at any time, from any location."</p>
+                            <p className="info">Have queries? Our round-the-clock support team is on hand to assist you at any time, from any location.</p>
                         </li>
                     </ul>
                 </div>

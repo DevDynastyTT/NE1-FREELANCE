@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 function Reassurance(){
     return(
         <div className="reassurance-flex-box">
@@ -53,7 +55,16 @@ function Reassurance(){
                 </div>
 
                 <div className="image-container">
-                    <img className="image" src="https://fiverr-res.cloudinary.com/q_auto,f_auto,w_700,dpr_1.0/v1/attachments/generic_asset/asset/089e3bb9352f90802ad07ad9f6a4a450-1599517407052/selling-proposition-still-1400-x1.png" alt="" />
+                    <Image 
+                        className="image" 
+                        src={"https://fiverr-res.cloudinary.com/q_auto,f_auto,w_700,dpr_1.0/v1/attachments/generic_asset/asset/089e3bb9352f90802ad07ad9f6a4a450-1599517407052/selling-proposition-still-1400-x1.png"}
+                        alt="man-image" 
+                        width={100}
+                        height={500}
+                        layout="responsive"
+                        unoptimized={true}
+
+                    />
                 </div>
         </div>
     )

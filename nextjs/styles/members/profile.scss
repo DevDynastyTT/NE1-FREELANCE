@@ -1,0 +1,116 @@
+.profile-main-container {
+    
+    .profile-flex-container{
+        display: flex;
+        flex-direction: row;
+
+        .left{
+            // border: 3px solid black;
+            width: 50%;
+            flex: 1;
+            .top{
+                // border: 4px dashed green;
+                width: 50%;
+                margin: 18% auto;
+    
+                .img-form{
+                    display: flex;
+                    flex-wrap: wrap;
+                    flex-direction: column;
+                    text-align: center;
+
+                    .username{
+                        font-size: 2rem;
+                    }
+                    #message-input{
+                        background-color: unset;
+                        color: black;
+                        width: 100%;
+                        font-size: 1rem;
+                    }
+    
+                    .profile-picture{
+                        object-fit: fill;
+                        width: 100%;
+                    }
+                    .tip, .image-label{
+                        font-size: 1rem;
+                    }
+
+                    .tip{
+                        color: red;
+                    }
+
+                    .image-btn{
+                        margin-top: -15%;
+                    }
+
+                
+                }
+            }
+        }
+    
+        .right{
+            // border: 3px solid red;
+            width: 100%;
+            flex: 2;
+
+
+            .update-profile-form{
+                width: 80%;
+                margin: 7% auto;
+                // border: 3px dashed green;
+
+                .profile-header{
+                    text-align: center;
+                }
+
+                .update-profile-form-container{
+                    .message{
+                        font-size: 1rem;
+                    }
+                    .inputs{
+                        width: 100%;
+                        color: black;
+                        background-color: unset;
+                        border: 2px solid black;
+                    }
+
+                    margin: 0 auto;
+                    // border: 2px solid pink;
+                    width: 50%;
+
+                    .submit-btn{
+                        width: 100%;
+                    }
+                }
+
+               
+            }
+        }
+    }
+    
+      
+
+    
+}
+
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 250px;
+    height: 250px;
+    animation: spin 1s linear infinite;
+  }
+
+  .spinner, .spinnerTitle{margin: 5% auto; text-align: center;}
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }

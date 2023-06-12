@@ -1,0 +1,105 @@
+.chatInput-main-container{
+
+    border: 1px solid;
+    // position: absolute;
+    bottom: 0;
+    height: 10%;
+    width: 98%;
+    border-radius: 5rem;
+    margin-left: .5%;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+
+    .emoji-container{
+        // border: 5px solid;
+        position: absolute;
+        margin-top: -38%;
+        cursor: pointer;
+    }
+
+    //emojis
+    .button-container{
+        width: 5%;
+        height: 100%;
+        margin-left: 2%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+        .emoji{
+            color: grey;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .emoji:hover{
+            color: rgb(218, 141, 0);
+        }
+    }
+   
+  
+
+
+    //text form
+    .input-container{
+        width: 100%;
+        border-radius: 2rem;
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        .message-box{
+            width: 100%;
+            height: 60%;
+            background-color: transparent;
+            color: black;
+            border: none;
+            padding-left: 1rem;
+            font-size: 1.2rem;
+        }
+        .message-box:focus{
+            outline: none;
+        }
+
+        .attachment{
+            // border: 1px solid;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .paper-clip{
+                font-size: 2rem;
+                cursor: pointer;
+            }
+            input{
+                display: none;
+            }
+
+            .file-text{
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width:80px; 
+            }
+    
+        }
+       
+        button{
+            padding: 0.3rem 2.5rem;
+            border-radius: 2rem;
+            display: flex;
+            -webkit-box-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            align-items: center;
+            border: none;
+            height: 100%;
+            background-color: #0073e0 !important;
+            color: white;
+        }
+        button:focus{
+            outline: none;
+        }
+    }
+    
+  
+}

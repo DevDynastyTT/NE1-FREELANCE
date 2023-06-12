@@ -1,0 +1,91 @@
+.profile-main-container .profile-flex-container {
+  display: flex;
+  flex-direction: row;
+}
+.profile-main-container .profile-flex-container .left {
+  width: 50%;
+  flex: 1;
+}
+.profile-main-container .profile-flex-container .left .top {
+  width: 50%;
+  margin: 18% auto;
+}
+.profile-main-container .profile-flex-container .left .top .img-form {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  text-align: center;
+}
+.profile-main-container .profile-flex-container .left .top .img-form .username {
+  font-size: 2rem;
+}
+.profile-main-container .profile-flex-container .left .top .img-form #message-input {
+  background-color: unset;
+  color: black;
+  width: 100%;
+  font-size: 1rem;
+}
+.profile-main-container .profile-flex-container .left .top .img-form .profile-picture {
+  -o-object-fit: fill;
+     object-fit: fill;
+  width: 100%;
+}
+.profile-main-container .profile-flex-container .left .top .img-form .tip, .profile-main-container .profile-flex-container .left .top .img-form .image-label {
+  font-size: 1rem;
+}
+.profile-main-container .profile-flex-container .left .top .img-form .tip {
+  color: red;
+}
+.profile-main-container .profile-flex-container .left .top .img-form .image-btn {
+  margin-top: -15%;
+}
+.profile-main-container .profile-flex-container .right {
+  width: 100%;
+  flex: 2;
+}
+.profile-main-container .profile-flex-container .right .update-profile-form {
+  width: 80%;
+  margin: 7% auto;
+}
+.profile-main-container .profile-flex-container .right .update-profile-form .profile-header {
+  text-align: center;
+}
+.profile-main-container .profile-flex-container .right .update-profile-form .update-profile-form-container {
+  margin: 0 auto;
+  width: 50%;
+}
+.profile-main-container .profile-flex-container .right .update-profile-form .update-profile-form-container .message {
+  font-size: 1rem;
+}
+.profile-main-container .profile-flex-container .right .update-profile-form .update-profile-form-container .inputs {
+  width: 100%;
+  color: black;
+  background-color: unset;
+  border: 2px solid black;
+}
+.profile-main-container .profile-flex-container .right .update-profile-form .update-profile-form-container .submit-btn {
+  width: 100%;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 250px;
+  height: 250px;
+  animation: spin 1s linear infinite;
+}
+
+.spinner, .spinnerTitle {
+  margin: 5% auto;
+  text-align: center;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}/*# sourceMappingURL=profile.css.map */

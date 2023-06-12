@@ -1,0 +1,79 @@
+
+.createJob-main-container {
+    background-color: #f7f7f7; //LIGHT GREY
+    padding-top: 3%;
+
+    #job_form{
+        background: white;
+        font-size: 3rem;
+        margin: 2% auto;
+        width: 60%;
+        border: .5px solid;
+        border-radius: .5rem;
+        padding: 2%;
+
+        .input-wrapper{
+            display: flex;
+            flex-direction: row;
+            margin-bottom: 3%;
+
+
+            .info{
+
+                display: flex;
+                flex-direction: column;
+                width: 30%;
+              
+                .label{
+                    font-weight: bold;
+                    font-size: 1.2rem;
+                }
+
+                .descriptive{
+                    font-size: 1rem;
+                }
+
+                #thumbnail-input{
+                    position: absolute !important;
+                    margin-left: 14% !important;
+                    width: 26.5% !important;
+                }
+            }
+
+            input, textarea{
+                background-color: unset;
+                margin-left: 5%;
+                color: black;
+                border: 1px solid;
+            }
+
+            textarea{
+                height: 8rem
+            }
+
+            select{
+                font-size: 1rem;
+                height: 2rem;
+                margin-left: -5% !important;
+            }
+
+            #price{
+                width: 30%;
+                margin-left: -5% !important;
+
+            }
+           
+           
+
+
+        }
+    
+       
+    
+        .submit-btn{
+            width: 50%;
+            background-color: #3e7258;
+            margin-left: 25%;
+          }
+    }
+}

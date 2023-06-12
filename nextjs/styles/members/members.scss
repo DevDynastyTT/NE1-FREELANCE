@@ -1,0 +1,38 @@
+.login-main-container, .signup-main-container {
+    .loginForm, .signupForm{
+        width: 30%;
+        margin: 10% auto;
+        border: 1px solid #ccc;
+        padding: 1%;
+        border-radius: 1rem;
+        .inputs{
+            background-color: white;
+            color: black;
+        }
+
+        .link{
+            font-size: 1rem;
+        }
+    }
+    
+    .submit-btn{
+        width: 100%;
+        background-color: #3e7258;
+    
+    }
+
+    @media (min-width: 384px) and (max-width: 499px) {
+        .loginForm, .signupForm{
+            width: 80%;
+        }
+        
+    }
+
+    @media (min-width: 500px) and (max-width: 768px) {
+        .loginForm, .signupForm{
+            width: 40%;
+        }
+        
+    }
+    
+}

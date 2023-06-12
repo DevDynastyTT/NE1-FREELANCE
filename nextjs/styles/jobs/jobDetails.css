@@ -1,0 +1,230 @@
+.jobsDetails-main-container .card {
+  padding: 2% 0 0 10%;
+  display: flex;
+  flex-direction: row;
+}
+.jobsDetails-main-container .card .job {
+  width: 65%;
+}
+.jobsDetails-main-container .card .job .job-title-container h1 {
+  font-size: 2rem;
+}
+.jobsDetails-main-container .card .job .job-title-container .flex-wrapper {
+  display: flex;
+  flex-direction: row;
+  height: 1%;
+  width: 50%;
+  display: relative;
+}
+.jobsDetails-main-container .card .job .job-title-container .flex-wrapper .freelancer-profile-picture-container {
+  width: 50px;
+  height: 45px;
+  border-radius: 5rem;
+  overflow: hidden;
+}
+.jobsDetails-main-container .card .job .job-title-container .flex-wrapper #title-profile-picture {
+  width: 100%;
+  height: 100%;
+  border-radius: 50rem;
+}
+.jobsDetails-main-container .card .job .job-title-container .flex-wrapper .userRating {
+  margin-left: 5%;
+  margin-top: 2%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 2%;
+}
+.jobsDetails-main-container .card .job .job-title-container .flex-wrapper .userRating #pipe {
+  color: grey;
+}
+.jobsDetails-main-container .card .job .job-title-container .flex-wrapper .userRating .starRatings {
+  color: grey;
+  margin-top: -1%;
+}
+.jobsDetails-main-container .card .job .thumbnail-container {
+  width: 60%;
+  height: 25rem;
+  display: flex;
+  background-color: #f5f5f5;
+  justify-content: center;
+}
+.jobsDetails-main-container .card .job .thumbnail-container .paper {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 80%;
+  overflow: hidden;
+}
+.jobsDetails-main-container .card .job .thumbnail-container .paper #job-thumbnail {
+  width: 80%;
+  height: 90%;
+  -o-object-fit: contain;
+     object-fit: contain;
+  transition: transform 0.5s ease-in-out;
+}
+.jobsDetails-main-container .card .job .thumbnail-container .paper #job-thumbnail:hover {
+  opacity: 80%;
+  transform: scale(1.1);
+}
+.jobsDetails-main-container .card .job .job-description {
+  width: 60%;
+  height: 100%;
+}
+.jobsDetails-main-container .card .job .ratings-list {
+  width: 30%;
+  margin-bottom: 3%;
+}
+.jobsDetails-main-container .card .job .ratings-list .rating-form {
+  border: 2px solid #ccc;
+  padding: 2%;
+  border-radius: 1rem;
+}
+.jobsDetails-main-container .card .job .ratings-list .rating-form button {
+  margin-bottom: 3%;
+}
+.jobsDetails-main-container .card .job .ratings-list .rating-form textarea {
+  border-bottom: 2px solid #ccc;
+  border-top: 2px solid #ccc;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+.jobsDetails-main-container .card .job .ratings-list .ratings-card {
+  border-bottom: 2px solid black;
+  margin-bottom: 2%;
+}
+.jobsDetails-main-container .card .job .ratings-list .rating-section {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+.jobsDetails-main-container .card .job .ratings-list .star-rating {
+  display: flex;
+  align-items: center;
+}
+.jobsDetails-main-container .card .job .ratings-list .stars {
+  flex: 0 0 80px;
+}
+.jobsDetails-main-container .card .job .ratings-list .progress-bar {
+  flex: 1;
+  height: 10px;
+  background-color: #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.jobsDetails-main-container .card .job .ratings-list .progress {
+  height: 100%;
+  background-color: #60d394;
+}
+.jobsDetails-main-container .card .job .ratings-list .count {
+  margin-left: 10px;
+}
+.jobsDetails-main-container .card .payment-details {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  height: 80vh;
+  border: 2px solid rgb(226, 226, 226);
+  background-color: rgb(250, 250, 250);
+  position: sticky;
+  position: -webkit-sticky; /* Safari */
+  top: 0;
+}
+.jobsDetails-main-container .card .payment-details .job-title {
+  display: flex;
+  flex-direction: row;
+  padding: 3%;
+  border-bottom: 1px solid rgb(220, 220, 220);
+  gap: 5%;
+  justify-content: left;
+}
+.jobsDetails-main-container .card .payment-details .job-title .job-thumbnail {
+  width: 30%;
+}
+.jobsDetails-main-container .card .payment-details .job-title .job-thumbnail img {
+  width: 100%;
+}
+.jobsDetails-main-container .card .payment-details .job-description {
+  padding: 3%;
+  border-bottom: 1px solid rgb(220, 220, 220);
+  overflow-y: auto;
+}
+.jobsDetails-main-container .card .payment-details .prices {
+  display: flex;
+  flex-direction: column;
+  padding: 3%;
+  height: 90%;
+  overflow-y: auto;
+}
+.jobsDetails-main-container .card .payment-details .prices .job-fee {
+  font-size: 1.5rem;
+  font-style: oblique;
+  display: flex;
+  flex-direction: row;
+}
+.jobsDetails-main-container .card .payment-details .prices .job-fee .cost-title {
+  width: 90%;
+}
+.jobsDetails-main-container .card .payment-details .prices .total-fee {
+  font-weight: bold;
+}
+.jobsDetails-main-container .card .payment-details .continue {
+  height: 3rem;
+  width: 80%;
+  margin: 0 auto;
+  margin-bottom: 3%;
+  /* spinner/processing state, errors */
+}
+.jobsDetails-main-container .card .payment-details .continue .spinner,
+.jobsDetails-main-container .card .payment-details .continue .spinner:before,
+.jobsDetails-main-container .card .payment-details .continue .spinner:after {
+  border-radius: 50%;
+}
+.jobsDetails-main-container .card .payment-details .continue .spinner {
+  color: #ffffff;
+  font-size: 22px;
+  text-indent: -99999px;
+  margin: 0px auto;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  box-shadow: inset 0 0 0 2px;
+  transform: translateZ(0);
+}
+.jobsDetails-main-container .card .payment-details .continue .spinner:before,
+.jobsDetails-main-container .card .payment-details .continue .spinner:after {
+  position: absolute;
+  content: "";
+}
+.jobsDetails-main-container .card .payment-details .continue .spinner:before {
+  width: 10.4px;
+  height: 20.4px;
+  background: #5469d4;
+  border-radius: 20.4px 0 0 20.4px;
+  top: -0.2px;
+  left: -0.2px;
+  transform-origin: 10.4px 10.2px;
+  animation: loading 2s infinite ease 1.5s;
+}
+.jobsDetails-main-container .card .payment-details .continue .spinner:after {
+  width: 10.4px;
+  height: 10.2px;
+  background: #5469d4;
+  border-radius: 0 10.2px 10.2px 0;
+  top: -0.1px;
+  left: 10.2px;
+  transform-origin: 0px 10.2px;
+  animation: loading 2s infinite ease;
+}
+.jobsDetails-main-container .card .payment-details .ssl {
+  text-align: center;
+  margin-top: 3%;
+}
+.jobsDetails-main-container .card .payment-details .ssl .fa-lock {
+  font-size: 0.8rem;
+  margin-right: 1%;
+}/*# sourceMappingURL=jobDetails.css.map */

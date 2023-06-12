@@ -24,7 +24,6 @@ import UserInfo from './Components/admin/UserInfo';
 import Chat from './Components/members/chat/pages/Chat'
 import SellerChat from './Components/members/sellerChat/pages/Chat'
 
-import Unauthorized from './Unauthorized';
 import { useEffect, useState } from 'react';
 import { userSession, heartBeat } from './Components/utils/APIRoutes';
 
@@ -122,21 +121,12 @@ let count = 1
             <Route path="/about" element={<AboutUs currentUser={currentUser} setCurrentUser={setCurrentUser}/>} />
             <Route path="/contact" element={<Contact currentUser={currentUser} setCurrentUser={setCurrentUser}/>} />
 
-            {currentUser && currentUser.is_staff ? (
-              <> 
+            
                 <Route path="/admin" element={<Admin currentUser={currentUser} setCurrentUser={setCurrentUser} />}/>
                 <Route path="/admin/AboutUsContent/add" element={<AboutUsContent currentUser={currentUser}  setCurrentUser={setCurrentUser}/>}/>
                 <Route path="/admin/UserInfo" element={<UserInfo currentUser={currentUser}  setCurrentUser={setCurrentUser}/>}/>
                 <Route path="/admin/HomeServices" element={<ServicesDisplay currentUser={currentUser}  setCurrentUser={setCurrentUser}/>}/>
-                </> 
-             ): (
-              <>
-                <Route path="/admin" element={<Unauthorized/>}/>
-                <Route path="/admin/AboutUsContent/add" element={<Unauthorized/>}/>
-                <Route path="/admin/UserInfo" element={<Unauthorized/>}/>
-                <Route path="/admin/HomeServices" element={<Unauthorized/>}/>
-              </> 
-            )}
+            
         
           </Routes>
         </Router>

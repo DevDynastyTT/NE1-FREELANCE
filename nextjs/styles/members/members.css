@@ -1,0 +1,28 @@
+.login-main-container .loginForm, .login-main-container .signupForm, .signup-main-container .loginForm, .signup-main-container .signupForm {
+  width: 30%;
+  margin: 10% auto;
+  border: 1px solid #ccc;
+  padding: 1%;
+  border-radius: 1rem;
+}
+.login-main-container .loginForm .inputs, .login-main-container .signupForm .inputs, .signup-main-container .loginForm .inputs, .signup-main-container .signupForm .inputs {
+  background-color: white;
+  color: black;
+}
+.login-main-container .loginForm .link, .login-main-container .signupForm .link, .signup-main-container .loginForm .link, .signup-main-container .signupForm .link {
+  font-size: 1rem;
+}
+.login-main-container .submit-btn, .signup-main-container .submit-btn {
+  width: 100%;
+  background-color: #3e7258;
+}
+@media (min-width: 384px) and (max-width: 499px) {
+  .login-main-container .loginForm, .login-main-container .signupForm, .signup-main-container .loginForm, .signup-main-container .signupForm {
+    width: 80%;
+  }
+}
+@media (min-width: 500px) and (max-width: 768px) {
+  .login-main-container .loginForm, .login-main-container .signupForm, .signup-main-container .loginForm, .signup-main-container .signupForm {
+    width: 40%;
+  }
+}/*# sourceMappingURL=members.css.map */

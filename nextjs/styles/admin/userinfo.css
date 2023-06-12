@@ -1,0 +1,99 @@
+#user-info, #service-info {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  #service-info th, #service-info td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+
+  }
+  #user-info {
+    width: 80%;
+    margin-left: 17%;
+    border-collapse: collapse;
+  }
+  
+  #user-info {border: 1px solid;}
+
+  #user-info th,
+  #user-info td{
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+  }
+  #user-info th {
+    background-color: #f2f2f2;
+    
+  }
+  
+  #user-info th #service-info th{
+    background-color: #f2f2f2;
+    
+  }
+
+  .highlighted {
+    background-color: #fcab64;
+  }
+
+  .main-service-display-container{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: 80%;
+    /* border: 1px solid; */
+    margin-left: 18%;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* #service-info{border:1px solid} */
+
+  .service-form-section{
+    margin-top: 3%;
+    display: flex;
+    flex-direction: row;
+    gap: 5%;
+  }
+
+ 
+ .left-service-form, .right-service-form{
+  width: 30%;
+  /* background-color: #ddd; */
+  border: 1px solid;
+  border-radius: 1rem; 
+  padding: 1%;
+  
+ }
+
+ .left-service-form input, .right-service-form input{
+  background-color: rgb(214, 214, 214);
+  color: black;
+  outline: auto;
+}
+
+.left-service-form button, .right-service-form button{
+  background-color: #7be0ad;
+  border-radius: 1rem;
+  margin-top: 2%;
+  margin-left: 2%;
+  color: #f8f7ff;
+}
+
+.right-service-form .action-btn{
+  width: 50%;
+}
+.left-service-form .action-btn{
+  display: inline;
+  width: 30%;
+
+}
+
+.create-icon {
+  width: 1.5rem;
+  margin-left: .5%;
+  cursor: pointer;
+}

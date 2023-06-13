@@ -1,11 +1,23 @@
+'use client'
+
 import '../../styles/nav/navbar.css'
 import Link from 'next/link'
+import { useState } from 'react';
+import { GrMenu } from 'react-icons/gr';
 
 export default function Navbar() {
+  const [isMenuOpen, setMenuOpen] = useState(false);
 
+  const toggleMenu = () => {
+    setMenuOpen(!isMenuOpen);
+  };
   return (
-      <nav className="logged_out-navbar">
-        <ul>
+      <nav className="home-navbar">
+
+        <button className="sandwich-button" onClick={toggleMenu}>
+          <GrMenu /> {/* Sandwich icon */}
+        </button>
+        <ul className={`menu ${isMenuOpen ? 'open' : ''}`}>
             <li className="nav-item">
               <Link 
                 className="nav-link" 

@@ -12,6 +12,7 @@ import axios from 'axios'
 
 export default function Header(){
     const router = useRouter()
+
     const [jobCategories, setJobCategories] = useState<Category[]>([]) // Add type annotation    const [jobCategory, setJobCategory] = useState([])
     const [jobCategory, setJobCategory] = useState<string>()
     const [isSearching, setIsSearching] = useState<boolean>(false)
@@ -54,46 +55,54 @@ export default function Header(){
 
     return (
         <header className="header">
+
+            <div className="logoAndForm">
+              
+                {/* Logo of the website */}
+                <div className="logo-wrapper">
+                    <Image 
+                        className= "logo"
+                        src={Logo}
+                        alt="logo"
+                        priority
+                        />
+                </div>
+             
+
+                <form className="search_form" onSubmit={handleSearchSubmit}>
+                    <input 
+                        className="search-input" 
+                        type="text" 
+                        placeholder="Search for job..." 
+                        name="search" 
+                        required
+                        onChange={(event)=> setSearch(event.target.value)}
+                    />
+                    
+                    <select
+                        name="category"
+                        className="select-category"
+                        defaultValue=""
+                        onChange={(e) => setJobCategory(e.target.value)}
+                    ><option value="">All categories</option>
+                        {jobCategories.map(category => {
+                            return(
+                                <option value={category.name} key={category.name}>{category.name}</option>
+                            )
+                        })}
+                    </select>
+
+                    <button className="search-btn" type="submit" title="search button">
+                        <i className="fa fa-search"></i> {/*Search icon*/}
+                    </button> 
+                </form>
+              
+            </div> 
+         
+
           <Navbar />
 
-          {/* This is the red portion of the curve blending into green */}
-          <div className="red-gradient">
-              
-              {/* Logo of the website */}
-              <Image 
-                className= "logo"
-                src={Logo}
-                alt="logo" 
-                />
-              {/* Title of the website  */}
-              {/* <h1 className="title"><b>Freelance</b></h1> */}
-
-              <form className="search_form" onSubmit={handleSearchSubmit}>
-                  {/* {% csrf_token %} */}
-                  <input className="search" type="text" placeholder="Search for job..." name="search" required
-                    onChange={(event)=> setSearch(event.target.value)}
-                  />
-                  
-                <select
-                    name="category"
-                    className="category"
-                    defaultValue=""
-                    onChange={(e) => setJobCategory(e.target.value)}
-                ><option value="">All categories</option>
-                      {jobCategories.map(category => {
-                        return(
-                             <option value={category.name} key={category.name}>{category.name}</option>
-                        )
-                      })}
-                  </select>
-
-                  <button className="search-btn" type="submit" title="search button">
-                      <i className="fa fa-search"></i> {/*Search icon*/}
-                  </button> 
-              </form>
-              
-          </div>
-      </header>
+        </header>
     )
 }
 

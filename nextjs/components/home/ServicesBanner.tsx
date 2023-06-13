@@ -2,6 +2,7 @@
 
 import { getAllServices } from '../../utils/APIRoutes';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import axios from 'axios';
 
 interface Services {
@@ -39,7 +40,11 @@ async function fetchServiceInfo() {
                         <p className="service-tagline">{service.title}</p>
                             <p className="service-title" id="transportation-title">{service.description}</p>
 
-                            <img className="service-img" src={`http://localhost:3000/images/${service.thumbnail}`} alt="Transportation services img"/>
+                            <Image 
+                                className="service-img" 
+                                src={`http://localhost:3000/images/${service.thumbnail}`} 
+                                alt="Transportation services img"
+                            />
                         </div>
                 ))}
                    

@@ -1,7 +1,0 @@
-SERVER_PORT=3002 #express port
-MONGO_URL="mongodb+srv://drgnstudio868:drgnstudio123@cluster0.d7tiei4.mongodb.net/NE1-FREELANCE"
-ORIGIN="http://localhost:3000" #website url
-NODEMAILER_API_SERVER_EMAIL="drgnstudio868@outlook.com"
-NODEMAILER_API_SERVER_EMAIL_PASSWORD="drgnstudio123"
-NODEMAILER_API_SERVICE_TYPE="hotmail"
-EXPRESS_SESSION_KEY="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"

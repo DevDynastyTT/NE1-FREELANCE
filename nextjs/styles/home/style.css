@@ -70,16 +70,15 @@
 }
 
 .home-main-container {
-  margin-top: 14%;
   position: absolute;
   background: linear-gradient(0deg, rgb(255, 255, 255) 75%, rgb(241, 253, 247) 100%);
 }
-.home-main-container .flexible-services {
+.home-main-container .services-section {
   position: relative;
-  width: 100vw;
   padding-left: 4%;
+  width: 100%;
 }
-.home-main-container .flexible-services h2 {
+.home-main-container .services-section h2 {
   font-weight: 600px;
   font-family: "Mukta", sans-serif;
   font-size: 2.5rem;
@@ -89,16 +88,15 @@
   text-align: left;
   color: rgb(82, 71, 71);
 }
-.home-main-container .flexible-services .services {
+.home-main-container .services-section .services-container {
   display: flex;
   flex-wrap: wrap;
-  width: 100vw;
+  width: 100%;
 }
-.home-main-container .flexible-services .services .service, .home-main-container .flexible-services .services .service-img {
+.home-main-container .services-section .services-container .service, .home-main-container .services-section .services-container .service-img {
   border-radius: 0.5rem;
 }
-.home-main-container .flexible-services .services .service {
-  display: inline-block;
+.home-main-container .services-section .services-container .service {
   margin-top: 2%;
   margin-left: 2.5%;
   position: relative;
@@ -106,20 +104,19 @@
   height: 40vh;
   cursor: pointer;
   overflow: hidden;
-  background-color: rgb(98, 98, 98);
 }
-.home-main-container .flexible-services .services .service .service-img {
+.home-main-container .services-section .services-container .service .service-Image {
   width: 100%;
   height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
   transition: transform 0.3s ease-in-out;
 }
-.home-main-container .flexible-services .services .service .service-img:hover {
+.home-main-container .services-section .services-container .service .service-Image:hover {
   opacity: 80%;
   transform: scale(1.1);
 }
-.home-main-container .flexible-services .services .service .service-title, .home-main-container .flexible-services .services .service .service-title-span, .home-main-container .flexible-services .services .service .service-tagline {
+.home-main-container .services-section .services-container .service .service-title, .home-main-container .services-section .services-container .service .service-title-span, .home-main-container .services-section .services-container .service .service-tagline {
   position: absolute;
   z-index: 2;
   font-weight: 600px;
@@ -128,23 +125,23 @@
   color: white;
   text-shadow: 2px 1px 2px black;
 }
-.home-main-container .flexible-services .services .service .service-title {
+.home-main-container .services-section .services-container .service .service-title {
   margin-top: 65%;
   font-size: 1.3rem;
 }
-.home-main-container .flexible-services .services .service .service-tagline {
+.home-main-container .services-section .services-container .service .service-tagline {
   margin-top: 73%;
   font-size: 1.3rem;
 }
-.home-main-container .flexible-services .services .service .service-title-span {
+.home-main-container .services-section .services-container .service .service-title-span {
   margin-top: 72%;
   font-size: 1.8rem;
   font-weight: bold;
 }
-.home-main-container .flexible-services .services .service #transportation-title {
+.home-main-container .services-section .services-container .service #transportation-title {
   margin-top: 65%;
 }
-.home-main-container .flexible-services .services .service #transportation-span {
+.home-main-container .services-section .services-container .service #transportation-span {
   margin-top: 72%;
 }
 .home-main-container .reassurance-flex-box {
@@ -252,7 +249,7 @@
     margin-left: 8.5%;
   }
 }
-@media (min-width: 425px) and (max-width: 681px) {
+@media (min-width: 412px) and (max-width: 681px) {
   .header .home-navbar .sandwich-button {
     left: 68%;
   }
@@ -261,6 +258,12 @@
   }
   .header .home-navbar .menu.open {
     margin-left: 13%;
+  }
+  .home-main-container .services-section .services-container .service .service-title {
+    margin-top: 60%;
+  }
+  .home-main-container .services-section .services-container .service .service-tagline {
+    margin-top: 70%;
   }
 }
 @media (min-width: 320px) and (max-width: 681px) {
@@ -320,6 +323,13 @@
   .header .home-navbar .menu .nav-item a {
     color: black;
   }
+  .home-main-container .services-section .services-container {
+    flex-direction: column;
+  }
+  .home-main-container .services-section .services-container .service {
+    margin: 0 auto 5%;
+    width: 80%;
+  }
 }
 @media (min-width: 681px) {
   .sandwich-button {
@@ -353,14 +363,44 @@
   .header .home-navbar ul li a {
     font-size: 1rem;
   }
+  .home-main-container .services-section .services-container .service .service-title {
+    margin-top: 120%;
+  }
+  .home-main-container .services-section .services-container .service .service-tagline {
+    margin-top: 140%;
+  }
+  .home-main-container .services-section .services-container .service .service-tagline-4 {
+    font-size: 1.15rem;
+  }
 }
 @media (min-width: 768px) and (max-width: 1023px) {
   .header .home-navbar ul {
     margin-left: 10%;
   }
+  .home-main-container .services-section .services-container .service .service-title {
+    margin-top: 100%;
+  }
+  .home-main-container .services-section .services-container .service .service-tagline {
+    margin-top: 120%;
+  }
 }
 @media (min-width: 1024px) and (max-width: 1440px) {
   .header .home-navbar ul {
     margin-left: 10%;
+  }
+  .home-main-container .services-section .services-container .service .service-title {
+    margin-top: 80%;
+  }
+  .home-main-container .services-section .services-container .service .service-tagline {
+    margin-top: 93%;
+  }
+}
+@media (min-width: 1440px) and (max-width: 1534px) {
+  .header .home-navbar ul {
+    margin-left: 25%;
+  }
+  .home-main-container .services-section .services-container .service .service-title {
+    margin-top: 85%;
+    font-size: 1.3rem;
   }
 }/*# sourceMappingURL=style.css.map */

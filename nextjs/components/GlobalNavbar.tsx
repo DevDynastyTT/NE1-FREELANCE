@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { fetchCategories } from '../utils/reuseableCode'
 import { getCategories, logoutRoute, userSession } from '../utils/APIRoutes'
-import Category from '../utils/jobCategoryInterface'
+import Category from '../utils/interfaces'
 
 
 export default function GlobalNavbar() {

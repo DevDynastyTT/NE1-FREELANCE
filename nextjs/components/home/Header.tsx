@@ -1,13 +1,13 @@
 'use client'
 
 import Navbar from './Navbar'
-import Logo from '../../public/images/logo2.png'
+import Logo from '@public/images/logo2.png'
 import Image from 'next/image'
-import { getCategories, searchJobs } from '../../utils/APIRoutes'
-import { fetchCategories } from '../../utils/reuseableCode';
+import { getCategories, searchJobs } from '@utils/APIRoutes'
+import { fetchCategories } from '@utils/reuseableCode';
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation';
-import Category from '../../utils/jobCategoryInterface'
+import Category from '@utils/interfaces'
 import axios from 'axios'
 
 export default function Header(){

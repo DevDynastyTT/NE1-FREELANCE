@@ -1,7 +1,7 @@
 'use client'
 
 import { getAllServices } from '@utils/APIRoutes';
-import Services from '@utils/interfaces';
+import {Services} from '@utils/interfaces';
 import Administration from '@public/images/administration.jpeg'
 import Esthetics from '@public/images/esthetics.jpeg'
 import Cleaning from '@public/images/cleaning.jpeg'
@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
 
-function ServicesBanner() {
+export default function ServicesBanner() {
 
     const [services, setServices] = useState<Services[]>()
 
@@ -104,5 +104,3 @@ function ServicesBanner() {
         </section> // End flexible-services
     )
 }
-
-export default ServicesBanner;

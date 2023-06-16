@@ -1,4 +1,4 @@
-.search-main-container{
+.jobs-main-container{
     margin: 0 auto;
     width: 90%;
 
@@ -19,7 +19,7 @@
                 border-color: #3e7258;
                 margin-left: 2%;
             }
-            .select-input-field{
+            .select-category{
                 margin-left: 1%;
                 font-size: 1rem;
             }
@@ -98,44 +98,49 @@
             } //end details
         } //end job-card
     }
+    
+}
 
-
-    @media (min-width: 384px) and (max-width: 600px) {
-        .top-no-padding, .top-padding{
-            h2{margin-left: 1%;}
-            .search-form{
+    @media(min-width:320px) and (max-width: 681px){
+        .jobs-main-container{
+            .top-no-padding, .top-padding{
                 width: 100%;
-                margin-left: .5%;
-                .search-input-field{width: 100%;}
-                .search-btn{margin-left: 5%;}
-            }
-        }
-        
-        .job-list-flex {
-            margin-top: 10%;
-        
-            .job-card {
-                flex-direction: row;
-                width: 100%;
-                margin-bottom: 10%;
-        
-                .thumbnail-container {
-                    height: 100%;
-                    padding: unset;
-                    border: 2px solid #b3b3b3;
-                    border-right: none;
-                    border-top-left-radius: .5rem;
-                    border-bottom-left-radius: .5rem;
+                .search-form{
+                    width: 100%;
+                    padding-left: 1.5%;
+                    .search-input-field{width: 90%;}
+                    .select-category{width: 60%;}
+                    .search-btn{margin-left: 5%;width: 30%;}
                 }
-        
-                .details {
-                    height: 100%;
-                     .price {
-                        text-align: right;
-                    }
-                } //end details
-            } //end job-card
-        }
+    }
+    
+    .job-list-flex {
+        margin-top: 10%;
+    
+        .job-card {
+            flex-direction: row;
+            width: 100%;
+            margin-bottom: 10%;
+    
+            .thumbnail-container {
+                height: 100%;
+                padding: unset;
+                border: 2px solid #b3b3b3;
+                border-right: none;
+                border-top-left-radius: .5rem;
+                border-bottom-left-radius: .5rem;
+            }
+    
+            .details {
+                height: 100%;
+                    .price {
+                    text-align: right;
+                }
+            } //end details
+        } //end job-card
+    }
+        }//end jobs-main-container
+
     }
 
     @media (min-width: 601px) and (max-width: 767px) {
@@ -210,15 +215,19 @@
         }
     }
 
-    @media (min-width: 768px) and (max-width: 1022px) {
+    @media (min-width: 768px) and (max-width: 1536px) {
+        .jobs-main-container{
+            .top-no-padding .search-form, .top-padding .search-form{
+                .search-input-field{width: 80%;}
+                .select-category{width: 30%;}
+                .search-btn{width: 15%;}
+            }
+        
         .job-list-flex .job-card{
             width: 20%;
         }
     }
-
-   
-    
-}
+    }
 
 .no-jobs{
     height: 85vh;

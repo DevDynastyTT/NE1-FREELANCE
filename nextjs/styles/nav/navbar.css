@@ -276,7 +276,7 @@
   .logged_in-navbar .nav-tabs, .logged_out-navbar .nav-tabs {
     display: flex;
     padding-left: 5%;
-    margin-left: 0% !important;
+    margin-left: -5% !important;
     padding-top: 3%;
     width: 100%;
   }

@@ -1,32 +1,32 @@
-.search-main-container {
+.jobs-main-container {
   margin: 0 auto;
   width: 90%;
 }
-.search-main-container .top-no-padding, .search-main-container .top-padding {
+.jobs-main-container .top-no-padding, .jobs-main-container .top-padding {
   padding-left: 3%;
 }
-.search-main-container .top-no-padding .search-form, .search-main-container .top-padding .search-form {
+.jobs-main-container .top-no-padding .search-form, .jobs-main-container .top-padding .search-form {
   width: 100%;
 }
-.search-main-container .top-no-padding .search-form .search-input-field, .search-main-container .top-padding .search-form .search-input-field {
+.jobs-main-container .top-no-padding .search-form .search-input-field, .jobs-main-container .top-padding .search-form .search-input-field {
   width: 30%;
   margin-left: 1%;
   background-color: white;
   color: black;
 }
-.search-main-container .top-no-padding .search-form .search-btn, .search-main-container .top-padding .search-form .search-btn {
+.jobs-main-container .top-no-padding .search-form .search-btn, .jobs-main-container .top-padding .search-form .search-btn {
   background-color: #3e7258;
   border-color: #3e7258;
   margin-left: 2%;
 }
-.search-main-container .top-no-padding .search-form .select-input-field, .search-main-container .top-padding .search-form .select-input-field {
+.jobs-main-container .top-no-padding .search-form .select-category, .jobs-main-container .top-padding .search-form .select-category {
   margin-left: 1%;
   font-size: 1rem;
 }
-.search-main-container .top-no-padding {
+.jobs-main-container .top-no-padding {
   padding: unset;
 }
-.search-main-container .job-list-flex {
+.jobs-main-container .job-list-flex {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
@@ -35,7 +35,7 @@
   margin-top: 5%;
   justify-content: left;
 }
-.search-main-container .job-list-flex .job-card {
+.jobs-main-container .job-list-flex .job-card {
   display: flex;
   flex-direction: column;
   width: 16%;
@@ -44,7 +44,7 @@
   align-items: center;
   justify-content: center;
 }
-.search-main-container .job-list-flex .job-card .thumbnail-container {
+.jobs-main-container .job-list-flex .job-card .thumbnail-container {
   height: 50%;
   width: 100%;
   padding: 2%;
@@ -52,7 +52,7 @@
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
 }
-.search-main-container .job-list-flex .job-card .thumbnail-container img {
+.jobs-main-container .job-list-flex .job-card .thumbnail-container img {
   height: 100%;
   width: 100%;
   -o-object-fit: cover;
@@ -61,11 +61,11 @@
   border-radius: 0.5rem;
   cursor: pointer;
 }
-.search-main-container .job-list-flex .job-card .thumbnail-container img:hover {
+.jobs-main-container .job-list-flex .job-card .thumbnail-container img:hover {
   opacity: 80%;
   transform: scale(1.1);
 }
-.search-main-container .job-list-flex .job-card .details {
+.jobs-main-container .job-list-flex .job-card .details {
   width: 100%;
   padding: 3%;
   border: 2px solid #b3b3b3;
@@ -73,40 +73,45 @@
   border-bottom-left-radius: 0.5rem;
   border-bottom-right-radius: 0.5rem;
 }
-.search-main-container .job-list-flex .job-card .details .title {
+.jobs-main-container .job-list-flex .job-card .details .title {
   font-size: 1.1rem;
   cursor: pointer;
 }
-.search-main-container .job-list-flex .job-card .details .username {
+.jobs-main-container .job-list-flex .job-card .details .username {
   font-size: 0.9rem;
   cursor: pointer;
 }
-.search-main-container .job-list-flex .job-card .details .price {
+.jobs-main-container .job-list-flex .job-card .details .price {
   text-align: center;
 }
-@media (min-width: 384px) and (max-width: 600px) {
-  .search-main-container .top-no-padding h2, .search-main-container .top-padding h2 {
-    margin-left: 1%;
-  }
-  .search-main-container .top-no-padding .search-form, .search-main-container .top-padding .search-form {
-    width: 100%;
-    margin-left: 0.5%;
-  }
-  .search-main-container .top-no-padding .search-form .search-input-field, .search-main-container .top-padding .search-form .search-input-field {
+
+@media (min-width: 320px) and (max-width: 681px) {
+  .jobs-main-container .top-no-padding, .jobs-main-container .top-padding {
     width: 100%;
   }
-  .search-main-container .top-no-padding .search-form .search-btn, .search-main-container .top-padding .search-form .search-btn {
+  .jobs-main-container .top-no-padding .search-form, .jobs-main-container .top-padding .search-form {
+    width: 100%;
+    padding-left: 1.5%;
+  }
+  .jobs-main-container .top-no-padding .search-form .search-input-field, .jobs-main-container .top-padding .search-form .search-input-field {
+    width: 90%;
+  }
+  .jobs-main-container .top-no-padding .search-form .select-category, .jobs-main-container .top-padding .search-form .select-category {
+    width: 60%;
+  }
+  .jobs-main-container .top-no-padding .search-form .search-btn, .jobs-main-container .top-padding .search-form .search-btn {
     margin-left: 5%;
+    width: 30%;
   }
-  .search-main-container .job-list-flex {
+  .jobs-main-container .job-list-flex {
     margin-top: 10%;
   }
-  .search-main-container .job-list-flex .job-card {
+  .jobs-main-container .job-list-flex .job-card {
     flex-direction: row;
     width: 100%;
     margin-bottom: 10%;
   }
-  .search-main-container .job-list-flex .job-card .thumbnail-container {
+  .jobs-main-container .job-list-flex .job-card .thumbnail-container {
     height: 100%;
     padding: unset;
     border: 2px solid #b3b3b3;
@@ -114,15 +119,15 @@
     border-top-left-radius: 0.5rem;
     border-bottom-left-radius: 0.5rem;
   }
-  .search-main-container .job-list-flex .job-card .details {
+  .jobs-main-container .job-list-flex .job-card .details {
     height: 100%;
   }
-  .search-main-container .job-list-flex .job-card .details .price {
+  .jobs-main-container .job-list-flex .job-card .details .price {
     text-align: right;
   }
 }
 @media (min-width: 601px) and (max-width: 767px) {
-  .search-main-container .job-list-flex {
+  .job-list-flex {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
@@ -131,7 +136,7 @@
     margin-top: 5%;
     justify-content: left;
   }
-  .search-main-container .job-list-flex .job-card {
+  .job-list-flex .job-card {
     display: flex;
     flex-direction: column;
     width: 30%;
@@ -140,7 +145,7 @@
     align-items: center;
     justify-content: center;
   }
-  .search-main-container .job-list-flex .job-card .thumbnail-container {
+  .job-list-flex .job-card .thumbnail-container {
     height: 50%;
     width: 100%;
     padding: 2%;
@@ -148,7 +153,7 @@
     border-top-left-radius: 0.5rem;
     border-top-right-radius: 0.5rem;
   }
-  .search-main-container .job-list-flex .job-card .thumbnail-container img {
+  .job-list-flex .job-card .thumbnail-container img {
     height: 100%;
     width: 100%;
     -o-object-fit: cover;
@@ -157,11 +162,11 @@
     border-radius: 0.5rem;
     cursor: pointer;
   }
-  .search-main-container .job-list-flex .job-card .thumbnail-container img:hover {
+  .job-list-flex .job-card .thumbnail-container img:hover {
     opacity: 80%;
     transform: scale(1.1);
   }
-  .search-main-container .job-list-flex .job-card .details {
+  .job-list-flex .job-card .details {
     width: 100%;
     padding: 3%;
     border: 2px solid #b3b3b3;
@@ -169,24 +174,32 @@
     border-bottom-left-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
   }
-  .search-main-container .job-list-flex .job-card .details .title {
+  .job-list-flex .job-card .details .title {
     font-size: 1.1rem;
     cursor: pointer;
   }
-  .search-main-container .job-list-flex .job-card .details .username {
+  .job-list-flex .job-card .details .username {
     font-size: 0.9rem;
     cursor: pointer;
   }
-  .search-main-container .job-list-flex .job-card .details .price {
+  .job-list-flex .job-card .details .price {
     text-align: center;
   }
 }
-@media (min-width: 768px) and (max-width: 1022px) {
-  .search-main-container .job-list-flex .job-card {
+@media (min-width: 768px) and (max-width: 1536px) {
+  .jobs-main-container .top-no-padding .search-form .search-input-field, .jobs-main-container .top-padding .search-form .search-input-field {
+    width: 80%;
+  }
+  .jobs-main-container .top-no-padding .search-form .select-category, .jobs-main-container .top-padding .search-form .select-category {
+    width: 30%;
+  }
+  .jobs-main-container .top-no-padding .search-form .search-btn, .jobs-main-container .top-padding .search-form .search-btn {
+    width: 15%;
+  }
+  .jobs-main-container .job-list-flex .job-card {
     width: 20%;
   }
 }
-
 .no-jobs {
   height: 85vh;
 }/*# sourceMappingURL=style.css.map */

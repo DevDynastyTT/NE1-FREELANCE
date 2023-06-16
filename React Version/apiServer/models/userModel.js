@@ -25,11 +25,7 @@ const userSchema = new mongoose.Schema({
   date_joined: {
     type: Date,
     default: Date.now
-  },
-  jobs: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Job'
-  }]
+  }
 });
 
 module.exports = mongoose.model("Users", userSchema);

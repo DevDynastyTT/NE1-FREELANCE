@@ -1,4 +1,4 @@
-import '../styles/home/style.css';
+import '@styles/home/style.css';
 import Header from '../components/home/Header';
 import ServicesBanner from '../components/home/ServicesBanner';
 import Reassurance from '../components/home/Reassurance';

@@ -7,7 +7,7 @@
   padding-top: 1.5%;
   padding-bottom: 1.5%;
   background: linear-gradient(51deg, rgb(214, 27, 98) 0%, rgb(214, 27, 98) 10%, rgb(133, 186, 56) 100%, rgb(133, 186, 56) 100%);
-  width: 100vw;
+  width: 100%;
 }
 .header .logoAndForm {
   display: flex;
@@ -69,9 +69,6 @@
   color: white;
 }
 
-.home-main-container {
-  background: linear-gradient(0deg, rgb(255, 255, 255) 75%, rgb(241, 253, 247) 100%);
-}
 .home-main-container .services-section {
   position: relative;
   padding-left: 4%;
@@ -115,7 +112,9 @@
   opacity: 80%;
   transform: scale(1.1);
 }
-.home-main-container .services-section .services-container .service .service-title, .home-main-container .services-section .services-container .service .service-title-span, .home-main-container .services-section .services-container .service .service-tagline {
+.home-main-container .services-section .services-container .service .service-title,
+.home-main-container .services-section .services-container .service .service-title-span,
+.home-main-container .services-section .services-container .service .service-tagline {
   position: absolute;
   z-index: 2;
   font-weight: 600px;
@@ -143,60 +142,56 @@
 .home-main-container .services-section .services-container .service #transportation-span {
   margin-top: 72%;
 }
-.home-main-container .reassurance-flex-box {
+.home-main-container .reassurance-section {
   display: flex;
   flex-wrap: nowrap;
-  background: linear-gradient(0deg, rgb(237, 255, 246) 76%, rgb(255, 255, 255) 100%);
-  padding-left: 10%;
-  padding-top: 10%;
 }
-.home-main-container .reassurance-flex-box .text {
+.home-main-container .reassurance-section .pointers {
   width: 35%;
 }
-.home-main-container .reassurance-flex-box .text h3 {
+.home-main-container .reassurance-section .pointers h3 {
   color: #404145;
   font-weight: 700;
   font-size: 32px;
   line-height: 38px;
 }
-.home-main-container .reassurance-flex-box .text ul {
-  list-style-type: none;
-}
-.home-main-container .reassurance-flex-box .text ul .sub-heading {
+.home-main-container .reassurance-section .pointers .sub-heading {
   margin-bottom: 2%;
 }
-.home-main-container .reassurance-flex-box .text ul .bold {
+.home-main-container .reassurance-section .pointers .bold {
   color: #404145;
   font-weight: 700;
   font-size: 18px;
   line-height: 25px;
   font-style: bold;
 }
-.home-main-container .reassurance-flex-box .text ul .info {
+.home-main-container .reassurance-section .pointers .info {
   color: #62646a;
   font-weight: 400;
   font-size: 18px;
   line-height: 26px;
   font-style: bold;
 }
-.home-main-container .reassurance-flex-box .image-container {
-  padding-left: 5%;
-  padding-top: 2%;
+.home-main-container .reassurance-section .image-container {
+  margin: 0 auto;
   width: 50%;
+  height: 100%;
 }
-.home-main-container .reassurance-flex-box .image-container .image {
+.home-main-container .reassurance-section .image-container .image {
   width: 100%;
+  height: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 .home-main-container .getStarted {
   background-color: #3e7258;
   padding-top: 5%;
   padding-left: 10%;
-  margin-left: 10%;
-  margin-right: 10%;
-  margin-top: 5%;
+  margin: 5% auto;
   display: flex;
   flex-wrap: nowrap;
   height: 55vh;
+  width: 75%;
 }
 .home-main-container .getStarted h5 {
   font-size: 2rem;
@@ -221,9 +216,13 @@
   transform: scale(1.1);
 }
 .home-main-container .getStarted .image {
-  margin-top: -5%;
-  margin-left: 5%;
   overflow: hidden;
+}
+.home-main-container .getStarted .image .guy-img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 
 @media (min-width: 320px) and (max-width: 375px) {
@@ -244,7 +243,98 @@
     font-size: 1rem;
   }
 }
-@media (min-width: 375px) and (max-width: 425px) {
+@media (min-width: 320px) and (max-width: 681px) {
+  .reassurance-section {
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+    padding: unset !important;
+  }
+  .reassurance-section .pointers {
+    width: 90% !important;
+  }
+  .reassurance-section .pointers .sub-heading {
+    margin-bottom: 5% !important;
+  }
+  .reassurance-section .pointers .bold {
+    color: #404145;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 25px;
+    font-style: bold;
+  }
+  .reassurance-section .pointers .info {
+    color: #62646a;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 26px;
+    font-style: bold;
+  }
+  .reassurance-section .image-container {
+    width: 90% !important;
+    height: 100%;
+  }
+  .reassurance-section .image-container .h3 {
+    color: #404145;
+    font-size: 1.5rem;
+    line-height: 1.8rem;
+    margin-bottom: 3%;
+  }
+  .reassurance-section .image-container .image {
+    width: 100%;
+    height: 100%;
+    -o-object-fit: cover;
+       object-fit: cover;
+  }
+  .getStarted {
+    background-color: #3e7258;
+    padding-top: 5%;
+    padding-left: 10%;
+    margin: 5% auto;
+    display: flex;
+    flex-wrap: nowrap;
+    height: 55vh;
+    width: 75%;
+  }
+  .getStarted h5 {
+    font-size: 2rem;
+    color: white;
+    text-align: left;
+  }
+  .getStarted .getStarted-btn {
+    padding: 3%;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+    color: black;
+    background-color: white !important;
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+  }
+  .getStarted .getStarted-btn a {
+    text-decoration: none;
+    color: black;
+  }
+  .getStarted .getStarted-btn:hover {
+    transform: scale(1.1);
+  }
+  .getStarted .image {
+    overflow: hidden;
+  }
+  .getStarted .image .guy-img {
+    width: 100%;
+    height: 100%;
+    -o-object-fit: contain;
+       object-fit: contain;
+  }
+}
+@media (min-width: 320px) and (max-width: 412px) {
+  .home-main-container .reassurance-section .image-container {
+    display: flex;
+    flex-direction: column;
+  }
+}
+@media (min-width: 375px) and (max-width: 681px) {
   .header .home-navbar .sandwich-button {
     left: 70%;
   }
@@ -338,6 +428,9 @@
     margin: 0 auto 5%;
     width: 80%;
   }
+  .home-main-container .getStarted {
+    display: none;
+  }
 }
 @media (min-width: 681px) {
   .sandwich-button {
@@ -351,14 +444,14 @@
     -o-object-fit: contain;
        object-fit: contain;
   }
-  .header .logoAndForm .search_form .search-input {
+  .header .search_form .search-input {
     font-size: 1rem;
   }
-  .header .logoAndForm .search_form .select-category {
+  .header .search_form .select-category {
     font-size: 1rem;
     margin-top: 3%;
   }
-  .header .logoAndForm .search_form .search-btn {
+  .header .search_form .search-btn {
     font-size: 1.5rem;
     border: none !important;
     background-color: transparent;
@@ -380,16 +473,105 @@
   .home-main-container .services-section .services-container .service .service-tagline-4 {
     font-size: 1.15rem;
   }
+  .home-main-container .reassurance-section {
+    flex-direction: column-reverse;
+    width: 90%;
+    margin: 0 auto;
+    padding-top: 5%;
+  }
+  .home-main-container .reassurance-section .image-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+  .home-main-container .reassurance-section .image-container h3 {
+    font-size: 1.5rem;
+    line-height: 2.5rem;
+  }
+  .home-main-container .reassurance-section .image-container .image {
+    width: 50%;
+  }
+  .home-main-container .reassurance-section .pointers {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 10%;
+    justify-content: left;
+    padding-top: 5%;
+  }
+  .home-main-container .reassurance-section .pointers .sub-heading {
+    width: 40%;
+  }
+  .home-main-container .getStarted {
+    padding-top: 5%;
+    padding-left: 5%;
+    width: 80%;
+  }
+  .home-main-container .getStarted .signup-cta {
+    width: 50%;
+  }
+  .home-main-container .getStarted .image {
+    margin-left: -5%;
+  }
+  .home-main-container .getStarted .image .guy-img {
+    -o-object-fit: cover;
+       object-fit: cover;
+  }
 }
-@media (min-width: 768px) and (max-width: 1023px) {
+@media (min-width: 768px) and (max-width: 1024px) {
   .header .home-navbar ul {
     margin-left: 10%;
   }
   .home-main-container .services-section .services-container .service .service-title {
-    margin-top: 100%;
+    margin-top: 80%;
   }
   .home-main-container .services-section .services-container .service .service-tagline {
-    margin-top: 120%;
+    margin-top: 93%;
+  }
+  .home-main-container .reassurance-section {
+    flex-direction: column-reverse;
+    width: 90%;
+    margin: 0 auto;
+    padding-top: 5%;
+  }
+  .home-main-container .reassurance-section .image-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+  .home-main-container .reassurance-section .image-container h3 {
+    font-size: 2.5rem;
+    line-height: 2.5rem;
+    margin-top: 7%;
+  }
+  .home-main-container .reassurance-section .image-container .image {
+    width: 50%;
+  }
+  .home-main-container .reassurance-section .pointers {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 10%;
+    justify-content: left;
+    padding-top: 5%;
+  }
+  .home-main-container .reassurance-section .pointers .sub-heading {
+    width: 40%;
+  }
+  .home-main-container .getStarted {
+    padding-top: 5%;
+    padding-left: 5%;
+    width: 80%;
+  }
+  .home-main-container .getStarted .signup-cta {
+    width: 50%;
+  }
+  .home-main-container .getStarted .image {
+    margin-left: -5%;
+  }
+  .home-main-container .getStarted .image .guy-img {
+    -o-object-fit: cover;
+       object-fit: cover;
   }
 }
 @media (min-width: 1024px) and (max-width: 1440px) {
@@ -402,13 +584,116 @@
   .home-main-container .services-section .services-container .service .service-tagline {
     margin-top: 93%;
   }
+  .home-main-container .reassurance-section {
+    flex-direction: column-reverse;
+    width: 90%;
+    margin: 0 auto;
+    padding-top: 5%;
+  }
+  .home-main-container .reassurance-section .image-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+  .home-main-container .reassurance-section .image-container h3 {
+    font-size: 2.5rem;
+    line-height: 2.5rem;
+    margin-top: 7%;
+  }
+  .home-main-container .reassurance-section .image-container .image {
+    width: 50%;
+  }
+  .home-main-container .reassurance-section .pointers {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 10%;
+    justify-content: left;
+    padding-top: 5%;
+  }
+  .home-main-container .reassurance-section .pointers .sub-heading {
+    width: 40%;
+  }
+  .home-main-container .reassurance-section .pointers .sub-heading .bold {
+    font-size: 1.8rem;
+    margin-bottom: 1.5%;
+  }
+  .home-main-container .reassurance-section .pointers .sub-heading .bold svg {
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+  .home-main-container .reassurance-section .pointers .sub-heading .info {
+    font-size: 1.5rem;
+  }
 }
-@media (min-width: 1440px) and (max-width: 1534px) {
+@media (min-width: 1440px) and (max-width: 1536px) {
   .header .home-navbar ul {
     margin-left: 25%;
   }
-  .home-main-container .services-section .services-container .service .service-title {
-    margin-top: 85%;
+  .home-main-container .service .service-title {
+    margin-top: 80% !important;
     font-size: 1.3rem;
+  }
+  .home-main-container .service-tagline {
+    margin-top: 93% !important;
+  }
+  .home-main-container .reassurance-section {
+    flex-direction: column-reverse;
+    width: 90%;
+    margin: 0 auto;
+    padding-top: 5%;
+  }
+  .home-main-container .reassurance-section .image-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+  .home-main-container .reassurance-section .image-container h3 {
+    font-size: 2.5rem;
+    line-height: 2.5rem;
+    margin-top: unset;
+  }
+  .home-main-container .reassurance-section .image-container .image {
+    width: 50%;
+  }
+  .home-main-container .reassurance-section .pointers {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: 100%;
+    margin-top: -20%;
+    gap: 10%;
+    justify-content: left;
+    padding-top: unset;
+  }
+  .home-main-container .reassurance-section .pointers .sub-heading {
+    width: 40%;
+  }
+  .home-main-container .reassurance-section .pointers .sub-heading .bold {
+    font-size: 1.8rem;
+    margin-bottom: 1.5%;
+    line-height: 2rem;
+  }
+  .home-main-container .reassurance-section .pointers .sub-heading .bold svg {
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+  .home-main-container .reassurance-section .pointers .sub-heading .info {
+    font-size: 1.5rem;
+  }
+  .home-main-container .getStarted {
+    padding-top: 5%;
+    padding-left: 5%;
+    width: 80%;
+  }
+  .home-main-container .getStarted .signup-cta {
+    width: 50%;
+  }
+  .home-main-container .getStarted .image {
+    margin-left: -5%;
+  }
+  .home-main-container .getStarted .image .guy-img {
+    -o-object-fit: cover;
+       object-fit: cover;
   }
 }/*# sourceMappingURL=style.css.map */

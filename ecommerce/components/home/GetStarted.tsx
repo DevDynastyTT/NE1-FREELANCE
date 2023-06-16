@@ -18,9 +18,8 @@ function GetStarted() {
             </button>
         </div>
 
-    <div className="image">
+        <div className="image">
             <Image 
-                className='guy-img'
                 src={Man} 
                 alt="Black guy in white jersey excited"/>
         </div>

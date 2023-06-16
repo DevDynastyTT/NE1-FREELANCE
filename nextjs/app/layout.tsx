@@ -1,4 +1,6 @@
 import './globals.css'
+import "bootstrap/dist/css/bootstrap.min.css"; // Import bootstrap CSS
+
 import { Inter } from 'next/font/google'
 import GlobalFooter from '@components/GlobalFooter'
 const inter = Inter({ subsets: ['latin'] })
@@ -15,7 +17,7 @@ export default function RootLayout({children,}: {
     <html lang="en">
       <body className={inter.className}>
         {children}
-        <GlobalFooter/>
+        {/* <GlobalFooter/> */}
         </body>
     </html>
   )

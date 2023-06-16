@@ -1,25 +1,42 @@
 'use client'
 
-import '../static/css/navbar.css'
-import Logo from '../static/images/logo2.png'
-import {Link, useNavigate, useLocation} from 'react-router-dom'
+import '@styles/nav/navbar.css'
 import Image from 'next/image'
-import { useState, useEffect } from 'react'
-import { fetchCategories } from '../utils/reuseableCode'
-import { getCategories, logoutRoute, userSession } from '../utils/APIRoutes'
-import Category from '../utils/interfaces'
+import PcLogo from '@public/images/logo2.png'
+import MobileLogo from '@public/images/N.png'
+import { GrMenu } from 'react-icons/gr';
+
+import { fetchCategories } from '@utils/reuseableCode'
+import {User, Jobs, JobCategory} from '@utils/interfaces'
+import { getCategories, logoutRoute, userSession } from '@utils/APIRoutes'
+
+import Link from 'next/link'
+import { useState, useEffect, FormEvent, Dispatch, SetStateAction } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
+//TO DO log the type for currentUser and setCurrentUser, double check the job_id variable names in mongo as well
+export default function GlobalNavbar({currentUser, setCurrentUser}
+  : {
+    currentUser:User | undefined, 
+    setCurrentUser:Dispatch< SetStateAction<User | undefined> >
+  }) {
+
+  const router = useRouter()  
+  const pathname = usePathname()
+  const [jobs, setJobs] = useState<Jobs[]>([])
+  const [jobCategory, setJobCategory] = useState<JobCategory[]>()
+  const [jobCategories, setJobCategories] = useState<JobCategory[]>([])
+  
+  const [search, setSearch] = useState<String>()
+  const [isSearching, setIsSearching] = useState<Boolean>(false)
 
 
-export default function GlobalNavbar() {
-  const navigate = useNavigate()  
-  const location = useLocation();
-  const [jobs, setJobs] = useState([])
-  const [search, setSearch] = useState('');
-  const [isSearching, setIsSearching] = useState(false)
-  const [jobCategories, setJobCategories] = useState<Category[]>([])
-  const [jobCategory, setJobCategory] = useState('')
-  const [message, setMessage] = useState('Finding available jobs')
+  const [message, setMessage] = useState<String>('Finding available jobs')
 
+  const [isMenuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuOpen(!isMenuOpen);
+  };
       async function handleSearchSubmit(event: React.FormEvent){
         setIsSearching(true)
         console.log('Searching: ' + isSearching)
@@ -47,7 +64,7 @@ export default function GlobalNavbar() {
                     if (search) {
                     url += `term:${search}/`;
                     }
-                    navigate(url);
+                    router.push(url);
 
         }catch(error){
             console.log('CATCH ERROR WHILE FETCHING\n' + error)
@@ -70,7 +87,7 @@ export default function GlobalNavbar() {
           // setCurrentUser(null)
           sessionStorage.removeItem('user')
             if(window.location.href !== '/jobs/search')
-              navigate('/jobs/search')
+              router.push('/jobs/search')
             else
               window.location.reload()
           }catch(error){
@@ -85,54 +102,79 @@ export default function GlobalNavbar() {
 
   return (
     <>
-   
-
-
           <nav className="logged_out-navbar">
-            <Image 
-              src={Logo} 
-              className = "logo" 
-              alt = "logo" 
-              onClick={()=> window.location.href = "/"}
-            />
+
+            <div className="logo-wrapper">
+              <Image 
+                className = "pc-logo" 
+                src={PcLogo} 
+                alt = "logo" 
+                onClick={()=> router.push("/")}
+              />
+
+              <Image 
+                className = "mobile-logo" 
+                src={MobileLogo} 
+                alt = "logo" 
+                onClick={()=> router.push("/")}
+              />
+            </div>
+          
 
            {/* <!--Search for jobs form--> */}
-          {!location.pathname.startsWith('/jobs/search') || !location.pathname.startsWith('/members/login') || !location.pathname.startsWith('/members/signup')&&  (
-            <form className="search-form navbar-search-form row g-3" method="GET" onSubmit={handleSearchSubmit}>
-                              {/* {% csrf_token %} */}
-                              <input className="search-input-field form-control" type="text" placeholder="Search for job..." name="search" required
-                                  onChange={(event)=> setSearch(event.target.value)}
-                              />
+          {/* {pathname !== '/jobs/search' || pathname !== '/login' || pathname !== '/members/signup' &&  (
+                <form className="search-form navbar-search-form row g-3" method="GET" onSubmit={handleSearchSubmit}>
+                  <input className="search-input-field form-control" type="text" placeholder="Search for job..." name="search" required
+                      onChange={(event)=> setSearch(event.target.value)}
+                  />
 
-                              <select className="form-select select-input-field" name="category" defaultValue="All Categories" onChange={(e) => setJobCategory(e.target.value)}>
-                                  <option value="">All categories</option>
-                                  {jobCategories.map(category => {
-                                      return(
-                                          <option value={category.name} key={category.name}>{category.name}</option>
-                                      )
-                                  })}
-                              </select>
+                  <select 
+                    className="form-select select-input-field" 
+                    name="category" 
+                    defaultValue="All Categories" 
+                    onChange={(event) => setJobCategory([{name:event.target.value}])}>
+                      
+                    <option value="">All categories</option>
+                      {jobCategories.map(category => {
+                          return(
+                              <option 
+                                value={category.name.toString()} 
+                                key={category.name.toString()}>
+                                  {category.name}
+                              </option>
+                          )
+                      })}
+                  </select>
 
-                              <button className="btn btn-primary search-btn" type="submit">Search</button>
+                  <button className="btn btn-primary search-btn" type="submit">Search</button>
 
-                          </form>
+                </form>
 
-          )}
+           )} */}
           
-            <ul className="nav nav-tabs">
+          <button type='button' className="sandwich-button" onClick={toggleMenu}>
+            <GrMenu /> {/* Sandwich icon */}
+          </button>
+            <ul className={`nav nav-tabs ${isMenuOpen ? 'open' : ''}`}>
 
               <li className="nav-item">
-                <Link className="nav-link" to="/">Home</Link></li>
+                <Link className="nav-link" href="/">Home</Link>
+              </li>
 
-                <li className="nav-item"><Link className = "nav-link" to={'/jobs/search'}>Jobs</Link>
-                    </li>
+                <li className="nav-item">
+                  <Link className = "nav-link" href={'/jobs/search'}>Jobs</Link>
+                </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/about">About</Link></li>
+                <Link className="nav-link" href="/about">About</Link>
+              </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/contact">Contact</Link></li>
+                <Link className="nav-link" href="/contact">Contact</Link>
+              </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/members/login">Login/Signup</Link></li>
+                <Link className="nav-link" href="/members/login">Login/Signup</Link>
+              </li>
             </ul>
+
           </nav>
 
     </>
@@ -189,7 +231,7 @@ export default function GlobalNavbar() {
             
 //             <li><Link className="dropdown-item" 
 //             onClick={() => {
-//                 handleLogOut(currentUser._id).then(()=> navigate('/members/login'))
+//                 handleLogOut(currentUser._id).then(()=> router.push('/members/login'))
 //               }
 //               }
 //             >Logout</Link></li>

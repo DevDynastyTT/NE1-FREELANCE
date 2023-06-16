@@ -1,6 +1,6 @@
-'use client'
+// 'use client'
 
-import '../../styles/nav/navbar.css'
+import '@styles/nav/navbar.css'
 import Link from 'next/link'
 import { useState } from 'react';
 import { GrMenu } from 'react-icons/gr';
@@ -17,11 +17,12 @@ export default function Navbar() {
         <button className="sandwich-button" onClick={toggleMenu}>
           <GrMenu /> {/* Sandwich icon */}
         </button>
+        
         <ul className={`menu ${isMenuOpen ? 'open' : ''}`}>
             <li className="nav-item">
               <Link 
                 className="nav-link" 
-                href="/products">Jobs</Link>
+                href="/jobs">Jobs</Link>
             </li>
 
             <li className="nav-item">
@@ -39,7 +40,7 @@ export default function Navbar() {
                 <li className="nav-item">
                 <Link 
                   className="nav-link" 
-                  href="/members/login">Login/Signup</Link>
+                  href="/login">Login/Signup</Link>
                 </li>
         </ul>
       </nav>

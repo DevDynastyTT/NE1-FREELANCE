@@ -7,13 +7,13 @@ import { getCategories, searchJobs } from '@utils/APIRoutes'
 import { fetchCategories } from '@utils/reuseableCode';
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation';
-import Category from '@utils/interfaces'
+import {JobCategory} from '@utils/interfaces'
 import axios from 'axios'
 
 export default function Header(){
     const router = useRouter()
 
-    const [jobCategories, setJobCategories] = useState<Category[]>([]) // Add type annotation    const [jobCategory, setJobCategory] = useState([])
+    const [jobCategories, setJobCategories] = useState<JobCategory[]>([]) // Add type annotation    const [jobCategory, setJobCategory] = useState([])
     const [jobCategory, setJobCategory] = useState<string>()
     const [isSearching, setIsSearching] = useState<boolean>(false)
     const [search, setSearch] = useState<string>();

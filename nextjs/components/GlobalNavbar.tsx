@@ -210,22 +210,22 @@ export default function GlobalNavbar({currentUser, setCurrentUser}
 //     <ul className="nav nav-tabs">
 
 //         <li className="nav-item dropdown">
-//           <Link className="nav-link dropdown-toggle" data-bs-toggle="dropdown" to="#" role="button" aria-expanded="false">
+//           <Link className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
 //             <i className="fa-solid fa-circle active-status"></i>
 //               {currentUser ? (
 //                   currentUser.username
 //               ): null}
 //         </Link>
 //           <ul className="dropdown-menu">
-//             <li><Link className="dropdown-item" to={'/jobs/createjob'}>Create job</Link></li>
+//             <li><Link className="dropdown-item" href={'/jobs/createjob'}>Create job</Link></li>
 //             {window.location.pathname !== "/members/profile" ? (
-//               <li><Link className="dropdown-item" to={'/members/profile'}>Profile</Link></li>
+//               <li><Link className="dropdown-item" href={'/members/profile'}>Profile</Link></li>
 //             ) : null
 //             }
 //             {currentUser.is_staff ? (
-//               <li><Link className="dropdown-item" to={'/admin'}>Admin</Link></li>) : null
+//               <li><Link className="dropdown-item" href={'/auth/admin'}>Admin</Link></li>) : null
 //               }
-//               {/* <li><Link className="dropdown-item" to={'/admin'}>Admin</Link></li>) */}
+//               {/* <li><Link className="dropdown-item" href={'/auth/admin'}>Admin</Link></li>) */}
             
 //             <li><Link className="dropdown-item" 
 //             onClick={() => {
@@ -236,13 +236,13 @@ export default function GlobalNavbar({currentUser, setCurrentUser}
 //           </ul>
 //         </li>
 
-//         <li className="nav-item"><Link className = "nav-link" to={'/jobs/search'}>Jobs</Link>
+//         <li className="nav-item"><Link className = "nav-link" href={'/jobs/search'}>Jobs</Link>
 //             </li>
-//             <li className="nav-item"><Link className="nav-link" to={'/about'}>About</Link>
+//             <li className="nav-item"><Link className="nav-link" href={'/about'}>About</Link>
 //             </li>
-//                 <li className="nav-item"><Link className="nav-link" to={'/contact'}>Contact</Link>
+//                 <li className="nav-item"><Link className="nav-link" href={'/contact'}>Contact</Link>
 //                 </li>
-//                 <li className="nav-item"><Link className="nav-link" to={'/members/chat'}>Messages</Link>
+//                 <li className="nav-item"><Link className="nav-link" href={'/members/chat'}>Messages</Link>
 //                 </li>
 //       </ul>
 // </nav> }

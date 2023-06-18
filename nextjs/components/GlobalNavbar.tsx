@@ -160,7 +160,7 @@ export default function GlobalNavbar({currentUser, setCurrentUser}
               </li>
 
                 <li className="nav-item">
-                  <Link className = "nav-link" href={'/jobs/search'}>Jobs</Link>
+                  <Link className = "nav-link" href={'/jobs'}>Jobs</Link>
                 </li>
               <li className="nav-item">
                 <Link className="nav-link" href="/about">About</Link>

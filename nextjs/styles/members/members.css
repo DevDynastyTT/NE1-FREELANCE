@@ -16,13 +16,14 @@
   width: 100%;
   background-color: #3e7258;
 }
-@media (min-width: 384px) and (max-width: 499px) {
+
+@media (min-width: 320px) and (max-width: 500px) {
   .login-main-container .loginForm, .login-main-container .signupForm, .signup-main-container .loginForm, .signup-main-container .signupForm {
     width: 80%;
   }
 }
 @media (min-width: 500px) and (max-width: 768px) {
   .login-main-container .loginForm, .login-main-container .signupForm, .signup-main-container .loginForm, .signup-main-container .signupForm {
-    width: 40%;
+    width: 60%;
   }
 }/*# sourceMappingURL=members.css.map */

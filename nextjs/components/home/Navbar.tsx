@@ -40,7 +40,7 @@ export default function Navbar() {
                 <li className="nav-item">
                 <Link 
                   className="nav-link" 
-                  href="/login">Login/Signup</Link>
+                  href="/auth/login">Login/Signup</Link>
                 </li>
         </ul>
       </nav>

@@ -96,9 +96,7 @@ export default function GlobalNavbar({currentUser, setCurrentUser}
         }
       }
 
-    useEffect(()=>{
-      fetchCategories(setJobCategories, getCategories)
-    }, [])
+    useEffect(()=>{fetchCategories(setJobCategories, getCategories)}, [])
 
   return (
     <>

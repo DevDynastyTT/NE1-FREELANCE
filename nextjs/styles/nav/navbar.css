@@ -162,9 +162,6 @@
     -o-object-fit: contain;
        object-fit: contain;
   }
-  .logged_in-navbar .nav-tabs, .logged_out-navbar .nav-tabs {
-    display: none;
-  }
   .logged_in-navbar .sandwich-button, .logged_out-navbar .sandwich-button {
     background-color: transparent !important;
     font-size: 2rem;
@@ -174,31 +171,71 @@
     height: 100%;
     border: none;
   }
-  .logged_in-navbar .menu, .logged_out-navbar .menu {
+  .logged_in-navbar .nav-tabs, .logged_out-navbar .nav-tabs {
     display: none;
   }
-  .logged_in-navbar .menu li, .logged_out-navbar .menu li {
-    list-style-type: none;
-  }
-  .logged_in-navbar .menu li a, .logged_out-navbar .menu li a {
-    text-decoration: none;
-    font-size: 1rem;
-    color: white;
-  }
-  .logged_in-navbar .menu.open, .logged_out-navbar .menu.open {
+}
+@media (min-width: 320px) and (max-width: 375px) {
+  .logged_in-navbar .open, .logged_out-navbar .open {
     position: absolute;
     z-index: 1;
     display: flex;
     flex-direction: column;
-    display: flex;
+    flex-wrap: nowrap;
     background-color: whitesmoke;
     padding: 1.5%;
+    width: 40%;
+    margin-left: 53%;
+    margin-top: 20%;
+    height: auto;
   }
-  .logged_in-navbar .menu .nav-item, .logged_out-navbar .menu .nav-item {
-    margin-bottom: 15%;
+  .logged_in-navbar .open .nav-item, .logged_out-navbar .open .nav-item {
+    margin-bottom: 5%;
   }
-  .logged_in-navbar .menu .nav-item a, .logged_out-navbar .menu .nav-item a {
-    color: black;
+  .logged_in-navbar .open .nav-item a, .logged_out-navbar .open .nav-item a {
+    color: black !important;
+  }
+}
+@media (min-width: 412px) and (max-width: 425px) {
+  .logged_in-navbar .open, .logged_out-navbar .open {
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    background-color: whitesmoke;
+    padding: 1.5%;
+    width: 40%;
+    margin-left: 53%;
+    margin-top: 18%;
+    height: auto;
+  }
+  .logged_in-navbar .open .nav-item, .logged_out-navbar .open .nav-item {
+    margin-bottom: 5%;
+  }
+  .logged_in-navbar .open .nav-item a, .logged_out-navbar .open .nav-item a {
+    color: black !important;
+  }
+}
+@media (min-width: 520px) and (max-width: 682px) {
+  .logged_in-navbar .open, .logged_out-navbar .open {
+    position: absolute;
+    z-index: 1;
+    display: flex !important;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    background-color: whitesmoke;
+    padding: 1.5%;
+    width: 40%;
+    margin-left: 53%;
+    margin-top: 13%;
+    height: auto;
+  }
+  .logged_in-navbar .open .nav-item, .logged_out-navbar .open .nav-item {
+    margin-bottom: 5%;
+  }
+  .logged_in-navbar .open .nav-item a, .logged_out-navbar .open .nav-item a {
+    color: black !important;
   }
 }
 @media (min-width: 681px) and (max-width: 768px) {
@@ -230,31 +267,24 @@
     border: none !important;
     display: block;
   }
-  .logged_in-navbar .menu, .logged_out-navbar .menu {
-    display: none;
-  }
-  .logged_in-navbar .menu li, .logged_out-navbar .menu li {
-    list-style-type: none;
-  }
-  .logged_in-navbar .menu li a, .logged_out-navbar .menu li a {
-    text-decoration: none;
-    font-size: 1rem;
-    color: white;
-  }
-  .logged_in-navbar .menu.open, .logged_out-navbar .menu.open {
+  .logged_in-navbar .open, .logged_out-navbar .open {
     position: absolute;
     z-index: 1;
-    display: flex;
+    display: flex !important;
     flex-direction: column;
-    display: flex;
+    flex-wrap: nowrap;
     background-color: whitesmoke;
     padding: 1.5%;
+    width: 40%;
+    margin-left: 53%;
+    margin-top: 10%;
+    height: auto;
   }
-  .logged_in-navbar .menu .nav-item, .logged_out-navbar .menu .nav-item {
-    margin-bottom: 15%;
+  .logged_in-navbar .open .nav-item, .logged_out-navbar .open .nav-item {
+    margin-bottom: 5%;
   }
-  .logged_in-navbar .menu .nav-item a, .logged_out-navbar .menu .nav-item a {
-    color: black;
+  .logged_in-navbar .open .nav-item a, .logged_out-navbar .open .nav-item a {
+    color: black !important;
   }
 }
 @media (min-width: 768px) {

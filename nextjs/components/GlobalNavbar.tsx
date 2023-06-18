@@ -169,7 +169,7 @@ export default function GlobalNavbar({currentUser, setCurrentUser}
                 <Link className="nav-link" href="/contact">Contact</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" href="/members/login">Login/Signup</Link>
+                <Link className="nav-link" href="/auth/login">Login/Signup</Link>
               </li>
             </ul>
 

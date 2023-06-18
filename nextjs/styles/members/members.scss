@@ -21,18 +21,27 @@
     
     }
 
-    @media (min-width: 384px) and (max-width: 499px) {
+   
+    
+}
+
+@media (min-width: 320px) and (max-width: 500px) {
+    .login-main-container, .signup-main-container {
+    
         .loginForm, .signupForm{
             width: 80%;
         }
-        
     }
 
-    @media (min-width: 500px) and (max-width: 768px) {
+}
+
+
+@media (min-width: 500px) and (max-width: 768px) {
+    .login-main-container, .signup-main-container {
+    
         .loginForm, .signupForm{
-            width: 40%;
+            width: 60%;
         }
         
     }
-    
 }

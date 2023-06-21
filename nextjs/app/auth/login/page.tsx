@@ -2,12 +2,14 @@
 
 import '@styles/members/members.css'
 import GlobalNavbar from "@components/GlobalNavbar";
-import { User } from "@utils/interfaces";
+import { User } from "@utils/types";
 import { loginRoute } from "@utils/APIRoutes";
 import Link from "next/link";
+import { Router } from 'next/router';
 import { FormEvent, useState } from "react";
 import axios from "axios";
 export default function Login(){
+
     const [currentUser, setCurrentUser] = useState<User>()
     const [message, setMessage] = useState<String>()
     const [values, setValues] = useState({ email: "", password: "" });
@@ -53,52 +55,50 @@ export default function Login(){
 
     return (
         <>
-        <GlobalNavbar currentUser={currentUser} setCurrentUser={setCurrentUser}/>
+        <GlobalNavbar />
         <br />
         <main className = "login-main-container">
-                <form className="loginForm" onSubmit={(event) => handleSubmit(event)}>
+          <form className="loginForm" onSubmit={(event) => handleSubmit(event)}>
+                  
+                  {message ? (
+                    <div className="alert alert-warning alert-dismissible fade show" role="alert">
+                          <strong>
+                              <i className="fa-solid fa-triangle-exclamation"></i>
+                              {message}
+                          </strong>
+                          <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div> 
+                    ) : null}
+                        
+                  <h1>Login</h1>
                 
-                {message ? (
-                  <div className="alert alert-warning alert-dismissible fade show" role="alert">
-                        <strong>
-                            <i className="fa-solid fa-triangle-exclamation"></i>
-                            {message}
-                        </strong>
-                        <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div> 
-                ) : null
-                }
-                      
-                <h1>Login</h1>
-                {/* {% csrf_token %} */}
+                  <div className="mb-3">
+                    <label htmlFor="email" className="form-label">Email:</label>
+                    <input type="email" className="form-control inputs" id="email" name = "email" placeholder="example@example.com"
+                    onChange={e => handleChange(e)} required />
+                  </div>
 
-                <div className="mb-3">
-                  <label htmlFor="email" className="form-label">Email:</label>
-                  <input type="email" className="form-control inputs" id="email" name = "email" placeholder="example@example.com"
-                  onChange={e => handleChange(e)} required
-                  />
-                </div>
+                  <div className="mb-3">
+                    <label htmlFor="password" className="form-label">Password</label>
+                    <input type="password" className="form-control inputs" id="password" name = "password" placeholder="********"
+                    onChange={e => handleChange(e)} required
+                    />
+                  </div>
 
-                <div className="mb-3">
-                  <label htmlFor="password" className="form-label">Password</label>
-                  <input type="password" className="form-control inputs" id="password" name = "password" placeholder="********"
-                  onChange={e => handleChange(e)} required
-                  />
-                </div>
+                  <div className="col-12">
+                    <p className="link">Need an Account?
+                      <Link href='/auth/signup'>Signup</Link>
+                    </p>
+                  </div>
 
-                <div className="col-12">
-                  <p className="link">Need an Account?
-                    <Link href='/auth/signup'>Signup</Link>
-                  </p>
-                </div>
-
-                <div className="col-12">
-                  <button className="btn btn-primary submit-btn" type="submit">Login</button>
-                </div>
+                  <div className="col-12">
+                    <button className="btn btn-primary submit-btn" type="submit">Login</button>
+                  </div>
 
 
-              </form> {/* End Form */}
-              </main> 
+          </form> 
+        </main> 
         </>
     )
 }
+       

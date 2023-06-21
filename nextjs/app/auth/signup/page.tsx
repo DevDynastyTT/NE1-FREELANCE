@@ -4,15 +4,14 @@ import '@styles/members/members.css'
 import GlobalNavbar from '@components/GlobalNavbar'
 import { useState, useEffect, FormEvent } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { Router } from 'next/router';
 import { registerRoute } from "@utils/APIRoutes";
 import axios from 'axios';
-import { User } from '@utils/interfaces';
+import { User } from '@utils/types';
 export default function Signup(){
 
   const [message, setMessage] = useState("");
     const [currentUser, setCurrentUser] = useState<User>()
-    const router = useRouter()
 
     const [values, setValues] = useState({
       username: "",
@@ -94,7 +93,7 @@ export default function Signup(){
 
   return (
     <>
-    <GlobalNavbar currentUser={currentUser} setCurrentUser={setCurrentUser}/>
+    <GlobalNavbar />
     <br />
         <main className="signup-main-container">
             <form className="signupForm" onSubmit={handleSubmit}>

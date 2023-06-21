@@ -7,7 +7,7 @@ import { getCategories, searchJobs } from '@utils/APIRoutes'
 import { fetchCategories } from '@utils/reuseableCode';
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation';
-import {JobCategory} from '@utils/interfaces'
+import {JobCategory} from '@utils/types'
 import axios from 'axios'
 
 export default function Header(){

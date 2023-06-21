@@ -1,34 +1,31 @@
 'use client'
 
-import '@styles/nav/navbar.css'
 import Image from 'next/image'
+import '@styles/nav/navbar.css'
 import PcLogo from '@public/images/logo2.png'
 import MobileLogo from '@public/images/N.png'
-import { GrMenu } from 'react-icons/gr';
 
+import {JobCategory, User} from '@utils/types'
 import { fetchCategories } from '@utils/reuseableCode'
-import {User, Jobs, JobCategory} from '@utils/interfaces'
-import { getCategories, logoutRoute, userSession } from '@utils/APIRoutes'
+import { getCategories} from '@utils/APIRoutes'
 
 import Link from 'next/link'
-import { useState, useEffect, FormEvent, Dispatch, SetStateAction } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { GrMenu } from 'react-icons/gr';
+import { usePathname } from 'next/navigation'
+import Router from 'next/router'
+import { useState, useEffect} from 'react'
 //TO DO log the type for currentUser and setCurrentUser, double check the job_id variable names in mongo as well
-export default function GlobalNavbar({currentUser, setCurrentUser}
-  : {
-    currentUser:User | undefined, 
-    setCurrentUser:Dispatch< SetStateAction<User | undefined> >
-  }) {
+export default function GlobalNavbar() { 
 
-  const router = useRouter()  
   const pathname = usePathname()
-  const [jobs, setJobs] = useState<Jobs[]>([])
+  
   const [jobCategory, setJobCategory] = useState<JobCategory[]>()
   const [jobCategories, setJobCategories] = useState<JobCategory[]>([])
   
   const [search, setSearch] = useState<String>()
   const [isSearching, setIsSearching] = useState<Boolean>(false)
 
+  const [currentUser, setCurrentUser] = useState<User>()
 
   const [message, setMessage] = useState<String>('Finding available jobs')
 
@@ -55,7 +52,6 @@ export default function GlobalNavbar({currentUser, setCurrentUser}
                     console.error(data.error)
                     setMessage(data.error)
                 }
-                    setJobs(data.job_list)
 
                     let url = `/jobs/search/`;
                     if (data.jobCategory) {
@@ -64,7 +60,7 @@ export default function GlobalNavbar({currentUser, setCurrentUser}
                     if (search) {
                     url += `term:${search}/`;
                     }
-                    router.push(url);
+                    Router.push(url);
 
         }catch(error){
             console.log('CATCH ERROR WHILE FETCHING\n' + error)
@@ -76,18 +72,9 @@ export default function GlobalNavbar({currentUser, setCurrentUser}
    
       async function handleLogOut() {
         try{
-          // const response = await axios.post(logoutRoute, {id: currentUser._id}, {withCredentials: true})
-          // if(response.data.error){
-          //   alert(response.data.error)
-          //   return
-          // }
-
-          // if(!setCurrentUser) return window.location.reload()
-
-          // setCurrentUser(null)
           sessionStorage.removeItem('user')
             if(window.location.href !== '/jobs/search')
-              router.push('/jobs/search')
+              Router.push('/jobs/search')
             else
               window.location.reload()
           }catch(error){
@@ -107,14 +94,14 @@ export default function GlobalNavbar({currentUser, setCurrentUser}
                 className = "pc-logo" 
                 src={PcLogo} 
                 alt = "logo" 
-                onClick={()=> router.push("/")}
+                onClick={()=> Router.push("/")}
               />
 
               <Image 
                 className = "mobile-logo" 
                 src={MobileLogo} 
                 alt = "logo" 
-                onClick={()=> router.push("/")}
+                onClick={()=> Router.push("/")}
               />
             </div>
           
@@ -229,7 +216,7 @@ export default function GlobalNavbar({currentUser, setCurrentUser}
             
 //             <li><Link className="dropdown-item" 
 //             onClick={() => {
-//                 handleLogOut(currentUser._id).then(()=> router.push('/members/login'))
+//                 handleLogOut(currentUser._id).then(()=> Router.push('/members/login'))
 //               }
 //               }
 //             >Logout</Link></li>

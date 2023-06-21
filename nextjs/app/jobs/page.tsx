@@ -2,7 +2,7 @@
 
 import '@styles/searchResults/style.css'
 
-import {User, Jobs, JobCategory} from '@utils/interfaces'
+import {User, Jobs, JobCategory} from '@utils/types'
 import RootLayout from '@app/layout'
 import GlobalNavbar from '@components/GlobalNavbar'
 import GlobalFooter from '@components/GlobalFooter'
@@ -67,7 +67,7 @@ export default function Jobs(){
 
 return(
     <>
-        <GlobalNavbar currentUser={currentUser} setCurrentUser={setCurrentUser}/>
+        <GlobalNavbar />
         <br />
         <main className={`jobs-main-container search ${jobs.length === 0 && 'no-jobs'}`}>
                     
@@ -157,7 +157,7 @@ return(
 
                     
 
-            </main> 
+        </main> 
     </>
 )
 }

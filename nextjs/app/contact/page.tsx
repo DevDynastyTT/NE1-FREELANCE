@@ -6,7 +6,7 @@ import "@styles/contact/contact.css";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { sendEmailRoute } from "@utils/APIRoutes";
-import { User } from "@utils/interfaces";
+import { User } from "@utils/types";
 import axios from "axios";
 export default function Contact() {
     const [name, setName] = useState<string>();

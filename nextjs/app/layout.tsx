@@ -5,18 +5,18 @@ import { Inter } from 'next/font/google'
 import GlobalFooter from '@components/GlobalFooter'
 const inter = Inter({ subsets: ['latin'] })
 import Head from 'next/head'
+
 export const metadata = {
   title: 'NE1-FREELANCE',
   description: 'Freelancing Services',
 }
 
-export default function RootLayout({children,}: {
-  children: React.ReactNode
-}) {
+type childrenProps = { children: React.ReactNode}
+export default function RootLayout(props: childrenProps) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        {children}
+        {props.children}
         <GlobalFooter/>
         </body>
     </html>

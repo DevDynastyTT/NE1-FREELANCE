@@ -1,5 +1,5 @@
-const User = require("../models/userModel");
-const userProfile = require("../models/userProfileModel");
+const User = require("../../../nextjs/models/userModel");
+const userProfile = require("../../../nextjs/models/userProfileModel");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const { ObjectId } = require('mongodb')

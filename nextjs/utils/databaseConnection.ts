@@ -4,10 +4,8 @@ let connected = false
 
 export const connectToDB: () => Promise<void>  = async () => {
     mongoose.set('strictQuery', true)
-    if(connected) {
-        console.error('MongoDB is already connected')
-        return
-    }
+    if(connected) return
+    
         const mongodbUri = process.env.MONGODB_URI;
 
         if (!mongodbUri) {

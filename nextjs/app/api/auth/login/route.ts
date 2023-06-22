@@ -1,9 +1,10 @@
-import { NextResponse } from 'next/server'
-import { connectToDB } from '@utils/databaseConnection';
-import { User } from '@models/userModel';
 const bcrypt = require('bcrypt')
+import { NextResponse } from 'next/server'
 
-export async function POST(request:Request) {
+import { User } from '@models/userModel';
+import { connectToDB } from '@utils/databaseConnection';
+
+export async function POST(request:Request): Promise<NextResponse>{
   try {
     await connectToDB(); //Connect to Mongodb Database
 

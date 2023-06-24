@@ -24,6 +24,6 @@
     }
     
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/RatingsForm.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/RatingsForm.jsx", "app/api/auth/login/route.js", "tests/Components/auth/login.cy.ts", "cypress.config.js", "cypress/Components/auth/login.cy.ts", "cypress/mocks/nextRouterMock.js", "lib/session.js", "apiServer/controllers/userController.js", "apiServer/models/userModel.js", "apiServer/models/userProfileModel.js"],
   "exclude": ["node_modules"]
 }

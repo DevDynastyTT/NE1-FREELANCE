@@ -3,18 +3,20 @@
 import GlobalNavbar from "@components/GlobalNavbar";
 import GlobalFooter from "@components/GlobalFooter"
 import "@styles/contact/contact.css";
-import Link from "next/link";
-import { FormEvent, useState } from "react";
-import { sendEmailRoute } from "@utils/APIRoutes";
-import { User } from "@utils/interfaces";
+
 import axios from "axios";
+import Link from "next/link";
+import { FormEvent, useState, useEffect } from "react";
+import { sendEmailRoute } from "@utils/APIRoutes";
+import { SessionType } from "@utils/types";
 export default function Contact() {
     const [name, setName] = useState<string>();
     const [userEmail, setUserEmail] = useState<string>();
     const [message, setMessage] = useState<string>();
     const [isLoading, setIsLoading] = useState(false)
-    const [currentUser, setCurrentUser] = useState<User>()
-  async function handleContact(event: FormEvent){
+    const [session, setSession] = useState<SessionType>()
+    
+    async function handleContact(event: FormEvent){
     event.preventDefault();
   
     setIsLoading(true)
@@ -32,10 +34,15 @@ export default function Contact() {
     
   };
   
-
+  useEffect(() => {
+    const checkSession = sessionStorage.getItem('user');
+    if (checkSession) {
+      setSession(JSON.parse(checkSession));
+    }
+  }, []);
   return (
     <>
-      <GlobalNavbar currentUser={currentUser} setCurrentUser={setCurrentUser}/>
+      <GlobalNavbar session={session}/>
       <main className="contact-main-container">
         <section className="contact-section">
           {/*Left contact page*/}

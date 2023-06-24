@@ -1,7 +1,7 @@
 'use client'
 
 import { getAllServices } from '@utils/APIRoutes';
-import {Services} from '@utils/interfaces';
+import {Services} from '@utils/types';
 import Administration from '@public/images/administration.jpeg'
 import Esthetics from '@public/images/esthetics.jpeg'
 import Cleaning from '@public/images/cleaning.jpeg'

@@ -2,7 +2,7 @@
 
 import '@styles/searchResults/style.css'
 
-import {User, Jobs, JobCategory} from '@utils/interfaces'
+import {SessionType, Jobs, JobCategory} from '@utils/types'
 import RootLayout from '@app/layout'
 import GlobalNavbar from '@components/GlobalNavbar'
 import GlobalFooter from '@components/GlobalFooter'
@@ -19,6 +19,9 @@ export default function Jobs(){
     //Used for navigating urls
     const router = useRouter();
 
+    const [session, setSession] = useState<SessionType>()
+
+
     // Jobs State
     const [jobs, setJobs] = useState<Jobs[]>([])
     const [jobCategories, setJobCategories] = useState<JobCategory[]>([])
@@ -29,9 +32,6 @@ export default function Jobs(){
     const [message, setMessage] = useState<String>('Finding available jobs')
     const [isSearching, setIsSearching] = useState<Boolean>(false)
 
-    const [currentUser, setCurrentUser] = useState<User>()
-
-       
         async function handleSearchSubmit(event: FormEvent){
             setIsSearching(true)
             event.preventDefault();
@@ -65,9 +65,17 @@ export default function Jobs(){
             fetchCategories(setJobCategories, getCategories)
         }, [isSearching])
 
+        
+        useEffect(() => {
+            const checkSession = sessionStorage.getItem('user');
+            if (checkSession) {
+            setSession(JSON.parse(checkSession));
+            }
+        })
+
 return(
     <>
-        <GlobalNavbar currentUser={currentUser} setCurrentUser={setCurrentUser}/>
+        <GlobalNavbar session={session}/>
         <br />
         <main className={`jobs-main-container search ${jobs.length === 0 && 'no-jobs'}`}>
                     
@@ -157,7 +165,7 @@ return(
 
                     
 
-            </main> 
+        </main> 
     </>
 )
 }

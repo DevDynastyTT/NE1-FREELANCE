@@ -4,15 +4,16 @@ import '@styles/members/members.css'
 import GlobalNavbar from '@components/GlobalNavbar'
 import { useState, useEffect, FormEvent } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { Router } from 'next/router';
 import { registerRoute } from "@utils/APIRoutes";
 import axios from 'axios';
-import { User } from '@utils/interfaces';
+import { SessionType } from '@utils/types';
 export default function Signup(){
 
   const [message, setMessage] = useState("");
-    const [currentUser, setCurrentUser] = useState<User>()
-    const router = useRouter()
+  const [session, setSession] = useState<SessionType>()
+    
+
 
     const [values, setValues] = useState({
       username: "",
@@ -91,10 +92,16 @@ export default function Signup(){
       }
     };
   
+    useEffect(() => {
+      const checkSession = sessionStorage.getItem('user');
+      if (checkSession) {
+        setSession(JSON.parse(checkSession));
+      }
+    })
 
   return (
     <>
-    <GlobalNavbar currentUser={currentUser} setCurrentUser={setCurrentUser}/>
+    <GlobalNavbar session={session}/>
     <br />
         <main className="signup-main-container">
             <form className="signupForm" onSubmit={handleSubmit}>

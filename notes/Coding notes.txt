@@ -1,0 +1,34 @@
+# Connect to mongo cloud database:
+mongosh mongodb+srv://drgnstudio868:drgnstudio123@cluster0.d7tiei4.mongodb.net/NE1-FREELANCE
+
+# Upgrade node version(note that u need to install nvm first from the web)
+nvm install node --reinstall packages-from-node
+
+creating an array of objectsin Ts
+type propName = {
+    objectArrayName = {
+        //Values
+    }[]
+} 
+
+console.log(props.propName and[0].values)//Where values is the properties and 0 is the index position of
+You can also loop
+
+
+button events
+import React from 'react'
+(event: React.MouseEvent<HTMLButtonElement>)
+
+npx cypress run --component --record --key 23aec443-4a40-45fe-9282-20c4a49f92c4
+
+.contains(content)
+.contains(content, options)
+.contains(selector, content)
+.contains(selector, content, options)
+
+// ---or---
+
+cy.contains(content)
+cy.contains(content, options)
+cy.contains(selector, content)
+cy.contains(selector, content, options)

@@ -1,5 +1,0 @@
-# Connect to mongo cloud database:
-mongosh mongodb+srv://drgnstudio868:drgnstudio123@cluster0.d7tiei4.mongodb.net/NE1-FREELANCE
-
-# Upgrade node version(note that u need to install nvm first from the web)
-nvm install node --reinstall packages-from-node

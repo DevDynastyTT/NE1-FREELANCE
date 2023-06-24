@@ -116,30 +116,44 @@ module.exports.register = async (request, response) => {
       console.log("Enter your password")
       return response.json({error: "Enter your password"})
     }
+
     const emailCheck = await User.findOne({ email });
+
     if (emailCheck)
       return response.json({ error: "Email already used", status: false });
+    
+      console.log('Creating User...')
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(hashedPassword)
-    const user = await User.create({
+
+    
+    const user = new User({
       email,
       username,
       password: hashedPassword,
     });
-    delete user.password;
-    
+
+    const savedUser = await user.save();
+
+    console.log('Created User', savedUser);
+
     // Insert the user's ID into the profiles table.
-    const profile = await userProfile.create({
-      user_id: user.id,
+    const profile = new userProfile({
+      user_id: savedUser._id,
       profile_picture: null
     });
 
-    await User.findOneAndUpdate({email}, { $set: {is_active: true} })
-    request.session.user = user
-    request.session.profile = profile
-    return response.json({ status: true, user, profile });
-  } catch (ex) {
-    (ex);
+    await profile.save();
+
+    console.log('Created Profile');
+
+    await User.findOneAndUpdate({ email }, { $set: { is_active: true } });
+
+    request.session.user = savedUser;
+    request.session.profile = profile;
+    return response.json({ status: true, user: savedUser, profile });
+   
+  } catch (error) {
+    console.log(error.message);
   }
 };
 

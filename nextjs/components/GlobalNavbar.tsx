@@ -54,7 +54,7 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
                     setMessage(data.error)
                 }
 
-                    let url = `/jobs/search/`;
+                    let url = `/jobs`;
                     if (data.jobCategory) {
                     url += `category:${data.jobCategory}/`;
                     }

@@ -17,9 +17,6 @@ import { usePathname } from 'next/navigation'
 //TO DO log the type for session and setsession, double check the job_id variable names in mongo as well
 export default function GlobalNavbar({session}:{session:SessionType | undefined}) { 
   
-  
-
-  console.log(session)
   const pathname = usePathname()
   
   const [jobCategory, setJobCategory] = useState<JobCategory[]>()
@@ -85,7 +82,6 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
       }
 
       useEffect(()=>{fetchCategories(setJobCategories, getCategories)}, [])
-      console.log(session)
   return (
     <>
         {session ? (

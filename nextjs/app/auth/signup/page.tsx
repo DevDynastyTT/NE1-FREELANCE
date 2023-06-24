@@ -80,14 +80,14 @@ export default function Signup(){
       if (handleValidation()) {
         console.log('passed validation')
         const { email, username, password } = values;
-        const { data } = await axios.post(registerRoute, { username, email, password}, {withCredentials: true});
+        const response:any = await axios.post(registerRoute, { username, email, password}, {withCredentials: true});
 
-        if(!data.status){
-          console.log(data.error)
-          setMessage(data.error)
+        if(!response.status){
+          console.log(response.error)
+          setMessage(response.error)
           return
         }
-        sessionStorage.setItem('user', JSON.stringify(data.user))
+        sessionStorage.setItem('user', JSON.stringify(response.user))
         window.location.href = "/jobs/search";
       }
     };
@@ -109,7 +109,7 @@ export default function Signup(){
             {message ? (
                 <div className="alert alert-warning alert-dismissible fade show" role="alert">
                         <strong><i className="fa-solid fa-triangle-exclamation"></i>{message}</strong>
-                        <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <button type="button" className="btn-close" response-bs-dismiss="alert" aria-label="Close"></button>
                     </div> 
             ) : null
             }

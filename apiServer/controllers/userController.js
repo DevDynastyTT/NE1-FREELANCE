@@ -102,6 +102,7 @@ module.exports.userSession = async (request, response) => {
 //Signup page
 module.exports.register = async (request, response) => {
   try {
+    console.log('Registering User')
     const { username, email, password } = request.body;
     if (!email) {
       console.log("Enter your email")

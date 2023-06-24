@@ -4,6 +4,14 @@ import {useRouter} from 'next/navigation';
 import LoginComponent from '@components/auth/login/LoginComponent';
 export default function Login(){
   const router = useRouter()
-  return  <LoginComponent router={router} />
+  return  (
+    <>
+      <head>
+        <title>Login</title>
+      </head>
+      
+      <LoginComponent router={router} />
+    </>
+  )
 }
 

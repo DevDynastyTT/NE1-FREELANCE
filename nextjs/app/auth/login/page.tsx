@@ -6,19 +6,14 @@ import { SessionType } from "@utils/types";
 import { loginRoute } from "@utils/APIRoutes";
 import Link from "next/link";
 import { Router } from 'next/router';
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import axios from "axios";
 export default function Login(){
 
 
     const [session, setSession] = useState<SessionType>()
     
-    const checkSession = sessionStorage.getItem('user')
-    if(checkSession){
-        if(!session) setSession(JSON.parse(checkSession))
-        console.log(JSON.parse(checkSession))
-        window.location.href = "/jobs"
-      }
+ 
 
     const [message, setMessage] = useState<String>()
     const [values, setValues] = useState({ email: "", password: "" });
@@ -68,6 +63,12 @@ export default function Login(){
         }
       };
 
+      useEffect(() => {
+        const checkSession = sessionStorage.getItem('user');
+        if (checkSession) {
+          setSession(JSON.parse(checkSession));
+        }
+      })
     return (
         <>
         <GlobalNavbar session={session}/>

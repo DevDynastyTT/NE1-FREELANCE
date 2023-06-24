@@ -7,11 +7,13 @@ import Link from 'next/link';
 import { Router } from 'next/router';
 import { registerRoute } from "@utils/APIRoutes";
 import axios from 'axios';
-import { User } from '@utils/types';
+import { SessionType } from '@utils/types';
 export default function Signup(){
 
   const [message, setMessage] = useState("");
-    const [currentUser, setCurrentUser] = useState<User>()
+  const [session, setSession] = useState<SessionType>()
+    
+
 
     const [values, setValues] = useState({
       username: "",
@@ -90,10 +92,16 @@ export default function Signup(){
       }
     };
   
+    useEffect(() => {
+      const checkSession = sessionStorage.getItem('user');
+      if (checkSession) {
+        setSession(JSON.parse(checkSession));
+      }
+    })
 
   return (
     <>
-    <GlobalNavbar />
+    <GlobalNavbar session={session}/>
     <br />
         <main className="signup-main-container">
             <form className="signupForm" onSubmit={handleSubmit}>

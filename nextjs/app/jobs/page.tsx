@@ -20,12 +20,7 @@ export default function Jobs(){
     const router = useRouter();
 
     const [session, setSession] = useState<SessionType>()
-    
-    const checkSession = sessionStorage.getItem('user')
-    if(checkSession){
-        if(!session) setSession(JSON.parse(checkSession))
-        console.log(JSON.parse(checkSession))
-      }
+
 
     // Jobs State
     const [jobs, setJobs] = useState<Jobs[]>([])
@@ -69,6 +64,14 @@ export default function Jobs(){
             fetchJobs(getAllJobs, setJobs, setMessage)
             fetchCategories(setJobCategories, getCategories)
         }, [isSearching])
+
+        
+        useEffect(() => {
+            const checkSession = sessionStorage.getItem('user');
+            if (checkSession) {
+            setSession(JSON.parse(checkSession));
+            }
+        })
 
 return(
     <>

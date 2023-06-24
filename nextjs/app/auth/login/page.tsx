@@ -2,7 +2,7 @@
 
 import '@styles/members/members.css'
 import GlobalNavbar from "@components/GlobalNavbar";
-import { User } from "@utils/types";
+import { SessionType } from "@utils/types";
 import { loginRoute } from "@utils/APIRoutes";
 import Link from "next/link";
 import { Router } from 'next/router';
@@ -10,7 +10,16 @@ import { FormEvent, useState } from "react";
 import axios from "axios";
 export default function Login(){
 
-    const [currentUser, setCurrentUser] = useState<User>()
+
+    const [session, setSession] = useState<SessionType>()
+    
+    const checkSession = sessionStorage.getItem('user')
+    if(checkSession){
+        if(!session) setSession(JSON.parse(checkSession))
+        console.log(JSON.parse(checkSession))
+        window.location.href = "/jobs"
+      }
+
     const [message, setMessage] = useState<String>()
     const [values, setValues] = useState({ email: "", password: "" });
 
@@ -44,8 +53,14 @@ export default function Login(){
               return
             }
             sessionStorage.setItem('user', JSON.stringify(data.user))
-    
-            window.location.href = "/jobs/search"
+         
+            const userSessionStorage = sessionStorage.getItem('user')
+            if(userSessionStorage){
+              console.log(JSON.parse(userSessionStorage))
+              setSession(JSON.parse(userSessionStorage)) 
+            }
+
+            window.location.href = "/jobs"
           }catch(error){
             console.log('Login Error\n', error)
             setMessage("Unfortunately our servers are down. Please try again later.")
@@ -55,7 +70,7 @@ export default function Login(){
 
     return (
         <>
-        <GlobalNavbar />
+        <GlobalNavbar session={session}/>
         <br />
         <main className = "login-main-container">
           <form className="loginForm" onSubmit={(event) => handleSubmit(event)}>

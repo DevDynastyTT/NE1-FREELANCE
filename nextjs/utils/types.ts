@@ -24,7 +24,7 @@ export type Services = {
 
 
 
-export type User = {
+export type SessionType = {
   _id: string;
   username: string;
   email: string;

@@ -16,12 +16,12 @@ app.use(express.json());
 
 app.use(cors({
   origin: process.env.ORIGIN,
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'DELETE', 'PUT'], // Add OPTIONS method
 }));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static('public'));
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("DB Connection Successful"))

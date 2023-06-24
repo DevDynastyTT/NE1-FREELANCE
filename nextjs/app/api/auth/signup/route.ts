@@ -1,8 +1,8 @@
 const bcrypt = require('bcrypt')
 import { NextResponse } from "next/server"
 
-import { User } from "@models/userModel"
-import { userProfile } from "@models/userProfileModel"
+import { User } from "@apiServer/models/userModel"
+import { userProfile } from "@apiServer/models/userProfileModel"
 import { connectToDB } from "@utils/databaseConnection"
 
 export async function POST(request: Request): Promise<NextResponse>{

@@ -1,8 +1,7 @@
 //comment this when deploying
-export const host = "http://localhost:3001"
 
 //Uncomment this whenever deploying publicly
-// export const host = "https://ne1freelance.onrender.com"
+export const host = "http://localhost:3001" || "https://ne1freelance.onrender.com"
 
 export const heartBeat = `${host}/api/heartbeat`
 

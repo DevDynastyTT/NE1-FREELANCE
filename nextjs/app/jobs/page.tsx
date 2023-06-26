@@ -3,9 +3,7 @@
 import '@styles/searchResults/style.css'
 
 import {SessionType, Jobs, JobCategory} from '@utils/types'
-import RootLayout from '@app/layout'
 import GlobalNavbar from '@components/GlobalNavbar'
-import GlobalFooter from '@components/GlobalFooter'
 import { fetchJobs, fetchCategories } from '@utils/reuseableCode';
 import { getAllJobs, getCategories, searchJobs } from '@utils/APIRoutes'
 
@@ -68,10 +66,8 @@ export default function Jobs(){
         
         useEffect(() => {
             const checkSession = sessionStorage.getItem('user');
-            if (checkSession) {
-            setSession(JSON.parse(checkSession));
-            }
-        })
+            if (checkSession) setSession(JSON.parse(checkSession));
+        },[])
 
 return(
     <>

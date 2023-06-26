@@ -142,15 +142,23 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
                     </ul>
                   </li>
           
-                  <li className="nav-item"><Link className = "nav-link" href={'/jobs'}>Jobs</Link>
-                      </li>
-                      <li className="nav-item"><Link className="nav-link" href={'#'}>About(Soon...)</Link>
-                      </li>
-                          <li className="nav-item"><Link className="nav-link" href={'/contact'}>Contact</Link>
-                          </li>
-                          <li className="nav-item"><Link className="nav-link" href={'#'}>Messages(Soon...)</Link>
-                          </li>
-                </ul>
+                  <li className="nav-item">
+                    <Link className = "nav-link" href={'/jobs'}>Jobs</Link>
+                  </li>
+
+                  <li className="nav-item">
+                    <Link className="nav-link" href={'#'}>About(Soon...)</Link>
+                  </li>
+
+                  <li className="nav-item">
+                    <Link className="nav-link" href={'/contact'}>Contact</Link>
+                  </li>
+
+                  <li className="nav-item">
+                    <Link className="nav-link" href={'#'}>Messages(Soon...)</Link>
+                  </li>
+
+            </ul>
           </nav> 
         ): (
           <nav className="logged_out-navbar">

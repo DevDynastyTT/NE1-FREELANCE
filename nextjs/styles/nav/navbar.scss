@@ -1,7 +1,9 @@
     .logged_in-navbar{
         .active-status{
             color: rgb(0, 255, 0);
-            font-size: .5em;
+            background-color: rgb(0, 255, 0);
+            border-radius:50%;
+            font-size: .8em;
             margin-right: 5%;
         }
         
@@ -19,7 +21,6 @@
     
         .dropdown-menu{
             width: 10%;
-            background-color: rgb(33,37,41);
             border-radius: .4rem;
         }
     }
@@ -269,7 +270,7 @@
     }
 }
 
-@media(min-width:520px) and (max-width:682px){
+@media(min-width:500px) and (max-width:682px){
     .logged_in-navbar, .logged_out-navbar{
     
     .open {

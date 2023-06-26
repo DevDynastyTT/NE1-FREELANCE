@@ -10,15 +10,17 @@ import { fetchCategories } from '@utils/reuseableCode'
 import { getCategories} from '@utils/APIRoutes'
 
 import Link from 'next/link'
-import Router from 'next/router'
-import { useState, useEffect, SetStateAction, Dispatch} from 'react'
+import { useState, useEffect} from 'react'
 import { GrMenu } from 'react-icons/gr';
-import { usePathname } from 'next/navigation'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircle } from '@fortawesome/free-regular-svg-icons'
+import 'bootstrap/dist/js/bootstrap.bundle';
+
+import { usePathname, useRouter } from 'next/navigation';
 //TO DO log the type for session and setsession, double check the job_id variable names in mongo as well
 export default function GlobalNavbar({session}:{session:SessionType | undefined}) { 
-  
+  const router = useRouter()
   const pathname = usePathname()
-  
   const [jobCategory, setJobCategory] = useState<JobCategory[]>()
   const [jobCategories, setJobCategories] = useState<JobCategory[]>([])
   
@@ -58,7 +60,7 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
                     if (search) {
                     url += `term:${search}/`;
                     }
-                    Router.push(url);
+                    router.push(url);
 
         }catch(error){
             console.log('CATCH ERROR WHILE FETCHING\n' + error)
@@ -68,17 +70,15 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
       };
 
    
-      async function handleLogOut() {
-        try{
+      function handleLogOut() {
           sessionStorage.removeItem('user')
-            if(window.location.href !== '/jobs/search')
-              Router.push('/jobs/search')
-            else
+
+          if(pathname !== '/jobs'){
+            console.log('redirecting')
+             if(router) router.push("/jobs")
+          }
+          else
               window.location.reload()
-          }catch(error){
-            alert('error logging out')
-            console.log(error)
-        }
       }
 
       useEffect(()=>{fetchCategories(setJobCategories, getCategories)}, [])
@@ -110,36 +110,73 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
             <ul className={`nav nav-tabs ${isMenuOpen ? 'open' : ''}`}>
           
                   <li className="nav-item dropdown">
-                    <Link className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                      <i className="fa-solid fa-circle active-status"></i>
-                        {session ? (
-                            session.username
+                    <Link 
+                      className="nav-link dropdown-toggle" 
+                      data-bs-toggle="dropdown" 
+                      href="#" 
+                      role="button" 
+                      aria-expanded="false"
+                    >
+                    
+                    {/* Green Circle Icon to show that the user is active */}
+                    <FontAwesomeIcon 
+                      className='active-status'
+                      icon={faCircle} 
+                    /> 
+                      {session ? (
+                         session.username
                         ): null}
-                  </Link>
-                    <ul className="dropdown-menu">
-                      <li>
-                        <Link className="dropdown-item" href={'/jobs/createjob'}>Create job</Link></li>
-                      {window.location.pathname !== "/members/profile" ? (
+                    </Link>
+                    
+                      {/* Drop down menu when the .dropdown-toggle / .dropdown is clicked */}
+                      <ul className="dropdown-menu">
                         <li>
-                          <Link className="dropdown-item" href={'/members/profile'}>Profile</Link></li>
-                      ) : null
-                      }
-                      {session.isStaff ? (
+                          <Link 
+                            className="dropdown-item" 
+                            href={'#'}>
+                            {/* href={'/jobs/createjob'}> */}
+                              Create job(Soon...)
+                          </Link>
+                        </li>
+
                         <li>
-                          <Link className="dropdown-item" href={'/auth/admin'}>Admin</Link></li>) : null
-                        }
-                        {/* <li>
-                        <Link className="dropdown-item" href={'/auth/admin'}>Admin</Link></li>) */}
-                      
-                      <li>
-                        <Link 
-                          className="dropdown-item" 
-                          href="#"
-                          onClick={() => handleLogOut().then(()=> Router.push('/members/login'))}>
-                            Logout
-                        </Link>
-                      </li>
-                    </ul>
+                          <Link 
+                            className="dropdown-item" 
+                            href={'#'}>
+                            {/* href={'/auth/profile'}> */}
+                              Profile(Soon...)
+                          </Link>
+                        </li>
+                        
+                        {session.isStaff && (
+                          <li>
+                            <Link 
+                              className="dropdown-item" 
+                              href={'#'}>
+                              {/* href={'/auth/admin'}> */}
+                                Admin(Soon...)
+                            </Link>
+                            </li>
+                          )}
+
+                          <li>
+                            <Link 
+                              className="dropdown-item" 
+                              href={'#'}>
+                              {/* href={'/auth/admin'}> */}
+                                Admin(Soon...)
+                            </Link>
+                          </li>
+                        
+                        <li>
+                          <Link 
+                            className="dropdown-item" 
+                            href="#"
+                            onClick={handleLogOut}>
+                              Logout
+                          </Link>
+                        </li>
+                      </ul> {/* End DropDown-Menu */}
                   </li>
           
                   <li className="nav-item">
@@ -168,14 +205,14 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
                 className = "pc-logo" 
                 src={PcLogo} 
                 alt = "logo" 
-                onClick={()=> Router.push("/")}
+                onClick={()=> router.push("/")}
               />
 
               <Image 
                 className = "mobile-logo" 
                 src={MobileLogo} 
                 alt = "logo" 
-                onClick={()=> Router.push("/")}
+                onClick={()=> router.push("/")}
               />
             </div>
           

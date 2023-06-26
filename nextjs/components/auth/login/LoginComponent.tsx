@@ -6,10 +6,11 @@ import { loginRoute } from "@utils/APIRoutes";
 import Link from "next/link";
 import { FormEvent, useState, useEffect } from "react";
 import axios from "axios";
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context';
+import {useRouter} from 'next/navigation';
 
-export default function LoginComponent({router}:{router:AppRouterInstance | undefined}){
+export default function LoginComponent(){
 
+    const router = useRouter()
 
     const [session, setSession] = useState<SessionType>()
     

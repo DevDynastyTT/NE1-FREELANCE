@@ -14,7 +14,6 @@ import { useState, useEffect} from 'react'
 import { GrMenu } from 'react-icons/gr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-regular-svg-icons'
-import 'bootstrap/dist/js/bootstrap.bundle';
 
 import { usePathname, useRouter } from 'next/navigation';
 //TO DO log the type for session and setsession, double check the job_id variable names in mongo as well
@@ -82,6 +81,13 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
       }
 
       useEffect(()=>{fetchCategories(setJobCategories, getCategories)}, [])
+
+      useEffect(() => {
+        if (typeof document !== 'undefined') {
+          // Load Bootstrap JavaScript bundle only in the browser environment
+          require('bootstrap/dist/js/bootstrap.bundle');
+        }
+      }, []);
   return (
     <>
         {session ? (

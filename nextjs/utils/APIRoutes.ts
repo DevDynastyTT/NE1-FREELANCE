@@ -1,8 +1,9 @@
 //comment this when deploying
 
 //Uncomment this whenever deploying publicly
-export const host = "https://ne1freelance.onrender.com"
+// export const host = "https://ne1freelance.onrender.com"
 // export const host = process.env.SERVER_HOST || "http://localhost:3001"
+export const host = process.env.NODE_ENV === 'production' ? process.env.SERVER_HOST : 'http://localhost:3001';
 
 export const heartBeat = `${host}/api/heartbeat`
 

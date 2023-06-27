@@ -4,18 +4,19 @@ import '@styles/searchResults/style.css'
 
 import {SessionType, Jobs, JobCategory} from '@utils/types'
 import GlobalNavbar from '@components/GlobalNavbar'
-import { fetchJobs, fetchCategories } from '@utils/reuseableCode';
+import { fetchJobs, fetchCategories, getUserSession } from '@utils/reuseableCode';
 import { getAllJobs, getCategories, searchJobs } from '@utils/APIRoutes'
 
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
 import { FormEvent, useEffect, useState } from 'react'
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context';
 
 
 export default function Jobs(){
     //Used for navigating urls
-    const router = useRouter();
+    const router:AppRouterInstance = useRouter();
 
     const [session, setSession] = useState<SessionType>()
 
@@ -26,9 +27,9 @@ export default function Jobs(){
     const [jobCategory, setJobCategory] = useState<JobCategory[]>()
 
     //Search State
-    const [search, setSearch] = useState<String>();
+    const [search, setSearch] = useState<string>()
     const [message, setMessage] = useState<String>('Finding available jobs')
-    const [isSearching, setIsSearching] = useState<Boolean>(false)
+    const [isSearching, setIsSearching] = useState<boolean>(false)
 
         async function handleSearchSubmit(event: FormEvent){
             setIsSearching(true)
@@ -59,15 +60,12 @@ export default function Jobs(){
         };
 
         useEffect(()=>{
+            getUserSession(setSession)
             fetchJobs(getAllJobs, setJobs, setMessage)
             fetchCategories(setJobCategories, getCategories)
         }, [isSearching])
 
-        
-        useEffect(() => {
-            const checkSession = sessionStorage.getItem('user');
-            if (checkSession) setSession(JSON.parse(checkSession));
-        },[])
+       
 
 return(
     <>
@@ -100,8 +98,8 @@ return(
                                     {jobCategories.map(category => {
                                         return(
                                             <option 
-                                                value={category.name.toString()} 
-                                                key={category.name.toString()}>
+                                                value={category.name} 
+                                                key={category.name}>
                                                     {category.name}
                                             </option>
                                         )
@@ -120,11 +118,11 @@ return(
                     {/* Render jobs if there are no jobs available */}
                     {jobs && jobs.length > 0 && message !== "There are currently no jobs available" ? (
                         <div className="job-list-flex">
-                        {jobs.map(function (job) {
+                        {jobs?.map(function (job) {
                         return (
                             <div
                             className="job-card"
-                            key={job._id.toString()}
+                            key={job._id?.toString()}
                             onClick={() => router.push(`/jobs/search/details/${job._id}`)}
                             >
                             {/* <!--Display the job's thumbnail--> */}

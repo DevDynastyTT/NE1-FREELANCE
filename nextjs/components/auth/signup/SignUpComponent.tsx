@@ -1,23 +1,32 @@
 'use client'
+import { SessionType } from '@utils/types';
+import { registerRoute } from "@utils/APIRoutes";
 
+import axios from 'axios';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import GlobalNavbar from '@components/GlobalNavbar'
 import { useState, useEffect, FormEvent } from 'react';
-import Link from 'next/link';
-import { registerRoute } from "@utils/APIRoutes";
-import axios from 'axios';
-import { SessionType } from '@utils/types';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context';
 
-export default function Signup({router}:{router:AppRouterInstance | undefined}){
+type valuesType = {
+    username: string,
+    email: string,
+    password: string,
+    confirmPassword: string,
+}
 
-  const [message, setMessage] = useState("");
+export default function Signup(){
+  const router:AppRouterInstance = useRouter()
+  
+  const [message, setMessage] = useState<string>();
   const [session, setSession] = useState<SessionType>()
-    const [values, setValues] = useState({
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    });
+  const [values, setValues] = useState<valuesType>({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   
     const handleChange = (event: FormEvent<HTMLInputElement>) => {

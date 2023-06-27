@@ -7,7 +7,7 @@ const host = process.env.NODE_ENV === 'production' ? process.env.SERVER_HOST : '
 
 export const heartBeat = `${host}/api/heartbeat`
 
-export const loginRoute = `${process.env.NODE_ENV}/api/auth/login`
+export const loginRoute = `${host}/api/auth/login`
 export const registerRoute = `${host}/api/auth/register`
 export const logoutRoute = `${host}/api/auth/logout`
 export const userSession = `${host}/api/auth/userSession`

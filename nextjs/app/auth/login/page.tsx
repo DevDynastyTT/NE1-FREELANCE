@@ -1,4 +1,3 @@
-'use client'
 import '@styles/members/members.css'
 import LoginComponent from '@components/auth/login/LoginComponent';
 export default function Login(){
@@ -7,7 +6,6 @@ export default function Login(){
       <head>
         <title>Login</title>
       </head>
-      
       <LoginComponent />
     </>
   )

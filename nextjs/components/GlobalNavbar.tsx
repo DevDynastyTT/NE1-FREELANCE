@@ -77,11 +77,12 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
              if(router) router.push("/jobs")
           }
           else
-              window.location.reload()
+              window.location.href = 'jobs'
       }
 
       useEffect(()=>{fetchCategories(setJobCategories, getCategories)}, [])
 
+      // Load bootstrap js functionality when the DOM has fully rednered
       useEffect(() => {
         if (typeof document !== 'undefined') {
           // Load Bootstrap JavaScript bundle only in the browser environment
@@ -139,9 +140,8 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
                         <li>
                           <Link 
                             className="dropdown-item" 
-                            href={'#'}>
-                            {/* href={'/jobs/createjob'}> */}
-                              Create job(Soon...)
+                            href={'/jobs/create'}> 
+                              Create job
                           </Link>
                         </li>
 

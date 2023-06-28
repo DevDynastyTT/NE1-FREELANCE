@@ -1,7 +1,7 @@
 import '@styles/jobs/createjob.css'
 import CreateJobComponent from "@components/jobs/create/CreateJobComponent";
 
-export default function Create() {
+export default function CreateJobPage() {
   return (
     <>
         <head>

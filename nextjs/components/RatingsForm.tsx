@@ -1,17 +1,22 @@
-import React, { useState, useEffect } from "react";
+import axios from "axios";
+import React, { useState, useEffect, FormEvent } from "react";
 import StarRating from "react-star-ratings";
 import { rateFreelancer, updateRatings } from "../utils/APIRoutes";
 
-export default function RatingForm(props) {
-  const [stars, setStars] = useState(0);
-  const [feedback, setFeedback] = useState("");
-  const [message, setMessage] = useState("")
-  let formType = props.formType
-  async function rateJob(event) {
+export default function RatingForm(
+  { formType, jobID, clientID, freeLancerID }: 
+  { formType:string, 
+    jobID:string, 
+    clientID:string, 
+    freeLancerID:string}) {
 
+  const [stars, setStars] = useState<number>(0);
+  const [feedback, setFeedback] = useState<string>();
+  const [message, setMessage] = useState<string>()
+
+  async function rateJob(event:FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    const {jobID, clientID, freeLancerID} = props
     try {
       const response = await axios.post(rateFreelancer, {
         jobID, clientID, freeLancerID, 
@@ -38,10 +43,9 @@ export default function RatingForm(props) {
     }
   }
 
-  async function update(event) {
+  async function update(event:FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    const {jobID, clientID, freeLancerID} = props
     try {
       const response = await axios.post(updateRatings, {
         jobID, clientID, freeLancerID, 
@@ -60,7 +64,7 @@ export default function RatingForm(props) {
       alert(data.message);
       setStars(0);
       setFeedback("");
-      window.location.reload()
+    window.location.reload()
 
     } catch (error) {
       alert("Failed to submit rating. Please try again later.");

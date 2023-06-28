@@ -9,7 +9,7 @@ import Link from "next/link";
 import { FormEvent, useState, useEffect } from "react";
 import { sendEmailRoute } from "@utils/APIRoutes";
 import { SessionType } from "@utils/types";
-export default function Contact() {
+export default function ContactPage() {
     const [name, setName] = useState<string>();
     const [userEmail, setUserEmail] = useState<string>();
     const [message, setMessage] = useState<string>();

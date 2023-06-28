@@ -1,11 +1,11 @@
 const Ratings = require('../models/ratingsModel')
 const User = require('../models/userModel');
-
-const { ObjectId } = require('mongodb')
-
+const mongoose = require('mongoose')
+const ObjectId = require('mongoose')
 module.exports.rateFreelancers = async(request, response) => {
-    const { jobID, freeLancerID, clientID,  ratings, feedback } = request.body;
-    
+    const { clientID, jobID, freeLancerID,
+       ratings, feedback } = request.body;
+  console.log(request.body)
     try{
         await Ratings.create({
             jobID,
@@ -23,15 +23,10 @@ module.exports.rateFreelancers = async(request, response) => {
 
 module.exports.getFreelancerRatings = async (request, response) => {
   const { jobID, freeLancerID } = request.body;
-  console.log('FreelancerID:', freeLancerID)
-  console.log('jobID:', jobID)
   try {
     const freeLancerRatings = await Ratings.aggregate([
       {
-        $match: {
-          jobID: ObjectId(jobID),
-          freeLancerID: ObjectId(freeLancerID)
-        }
+        $match: { jobID, freeLancerID }
       },
       {
         $group: {
@@ -61,8 +56,8 @@ module.exports.getFreelancerRatingsProgress = async (request, response) => {
     const freeLancerRatings = await Ratings.aggregate([
       {
         $match: {
-          jobID: ObjectId(jobID),
-          freeLancerID: ObjectId(freeLancerID),
+          jobID: jobID,
+          freeLancerID: freeLancerID,
         },
       },
       {
@@ -91,20 +86,18 @@ module.exports.getFreelancerRatingsProgress = async (request, response) => {
   }
 };
 
-
+//Ratings from the current user
 module.exports.getRatings = async(request, response) => {
 
     const { jobID, freeLancerID, clientID } = request.body
-    // console.log(jobID, ' is jobID', freeLancerID, ' is freelancerID', clientID, ' is clientID')
-    console.log(clientID, ' is clientID')
     try{
         const totalRatings = await Ratings.aggregate([
         //stage1
         {
             $match: {
-                "jobID": ObjectId(jobID),
-                "freeLancerID": ObjectId(freeLancerID),
-                "userID": ObjectId(clientID)
+                jobID: jobID,
+                freeLancerID:  freeLancerID,
+                userID:  clientID
             }
         },
 
@@ -118,17 +111,22 @@ module.exports.getRatings = async(request, response) => {
     }
 }
 
+
 module.exports.getAllRatings = async (request, response) => {
   const { jobID, freeLancerID } = request.body;
   try {
     await Ratings.aggregate([
       {
         $match: {
-          "jobID": ObjectId(jobID),
-          "freeLancerID": ObjectId(freeLancerID),
+          "jobID": jobID,
+          "freeLancerID": freeLancerID,
         }
       },
-
+      {
+        $addFields: {
+          userID: { $toObjectId: '$userID' }
+        }
+      },
       {
         $lookup: {
           from: 'users', // name of the users collection
@@ -150,9 +148,7 @@ module.exports.getAllRatings = async (request, response) => {
       },
     ])
     .then((results) => {
-      // results will contain an array of objects with the "username" field
-      // const usernames = results.map((result) => result.username);
-      // console.log(results);
+      console.log(results);
       return response.json({ allRatings: results });
 
     })
@@ -162,15 +158,19 @@ module.exports.getAllRatings = async (request, response) => {
   }
 };
 
+
+
+
+
 module.exports.updateRatings = async (request, response) => {
   const { jobID, freeLancerID, clientID, ratings, feedback } = request.body;
   console.log('Updating Ratings')
   try {
     const updatedRating = await Ratings.findOneAndUpdate(
       {
-        jobID: ObjectId(jobID),
-        freeLancerID: ObjectId(freeLancerID),
-        userID: ObjectId(clientID),
+        jobID: jobID,
+        freeLancerID: freeLancerID,
+        userID: clientID,
       },
       {
         $set: {

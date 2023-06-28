@@ -4,7 +4,7 @@ import ServicesBanner from '@components/home/ServicesBanner';
 import Reassurance from '@components/home/Reassurance';
 import GetStarted from '@components/home/GetStarted';
 import GlobalFooter from '@components/GlobalFooter'
-export default function Home() {
+export default function HomePage() {
   return (
     <div className="Home">
       <Header />

@@ -1,16 +1,19 @@
 import axios from "axios"
 import { Dispatch, SetStateAction } from "react"
-import { SessionType } from './types';
-function fetchJobs(getAllJobs:any, setJobs:any, setMessage:any){
+import { Jobs, SessionType } from './types';
 
-      axios.get(getAllJobs)
-      .then(response => {
+async function fetchJobs(
+  getAllJobs: string, 
+  setJobs: Dispatch<SetStateAction<Jobs[]>>, 
+  setMessage: Dispatch<SetStateAction<string>>): Promise<void> {
+
+      axios.get(getAllJobs).then(response => {
         const data = response.data
         if(data.error){
           setMessage(data.error)
           return
         }
-        // console.log(data.reversedJobList)
+        console.log(data.reversedJobList)
         setJobs(data.reversedJobList)
       })
       .catch(error => {

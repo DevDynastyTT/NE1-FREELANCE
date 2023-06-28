@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import StarRating from "react-star-ratings";
 import axios from "axios";
 
-export default function StarRatingComponent(props) {
+export default function StarRatingComponent() {
   const [averageRating, setAverageRating] = useState(0);
   const [totalRatings, setTotalRatings] = useState(0);
 

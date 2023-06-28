@@ -2,18 +2,18 @@ const mongoose = require('mongoose');
 
 const RatingsSchema = mongoose.Schema({
         jobID: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Jobs',
+            type: String,
+            ref: 'jobs',
             required: true
         },
         freeLancerID: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
+            type: String,
+            ref: 'users',
             required: true
         },
         userID: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
+            type: String,
+            ref: 'users',
             required: true
         },
         ratings: {

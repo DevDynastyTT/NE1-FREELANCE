@@ -32,7 +32,7 @@ module.exports.getAllJobs = async (request, response, next) => {
       const str1 = job.category.replace("{ name: '", "")
       const str2 = str1.replace("' }", "")
       job_list.push({
-        job_id: job._id,
+        _id: job._id,
         user_id: job.user_id,
         title: job.title,
         description: job.description,
@@ -179,8 +179,8 @@ module.exports.jobDetails = async(request, response) => {
 
   const jobDetails = []
   const jobDetails_list = {
-    job_id: job._id,
-    seller_id: job.user_id,
+    _id: job._id,
+    freeLancerID: job.user_id,
     title: job.title,
     description: job.description,
     thumbnail: job.thumbnail,
@@ -188,7 +188,7 @@ module.exports.jobDetails = async(request, response) => {
     category: job.category,
     username: user.username,
     user_bio: user.bio,
-    profile_picture: user.profile_picture,
+    profilePicture: user.profile_picture,
   };
 
   jobDetails.push(jobDetails_list)

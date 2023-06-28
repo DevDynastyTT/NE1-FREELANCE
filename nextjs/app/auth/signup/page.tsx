@@ -1,6 +1,6 @@
 import '@styles/members/members.css'
 import SignUpComponent from '@components/auth/signup/SignUpComponent'
-export default function Signup(){
+export default function SignupPage(){
   return  (
     <>
       <head>

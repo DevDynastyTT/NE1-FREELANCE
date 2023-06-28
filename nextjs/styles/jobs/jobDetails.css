@@ -227,4 +227,10 @@
 .jobsDetails-main-container .card .payment-details .ssl .fa-lock {
   font-size: 0.8rem;
   margin-right: 1%;
+}
+.jobsDetails-main-container .card .job-details-btn {
+  background-color: grey !important;
+  width: unset;
+  height: 3rem !important;
+  cursor: pointer;
 }/*# sourceMappingURL=jobDetails.css.map */

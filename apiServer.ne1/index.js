@@ -15,7 +15,7 @@ const socket = require("socket.io");
 app.use(express.json());
 
 app.use(cors({
-  origin: process.env.ORIGIN,
+  origin: process.env.NE1FREELANCE_ORIGIN,
   credentials: true,
   methods: ['GET', 'POST', 'DELETE', 'PUT'], // Add OPTIONS method
 }));

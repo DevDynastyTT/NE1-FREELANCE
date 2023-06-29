@@ -15,7 +15,7 @@ app.use(express.json());
 
 // Enable CORS with specific options
 app.use(cors({
-  origin: process.env.ORIGIN,
+  origin: process.env.CYBERD_ORIGIN,
   credentials: true,
   methods: ['GET', 'POST', 'DELETE', 'PUT', 'OPTIONS'], // Add OPTIONS method
 }));

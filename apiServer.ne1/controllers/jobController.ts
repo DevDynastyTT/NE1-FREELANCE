@@ -1,18 +1,18 @@
 import { JobDetails, JobsType } from "../types";
 
-const Jobs = require("../models/jobsModel.ts");
-const JobCategories = require("../models/jobCategoriesModel");
-const Users = require("../models/userModel");
-const Services = require("../models/serviceModel")
-const Invoice = require("../models/invoiceModel")
-const CreditCard = require("../models/creditCardModel")
-const { ObjectId } = require('mongodb')
+import Jobs from "../models/jobsModel";
+import JobCategories from "../models/jobCategoriesModel";
+import Users from "../models/userModel";
+import Services from "../models/serviceModel";
+import Invoice from "../models/invoiceModel";
+import CreditCard from "../models/creditCardModel";
+import { ObjectId } from 'mongodb';
 
-const crypto = require('crypto'); //Used for random characters
-const moment = require('moment'); //User for dates
-const template = require('./invoiceTemplate')
-const nodemailer = require('nodemailer');
-const bcrypt = require('bcrypt');
+import crypto from 'crypto'; //Used for random characters
+import moment from 'moment'; //User for dates
+import template from './invoiceTemplate';
+import nodemailer from 'nodemailer';
+import bcrypt from 'bcrypt';
 
 
 async function checkTransactionIdExists(transaction_id) {
@@ -68,12 +68,8 @@ const getAllJobs = async (request, response) => {
       reversedJobList.push(job_list[i])
     }
 
-    if (job_list.length > 0) {
-      return response.status(200).json({ reversedJobList });
-    }
-    else{
-      return response.json({ error: "There are currently no jobs available :(" });
-    }
+    if (job_list.length == 0)  return response.json({ error: "There are currently no jobs available :(" });
+    return response.status(200).json({ reversedJobList });
 
     } catch (err) {
       console.log(`Error retrieving jobs: ${err}`);
@@ -130,29 +126,36 @@ const searchResults = async (request, response) => {
       ]
     };
     // If a category is specified, add it to the query
-    if (category) {
-      query.category = category;
-    }
+    if (category) query.category = category;
 
     // Find the jobs that match the query
-    const jobs = await Jobs.find(query);
+    const jobs:any = await Jobs.find(query);
 
     // If no jobs are found, return an error message
     if (jobs.length === 0) return response.status(404).json({error: "No jobs found for " + term,category});
-    const job_list:JobsType[] = []
-    // Convert the jobs to a JSON object
-    const jobList = jobs.map(job => ({
-      _id: job._id,
-      freeLancerID: job.user_id,
-      username: JobCategories.findOne({_id: job.category}).username,
-      title: job.title,
-      description: job.description,
-      thumbnail: job.thumbnail,
-      price: job.price,
-      category: job.category,
-    }));
 
-    job_list.push(jobList)
+    const job_category:any = await JobCategories.findOne({ _id: jobs.category }).exec();
+
+    const job_list:JobsType[] = []
+    
+    // Convert the jobs to a JSON object
+    const jobList: JobsType[] = jobs.map(job => {
+      if (!job_category) {
+        throw new Error(`No category found for job ${job._id}`);
+      }
+
+      return {
+        _id: job._id,
+        freeLancerID: job.user_id,
+        username: category.username,
+        title: job.title,
+        description: job.description,
+        thumbnail: job.thumbnail,
+        price: job.price,
+        category: job.category,
+      };
+});
+    job_list.push(...jobList) //push each element of jobList into job_list
     job_list.forEach(job=> console.log(job));
     // Return the job list to the client
     response.status(200).json({job_list});
@@ -192,7 +195,7 @@ const jobDetails = async(request, response) => {
     return response.status(404).json({ error: "No job found with ID: " + jobID });
   }
 
-  const user = await Users.findOne({ _id: job.user_id });
+  const user:any = await Users.findOne({ _id: job.user_id });
 
   if (!user) {
     console.log("No user found with ID: " + job.user_id);
@@ -257,30 +260,35 @@ const createJob = async (request, response) => {
 };
 
 const createService = async(request, response) => {
-  const title = request.body.title;
-  const description = request.body.description;
-  let thumbnail='';
+    const title = request.body.title;
+    const description = request.body.description;
+    let thumbnail='';
 
-  if (request.file) {
-    thumbnail = request.file.filename
-    // do something with the file
-  } else {
-    console.log('No file uploaded');
-    // handle the case where no file was uploaded
-  }
-
-  if (!title || !description || !thumbnail) {
-    return response.status(400).json({ error: 'Missing required field' });
-  }
-
-  Services.create({ thumbnail, title, description }, (err, service) => {
-    if (err) {
-      console.error(err);
-      return response.status(500).json({ error: 'Internal server error' });
+    if (request.file) {
+      thumbnail = request.file.filename
+      // do something with the file
+    } else {
+      console.log('No file uploaded');
+      // handle the case where no file was uploaded
     }
-    console.log(`${title} Service Added`);
-    return response.status(201).json({ message: `${title} Service Added Successfully` });
-  });
+
+    if (!title || !description || !thumbnail) {
+      return response.status(400).json({ error: 'Missing required field' });
+    }
+
+    try{
+      const services = await Services.create({ thumbnail, title, description });
+        if (!services) {
+          console.error('There was a problem creating the service');
+          return response.status(500).json({ error: 'There was a problem creating the service' });
+        }
+        console.log(`${title} Service Added`);
+        return response.status(201).json({ message: `${title} Service Added Successfully` });
+    }catch(error){
+      console.log('An error occurred while creating service', error);
+      return response.status(500).json({ error: 'Internal Server Error' });
+    }
+   
 };
 
 const getAllServices = async (req, res, next) => {
@@ -394,7 +402,7 @@ const makePayment = async (request, response) => {
           const findCard = await CreditCard.findOne({user_id: info._id})
           if(!findCard){
             const creditCard = await CreditCard.create({
-              user_id: ObjectId(info._id),
+              user_id: new ObjectId(info._id),
               cardNumber: hashedCardNumber,
               expiryDate: hashedExpiryDate,
               securityCode: hashedSecurityCode,

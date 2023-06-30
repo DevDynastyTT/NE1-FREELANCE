@@ -29,4 +29,5 @@ const creditCardSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('CreditCard', creditCardSchema);
+const CreditCard = mongoose.model('CreditCard', creditCardSchema);
+export default CreditCard

@@ -9,7 +9,11 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react'
 
 import { updateUser, getUserProfile, updateProfile } from '@utils/APIRoutes';
+import { Metadata } from 'next'
 
+export const metadata:Metadata = {
+  title: 'Profile - NE1-FREELANCE'
+}
 export default function Profile(){
 //     const navigate = useNavigate();
 //     useEffect(()=> { if(!currentUser || currentUser == undefined || currentUser == null) navigate('/members/login') }, [])

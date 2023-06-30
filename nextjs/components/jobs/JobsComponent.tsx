@@ -1,7 +1,7 @@
 'use client'
 
 
-import {SessionType, Jobs, JobCategory} from '@utils/types'
+import {SessionType, JobsType, JobCategory} from '@utils/types'
 import GlobalNavbar from '@components/GlobalNavbar'
 import { fetchJobs, fetchCategories, getUserSession } from '@utils/reuseableCode';
 import { getAllJobs, getCategories, searchJobs } from '@utils/APIRoutes'
@@ -19,7 +19,7 @@ export default function JobsComponent() {
 
 
     // Jobs State
-    const [jobs, setJobs] = useState<Jobs[]>([])
+    const [jobs, setJobs] = useState<JobsType[]>([])
     const [jobCategories, setJobCategories] = useState<JobCategory[]>([])
     const [jobCategory, setJobCategory] = useState<JobCategory[]>()
 

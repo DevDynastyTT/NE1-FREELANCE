@@ -2,7 +2,7 @@
   "name": "ne1-freelance_server",
   "version": "1.0.0",
   "description": "API Handling",
-  "main": "index.js",
+  "main": "index.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DrgnStudio/NE1-FREELANCE.git"
@@ -10,7 +10,8 @@
   "author": "Drgn Studio",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon --exec ts-node index.ts",
+    "build": "tsc"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
@@ -21,9 +22,11 @@
     "nodemailer": "^6.9.3",
     "nodemon": "^2.0.22",
     "path": "^0.12.7",
-    "socket.io": "^4.6.2"
+    "socket.io": "^4.6.2",
+    "ts-node": "^10.9.1"
   },
   "devDependencies": {
+    "@types/node": "^20.3.2",
     "babel-cli": "^6.26.0",
     "connect-mongo": "^5.0.0",
     "crypto": "^1.0.1",

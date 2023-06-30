@@ -1,16 +1,9 @@
-//comment this when deploying
-
-//Uncomment this whenever deploying publicly
-// export const host = ""
-// export const host = process.env.SERVER_HOST || "http://localhost:3001"
 const host = process.env.NODE_ENV === 'production' ? 'https://ne1freelance.onrender.com' : 'http://localhost:3001';
 
 export const heartBeat = `${host}/api/heartbeat`
 
 export const loginRoute = `${host}/api/auth/login`
-export const registerRoute = `${host}/api/auth/register`
-export const logoutRoute = `${host}/api/auth/logout`
-export const userSession = `${host}/api/auth/userSession`
+export const registerRoute = `${host}/api/auth/signup`
 export const allUsersRoute = `${host}/api/auth/allusers`
 export const getAllUserInfo = `${host}/api/auth/getAllUserInfo`
 export const sendMessageRoute = `${host}/api/messages/addmsg`

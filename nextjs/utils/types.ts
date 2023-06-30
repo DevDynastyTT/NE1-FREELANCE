@@ -1,6 +1,6 @@
 import {NextRouter } from 'next/router';
 
-export type Jobs = {
+export type JobsType = {
   _id: string;
   freeLancerID: string;
   username: string;
@@ -12,8 +12,9 @@ export type Jobs = {
 }
 
 //Extend Jobs and create more variables
-export type JobDetails = Jobs & {
-  profilePicture: string;
+export type JobDetails = JobsType & {
+  profilePicture?: string;
+  userBio?:string;
 }
 
 export type JobCategory = {

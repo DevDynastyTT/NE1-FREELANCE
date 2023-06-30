@@ -1,10 +1,10 @@
 import axios from "axios"
 import { Dispatch, SetStateAction } from "react"
-import { Jobs, SessionType } from './types';
+import { JobsType, SessionType } from './types';
 
 async function fetchJobs(
   getAllJobs: string, 
-  setJobs: Dispatch<SetStateAction<Jobs[]>>, 
+  setJobs: Dispatch<SetStateAction<JobsType[]>>, 
   setMessage: Dispatch<SetStateAction<string>>): Promise<void> {
 
       axios.get(getAllJobs).then(response => {

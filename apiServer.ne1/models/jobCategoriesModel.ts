@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { JobCategory } from '../types';
 
 const jobCategoriesSchema = new mongoose.Schema({
     name:{
@@ -7,4 +8,5 @@ const jobCategoriesSchema = new mongoose.Schema({
     }
   })
 
-module.exports = mongoose.model('JobCategories', jobCategoriesSchema);
+const jobCategories  = mongoose.model('JobCategories', jobCategoriesSchema);
+export default jobCategories

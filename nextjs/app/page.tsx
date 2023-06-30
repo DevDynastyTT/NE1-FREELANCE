@@ -4,6 +4,11 @@ import ServicesBanner from '@components/home/ServicesBanner';
 import Reassurance from '@components/home/Reassurance';
 import GetStarted from '@components/home/GetStarted';
 import GlobalFooter from '@components/GlobalFooter'
+import { Metadata } from 'next'
+
+export const metadata:Metadata = {
+  title: 'NE1-FREELANCE'
+}
 export default function HomePage() {
   return (
     <div className="Home">
@@ -15,7 +20,7 @@ export default function HomePage() {
             <Reassurance />
                 {/* Login/Sign up banner */}
                 <GetStarted /><br/><br/>
-                {/* <GlobalFooter/> */}
+                <GlobalFooter/>
         </main>
     </div>  
     )

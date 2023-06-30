@@ -80,7 +80,7 @@ router.get("/members/chat/:seller_id", getSeller);
 // router.get('/getCategories', getCategories);
 // router.get('/countCategories',countCategories);
 // router.get("/jobDetails/:jobID", jobDetails);
-// router.get("/getAllJobs", getAllJobs);
+router.get("/getAllJobs", getAllJobs);
 // router.get('/countJobs',countJobs);
 // router.get('/countInvoices', countInvoices);
 // router.get('/countInvoiceDates', countInvoiceDates);

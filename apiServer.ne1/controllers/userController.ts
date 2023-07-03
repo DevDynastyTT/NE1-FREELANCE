@@ -2,7 +2,7 @@ import User from '../models/userModel';
 import userProfile from "../models/userProfileModel";
 import { SessionType } from '../types';
 import bcrypt from "bcrypt";
-
+const { ObjectId } = require('mongodb');
 
 // Handle termination events
 process.on('SIGINT', gracefulShutdown);
@@ -65,10 +65,10 @@ const login = async (request, response) => {
   
       // Remove password from user object
       const userObj:SessionType = user.toObject();
-      delete userObj.password;
+      delete userObj?.password;
   
       // Set user as active
-      await User.updateOne({ email }, { $set: { is_active: true } });
+      await User.updateOne({ email }, { $set: { isActive: true } });
   
       // Return logged-in user object
       return response.json({ user: userObj });
@@ -107,17 +107,25 @@ try {
 
     
     const user = new User({
-    email,
-    username,
-    password: hashedPassword,
+      email,
+      username,
+      password: hashedPassword,
     });
 
     const savedUser = await user.save();
         // Convert the Mongoose document to a plain JavaScript object
     const userObject:SessionType = savedUser.toObject();
 
+    const userprofile = new userProfile({
+      userID: user?._id,
+      profilePicture: 'default.png',
+      bio: 'undefined'
+    })
+
+    await userprofile.save();
+
     // Remove the password field from the plain JavaScript object
-    delete userObject.password;
+    delete userObject?.password;
     console.log('Created User', userObject.username);
 
     request.session.user = savedUser;
@@ -164,16 +172,16 @@ const updateProfile = async (request, response) => {
   const { userID, bio } = request.body;
   let update1 = false;
   let update2 = false;
-  let profile_picture = '';
+  let profilePicture = '';
 
  
   if (request.file) {
-    profile_picture = request.file.filename.toString('base64')
-    console.log(profile_picture)
+    profilePicture = request.file.filename.toString('base64')
+    console.log(profilePicture)
     console.log(request.file)
     // do something with the file
   } else {
-    console.log('No file uploaded\n');
+  console.log('No file uploaded\n');
     // handle the case where no file was uploaded
   }
   console.log('Attempting to update profile');
@@ -184,36 +192,37 @@ const updateProfile = async (request, response) => {
     }  
     console.log(`userID: ${userID}`);
 
-  if(bio == 'undefined' && profile_picture == 'undefined') {
+  if(bio == 'undefined' && profilePicture == 'undefined') {
     console.log('You need to upload something')
     return response.status(403).json({error: 'You need to upload something'})
   }
   console.log(`bio: ${bio}`);
-  console.log(`Profile Picture: ${profile_picture}`);
+  console.log(`Profile Picture: ${profilePicture}`);
 
   try {
-    if (profile_picture != 'undefined' && profile_picture != '') {
+    if (profilePicture != 'undefined' && profilePicture != '') {
       console.log('Updating profile picture')
-      const updatePicture = await userProfile.updateOne(
-        { user_id: userID },
-        { $set: { profile_picture } }
+
+      await userProfile.updateOne(
+        { userID },
+        { $set: { profilePicture } }
       );
       console.log('Updated picture successfully');
       update1 = true
     }
 
     if (bio != 'undefined' && bio != '') {
-      const updateBio = await userProfile.updateOne(
-        { user_id: userID },
+      await userProfile.updateOne(
+        { userID },
         { $set: { bio } }
       );
       console.log('Updated bio successfully');
       update2 = true
     }
     if(update1 == true || update2 == true)
-      response.status(200).json({ message: 'Profile updated successfully' })
+      return response.status(200).json({ message: 'Profile updated successfully' })
     else
-      response.status(500).json({ error: 'An unexpected error occurred. Try again.' })
+      return response.status(500).json({ error: 'An unexpected error occurred. Try again.' })
   } catch (err) {
     console.error(`${err}\nUPDATE PROFILE ERROR!!`);
     return response.status(500).json({ error: 'Internal server error' });
@@ -223,64 +232,65 @@ const updateProfile = async (request, response) => {
 const getUserProfile = async (request, response) => {
   try {
     const userID = request.params.id;
-    console.log(userID, " is id")
+    
     // Find the profile and user data for the specified user ID.
     const profile = await userProfile.aggregate([
-      { 
-        $match: { 
-          user_id: userID
-        } 
+      { $match: { userID } },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userID',
+          foreignField: '_id',
+          as: 'profile',
+        },
       },
-      { $lookup: { 
-          from: 'users', 
-          localField: 'user_id', 
-          foreignField: '_id', 
-          as: 'user' 
-        } 
-      },
-      { $project: { 
-          _id: 1, 
-          username: 1, 
-          profile_picture: 1, 
-          bio: 1 
-        } 
+      {
+        $project: {
+          _id: 1,
+          profilePicture: 1,
+          bio: 1,
+        },
       },
     ]);
 
-    console.log(profile, " is profile")
-    if (profile.length === 0) {
+
+    console.log(request.params.id, " is profile\n\n")
+    if (!profile) {
       console.log("Profile not found")
       return response.status(404).json({ error: 'Profile not found' });
     }
+    const matchedUserProfile = await User.findById(userID);
 
     // Format the response data.
     const user_profile = {
-      id: profile[0]._id,
-      user_id: userID,
-      profile_picture: profile[0].profile_picture,
-      name: profile[0].username,
+      _id: profile[0]._id,
+      userID,
+      profilePicture: profile[0].profilePicture,
+      username: matchedUserProfile?.username,
       bio: profile[0].bio,
     };
+    console.log(user_profile)
 
     user_profile.bio == undefined ? user_profile.bio = 'undefined' : null
-    user_profile.profile_picture == undefined ? user_profile.profile_picture = 'undefined' : null
+    user_profile.profilePicture == undefined ? user_profile.profilePicture = 'undefined' : null
 
-    console.log(user_profile)
+    // console.log(user_profile, 'is user profile')
     return response.status(200).json({ message: 'Profile fetched successfully', user_profile });
-  } catch (ex) {
-    (ex);
+  } catch (error) {
+    console.error(error);
+    return response.status(500).json({ error: 'Internal Server Error'})
   }
 };
 //Message page
 const getAllUsers = async (request, response) => {
   try {
-    const users: { profile_picture?: string }[] = await User.find(
+    const users: { profilePicture?: string }[] = await User.find(
       { _id: { $ne: request.params.id } }
     );
     
     const updatedUsers = users.map(user => ({
       ...user,
-      profile_picture: user.profile_picture || 'undefined'
+      profilePicture: user.profilePicture || 'undefined'
     }));
     
     return response.json({ users: updatedUsers });

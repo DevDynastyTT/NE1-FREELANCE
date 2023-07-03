@@ -31,7 +31,7 @@ export default function CreateJobComponent(){
     
       
         const formData = new FormData()
-        formData.append('user_id', session?._id || '')
+        formData.append('freeLancerID', session?._id || '')
         formData.append('title', title || '')
         formData.append('description', description || '')
         formData.append('price', String(price || ''))
@@ -155,13 +155,14 @@ export default function CreateJobComponent(){
                                 required>
 
                                 <option value="">All categories</option>
-                                {jobCategories?.map(category => {
+                                <option value="Administration">Administration</option>
+                                {/* {jobCategories?.map(category => {
                                     return <option 
                                             value={category.name} 
                                             key={category.name}>
                                                     {category.name}
                                             </option>
-                                })}
+                                })} */}
                             </select>
                         </div>
 

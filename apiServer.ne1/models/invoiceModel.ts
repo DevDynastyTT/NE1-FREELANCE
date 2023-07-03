@@ -1,17 +1,17 @@
 import mongoose from 'mongoose';
 
 const invoiceSchema = new mongoose.Schema({
-    client_id: {
+    clientID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Users',
         required: true
     },
-    freelancer_id: {
+    freeLancerID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Users',
         required: true
     },
-    transaction_id: {
+    transactionID: {
         type: String,
         required: true
     },
@@ -19,7 +19,7 @@ const invoiceSchema = new mongoose.Schema({
         type: Date,
         default: Date.now()
     },
-    payment_details: {
+    paymentDetails: {
         type: String,
         required: true,
         default: "Paid"

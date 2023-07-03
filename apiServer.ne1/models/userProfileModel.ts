@@ -1,21 +1,21 @@
 import mongoose from 'mongoose';
 
 const userProfileSchema = new mongoose.Schema({
-  user_id: {
-    type: "String",
-    ref: 'User',
+  userID: {
+    type: String,
+    ref: 'users',
     required: [true, "User Id Reference is required!"],
     unique: [true, "User Id must be unique!"],
   },
-  profile_picture: {
+  profilePicture: {
     type: String,
   },
   bio: {
     type: String,
   },
-  credCard: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'CredCard'
+  creditCard: {
+    type: String,
+    ref: 'creditcard'
   }
 });
 

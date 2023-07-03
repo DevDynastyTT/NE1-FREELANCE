@@ -23,7 +23,8 @@
     "nodemon": "^2.0.22",
     "path": "^0.12.7",
     "socket.io": "^4.6.2",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
   },
   "devDependencies": {
     "@types/node": "^20.3.2",

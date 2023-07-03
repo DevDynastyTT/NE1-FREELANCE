@@ -1,9 +1,11 @@
 .jobsDetails-main-container {
+  z-index: 1;
     .card {
       padding: 2% 0 0 10%;
       display: flex;
       flex-direction: row;
-      
+      height: 100%;
+      width: 100%;
       .job{
         width: 65%;
         
@@ -217,7 +219,7 @@
             
         }
     
-        .continue{
+        .side-buttons{
             height: 3rem;
             width: 80%;
             margin: 0 auto;

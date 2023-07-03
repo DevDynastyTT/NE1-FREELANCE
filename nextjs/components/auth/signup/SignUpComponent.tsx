@@ -1,6 +1,6 @@
 'use client'
 import { SessionType } from '@utils/types';
-import { registerRoute } from "@utils/APIRoutes";
+import { signupRoute } from "@utils/APIRoutes";
 
 import axios from 'axios';
 import Link from 'next/link';
@@ -86,9 +86,9 @@ export default function Signup(){
       if (handleValidation()) {
         console.log('passed validation')
         const { email, username, password } = values;
-        const { data } = await axios.post(registerRoute, { username, email, password}, {withCredentials: true});
-
-        if(!data.status){
+        const response = await axios.post(signupRoute, { username, email, password}, {withCredentials: true});
+        const data = response.data
+        if(response.status !== 200){
           console.log(data.error)
           setMessage(data.error)
           return
@@ -101,7 +101,7 @@ export default function Signup(){
           console.log(JSON.parse(userSessionStorage))
           setSession(JSON.parse(userSessionStorage)) 
           console.log('Redirecting to jobs page...')
-        router.push('/jobs')
+        if(router) router.push('/jobs')
 
         }
       }

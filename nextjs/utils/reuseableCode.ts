@@ -9,7 +9,7 @@ async function fetchJobs(
 
       axios.get(getAllJobs).then(response => {
         const data = response.data
-        if(data.error){
+        if(response.status !== 200){
           setMessage(data.error)
           return
         }

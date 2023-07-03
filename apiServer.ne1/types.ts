@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 export type JobsType = {
   _id: ObjectId;
-  freeLancerID: ObjectId;
+  freeLancerID: string;
   username: string;
   title: string;
   description: string;

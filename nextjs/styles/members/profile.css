@@ -28,7 +28,8 @@
 .profile-main-container .profile-flex-container .left .top .img-form .profile-picture {
   -o-object-fit: fill;
      object-fit: fill;
-  width: 100%;
+  width: 100% !important;
+  height: 100% !important;
 }
 .profile-main-container .profile-flex-container .left .top .img-form .tip, .profile-main-container .profile-flex-container .left .top .img-form .image-label {
   font-size: 1rem;
@@ -37,7 +38,7 @@
   color: red;
 }
 .profile-main-container .profile-flex-container .left .top .img-form .image-btn {
-  margin-top: -15%;
+  margin-top: 5%;
 }
 .profile-main-container .profile-flex-container .right {
   width: 100%;

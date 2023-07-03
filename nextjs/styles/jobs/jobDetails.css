@@ -1,7 +1,12 @@
+.jobsDetails-main-container {
+  z-index: 1;
+}
 .jobsDetails-main-container .card {
   padding: 2% 0 0 10%;
   display: flex;
   flex-direction: row;
+  height: 100%;
+  width: 100%;
 }
 .jobsDetails-main-container .card .job {
   width: 65%;
@@ -172,19 +177,19 @@
 .jobsDetails-main-container .card .payment-details .prices .total-fee {
   font-weight: bold;
 }
-.jobsDetails-main-container .card .payment-details .continue {
+.jobsDetails-main-container .card .payment-details .side-buttons {
   height: 3rem;
   width: 80%;
   margin: 0 auto;
   margin-bottom: 3%;
   /* spinner/processing state, errors */
 }
-.jobsDetails-main-container .card .payment-details .continue .spinner,
-.jobsDetails-main-container .card .payment-details .continue .spinner:before,
-.jobsDetails-main-container .card .payment-details .continue .spinner:after {
+.jobsDetails-main-container .card .payment-details .side-buttons .spinner,
+.jobsDetails-main-container .card .payment-details .side-buttons .spinner:before,
+.jobsDetails-main-container .card .payment-details .side-buttons .spinner:after {
   border-radius: 50%;
 }
-.jobsDetails-main-container .card .payment-details .continue .spinner {
+.jobsDetails-main-container .card .payment-details .side-buttons .spinner {
   color: #ffffff;
   font-size: 22px;
   text-indent: -99999px;
@@ -195,12 +200,12 @@
   box-shadow: inset 0 0 0 2px;
   transform: translateZ(0);
 }
-.jobsDetails-main-container .card .payment-details .continue .spinner:before,
-.jobsDetails-main-container .card .payment-details .continue .spinner:after {
+.jobsDetails-main-container .card .payment-details .side-buttons .spinner:before,
+.jobsDetails-main-container .card .payment-details .side-buttons .spinner:after {
   position: absolute;
   content: "";
 }
-.jobsDetails-main-container .card .payment-details .continue .spinner:before {
+.jobsDetails-main-container .card .payment-details .side-buttons .spinner:before {
   width: 10.4px;
   height: 20.4px;
   background: #5469d4;
@@ -210,7 +215,7 @@
   transform-origin: 10.4px 10.2px;
   animation: loading 2s infinite ease 1.5s;
 }
-.jobsDetails-main-container .card .payment-details .continue .spinner:after {
+.jobsDetails-main-container .card .payment-details .side-buttons .spinner:after {
   width: 10.4px;
   height: 10.2px;
   background: #5469d4;

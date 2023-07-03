@@ -1,0 +1,350 @@
+'use client'
+
+import { Profile, SessionType } from '@utils/types';
+import GlobalNavbar from '@components/GlobalNavbar'
+import { getUserSession } from '@utils/reuseableCode';
+import { updateUser, getUserProfile, updateProfile } from '@utils/APIRoutes';
+
+import axios from 'axios';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useState, useEffect, FormEvent } from 'react'
+import { usePathname } from 'next/navigation';
+
+export default function ProfileComponent(){
+
+    const router = useRouter()
+    const pathname = usePathname()
+    const [session, setSession] = useState<SessionType>();
+    const [userProfile, setUserProfile] = useState<Profile>()
+
+    const [userBio, setBio] = useState<string>();
+    const [message, setMessage] = useState<string>()
+  
+    const [values, setValues] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    });
+  
+    
+    const handleChange = (event:FormEvent<HTMLInputElement>) => { setValues({ ...values, [event.currentTarget.name]: event.currentTarget.value })};
+    
+    const handleValidation = () => {
+    console.log('validating')
+    const { password, confirmPassword, username, email } = values;
+    console.log(password)
+
+    if(password || confirmPassword){
+        if (password !== confirmPassword) {
+            alert("Password and confirm password should be same.")
+            return false;
+        } else if (password.length < 8) {
+            alert("Password should be equal or greater than 8 characters.")
+            return false;
+        }
+    }
+
+    return true;
+    };
+
+    async function handleLogOut() {
+        sessionStorage.removeItem('user')
+
+        if(pathname !== '/jobs'){
+          console.log('redirecting')
+           if(router) router.push("/jobs")
+        }
+        else
+            window.location.href = 'jobs'
+    }
+                
+
+    async function profile() {
+        try {
+            const response = await axios.get(`${getUserProfile}/${(session?._id)}`);
+            const data = response.data;
+            if (response.status !== 200) {
+                console.log(data.error);
+                setMessage(data.error);
+                return
+            }
+
+            console.log(data.user_profile)
+            setUserProfile(data.user_profile);
+        } catch (error) {
+            console.error(error, ' this happened');
+            setMessage("Internal server error");
+        }
+    }
+
+
+    async function handleProfileUploadFormSubmit(event:FormEvent<HTMLFormElement>){
+        event.preventDefault()
+
+        const formData = new FormData();
+        formData.append('userID', (session && Object.keys(session)?.length > 0) ? session._id : '')
+        formData.append('bio', (userBio  && userBio.length > 0) ? userBio : '')
+        formData.append('profile_picture', event.currentTarget.profilepicture.files[0]);
+        
+        try{
+            if(!userBio) setBio('undefined')
+
+            const response = await axios.post(`${updateProfile}`, formData)
+        
+
+            // Check the response status code
+            if (response.data.message) {
+                // Set the message
+                setMessage(response.data.message);
+        
+                // Log the message
+                console.log(response.data.message);
+        
+                
+            } else {
+                // Set the message
+                setMessage(response.data.message);
+        
+                // Log the message
+                console.log(response.data.message);
+            }
+        }catch(error){
+            console.log(error)
+        }
+    }
+
+    async function handleUpdateUserSubmit(event:FormEvent<HTMLFormElement>) {
+        event.preventDefault()
+
+        console.log(`Form Data Accepted\nUsername: ${values.username}, Email: ${values.email}\npassword: ${values.password}, confirmPassword: ${values.confirmPassword}`)
+
+        if(handleValidation()){
+            try {
+                console.log('Running updateUser function...')
+                console.log('passed validation')
+                const { email, username, password } = values;
+                const response = await axios.post(updateUser, {
+                    userID: session?._id,
+                    username,
+                    email,
+                    password,
+                })
+
+                    const data = response.data
+
+                    if (response.status !== 200) {
+                        console.log(data.error)
+                        setMessage(data.error)
+                        return
+                    } 
+
+                    alert('You are going to be logged out in 2 seconds for changes to apply...')
+                    setTimeout(() => {
+                        handleLogOut().then(()=> router.push('/auth/login'))
+                    }, 1000)
+                
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
+
+    
+    useEffect(()=>{
+        (session && session?._id) ? profile() : null
+    }, [session])
+
+    useEffect(()=> getUserSession(setSession), [])
+  
+    return (
+        <>
+
+        {(session && Object.keys(session)?.length > 0) ? (
+            <>
+                <GlobalNavbar session={session} />
+
+                <main className="profile-main-container">
+        
+        
+                    <div className="profile-flex-container">
+        
+                        <div className="left">
+        
+                        {/*Profile picture is stored here*/}
+                        <div className="top">
+    
+                            {/* Profile picture upload form */}
+                            <form 
+                                className="Image-form" 
+                                onSubmit={handleProfileUploadFormSubmit} 
+                                encType="multipart/form-data"
+                            >
+    
+                                {/* {% csrf_token %} */}
+                                <div className="profile-pic">
+                                    {/* USER PROFILE PICTURE */}
+                                    
+                                    {userProfile?.profilePicture != "undefined" || userProfile?.profilePicture != undefined? (
+                                        <Image 
+                                            className="profile-picture"
+                                            src={`http://localhost:3000/images/${userProfile?.profilePicture}`}
+                                            alt='profile picture'
+                                            width={100}
+                                            height={100}
+                                            layout='responsive'
+                                        />
+                                    ) : (
+                                        <Image 
+                                            className="profile-picture"
+                                            src="http://localhost:3000/images/default.jpeg"
+                                            alt="default image" 
+                                            width={100}
+                                            height={100}
+                                            layout='responsive'
+                                        />
+
+                                    )}
+                                    {/* <div className="spinner"></div> */}
+    
+    
+                                </div>
+                                
+                                <div className="bottom" style={{marginTop: "10%"}}>
+                                <br/>
+                                    <p className="username">{session?.username}</p>
+                                        {userProfile?.bio != "undefined" ? (
+                                            <textarea 
+                                                id="message-input" name="bio" 
+                                                onChange={(e) => setBio(e.target.value)}
+                                                placeholder={userProfile?.bio}/>
+                                        ): (
+                                            <textarea id="message-input" name="bio" 
+                                            onChange={(e) => setBio(e.target.value)}
+                                            placeholder="Tell us about yourself" />
+                                        )}
+    
+                                                {/* BUTTON TO UPLOAD PROFILE PICTURE */}
+                                                <label htmlFor="image-input" className="image-label">Update Profile Picture</label>
+                                                <br />
+                                                    <input 
+                                                        id="image-input" 
+                                                        type="file" 
+                                                        name="profilepicture" 
+                                                        accept="image/*"        
+                                                        className="btn btn-secondary image-btn" 
+                                                    />
+                                        
+                                    <button 
+                                        className="btn btn-primary" 
+                                        type="submit" 
+                                        style={{height: "2.5rem"}}
+                                    >Save Profile Picture
+                                    </button>
+    
+                                </div>
+                                    
+    
+    
+    
+    
+    
+                            </form> 
+                            {/* End form */}
+                            
+                        </div>{/*End top div*/} 
+    
+                        <div className="bottom"></div>
+        
+        
+                        </div> {/* End left div */}
+        
+        
+                        <div className="right">
+        
+        
+                            <form className="update-profile-form" onSubmit={handleUpdateUserSubmit}>
+        
+                                <h1 className="profile-header">Change Profile Information</h1>
+        
+                                <div className="update-profile-form-container">
+                                    {(message && message?.length > 0) && (
+                                        <div className="alert alert-warning alert-dismissible fade show" role="alert">
+                                        <strong className="message">
+                                            <i className="fa-solid fa-triangle-exclamation"></i>
+                                        {message }</strong> 
+                                        <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div> 
+                                        )}
+        
+                                    <div className="mb-3">
+                                    <label htmlFor="username" className="form-label">Username:</label>
+
+                                    {session && Object.keys(session).length > 0 ? (
+                                        <input 
+                                            type="text" 
+                                            className="form-control inputs" 
+                                            id="username" 
+                                            name="username" 
+                                            placeholder={session.username}
+                                            onChange={(event) => handleChange(event)}
+                                            />
+                                    ):(
+                                        <input 
+                                            type="text" 
+                                            className="form-control inputs" 
+                                            id="username" 
+                                            name="username" 
+                                            placeholder="Username"
+                                            onChange={(event) => handleChange(event)} />
+                                    )}
+                                
+                                    </div>
+
+                                    <div className="mb-3">
+                                    <label htmlFor="email" className="form-label">Email:</label>
+                                    <input type="email" className="form-control inputs" id="email" name="email" placeholder={session.email}
+                                        onChange={(e) => handleChange(e)}
+/>
+                                    </div>
+
+                                    <div className="mb-3">
+                                    <label htmlFor="password" className="form-label">Password</label>
+                                    <input type="password" className="form-control inputs" id="password" name="password" placeholder="********"
+                                        onChange={(e) => handleChange(e)}
+/>
+                                    </div>
+
+                                    <div className="mb-3">
+                                    <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
+                                    <input type="password" className="form-control inputs" id="confirmPassword" name="confirmPassword" placeholder="********"
+                                        onChange={(e) => handleChange(e)}
+/>
+                                    </div>
+        
+                                    <div className="col-12">
+                                        <button 
+                                            className="btn btn-primary submit-btn" 
+                                            type="submit">Update Information
+                                        </button>
+                                    </div>
+                                </div>
+                                
+        
+                            </form> {/* End form */}
+        
+        
+                        </div>{/* End right div? */}
+        
+        
+                    </div>
+                        
+                </main>
+            </>
+        ): <h1 className="spinnerTitle">Loading Please Wait </h1>}
+
+        </>
+            
+    )
+}

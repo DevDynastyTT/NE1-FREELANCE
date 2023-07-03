@@ -148,9 +148,8 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
                         <li>
                           <Link 
                             className="dropdown-item" 
-                            href={'#'}>
-                            {/* href={'/auth/profile'}> */}
-                              Profile(Soon...)
+                            href={'/auth/profile'}>
+                              Profile
                           </Link>
                         </li>
                         

@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation"
 
-export default function page() {
+export default function CheckoutPage() {
   const {id} = useParams()
 
   return (

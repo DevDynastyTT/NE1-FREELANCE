@@ -1,3 +1,5 @@
+'use client'
+
 import '@styles/jobs/jobDetails.css'
 import ReportForm from '../ReportForm';
 import RatingForm from '../../RatingsForm';

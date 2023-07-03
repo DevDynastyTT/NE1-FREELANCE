@@ -1,5 +1,3 @@
-'use client'
-
 import '@styles/jobs/jobDetails.css'
 import JobDetailsComponent from "@components/jobs/[id]/JobDetailsComponent"
 import GlobalFooter from '@components/GlobalFooter'

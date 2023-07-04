@@ -121,7 +121,7 @@ export default function JobsComponent() {
                                         {/* <!--Display the job's thumbnail--> */}
                                         <div className="thumbnail-container" style={{ overflow: "hidden" }}>
                                             <img 
-                                                src={`http://localhost:3000/images/${job.thumbnail}`} 
+                                                src={job.thumbnail} 
                                                 alt="job thumbnail" 
                                             />
                                         </div>

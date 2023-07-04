@@ -5,7 +5,12 @@ const nextConfig = {
       serverComponentsExternalPackages: ["mongoose"],
     },
     images: {
-      domains: ['lh3.googleusercontent.com', "fiverr-res.cloudinary.com", "localhost"],
+      domains: [
+        "ne1-freelance.s3.wasabisys.com",
+        "s3.eu-west-1.wasabisys.com",
+        'lh3.googleusercontent.com', 
+        "fiverr-res.cloudinary.com", 
+        "localhost"],
     },
     webpack(config) {
       config.experiments = {

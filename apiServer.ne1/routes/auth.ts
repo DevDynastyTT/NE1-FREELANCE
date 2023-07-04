@@ -43,26 +43,16 @@ import {
 
 
 import multer from 'multer';
-import path from 'path';
 const router = require("express").Router();
-
-
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    const destinationPath = path.join(__dirname, '../../nextjs/public/images');
-    cb(null, destinationPath);
-  },
-  filename: function(req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
+// Multer storage configuration
+const upload = multer({
+  storage: multer.memoryStorage(), // Store files in memory instead of disk
 });
-
-const upload = multer({ storage });
 
 router.post("/login", login);
 router.post("/signup", signup);
 router.post("/updateUser", updateUser);
-router.post("/updateProfile", upload.single('profile_picture'), updateProfile);
+router.put("/updateProfile", upload.single('profile_picture'), updateProfile);
 router.post("/reportJob", reportJob)
 router.get("/members/chat/:seller_id", getSeller);
 router.get("/allusers/:id", getAllUsers);

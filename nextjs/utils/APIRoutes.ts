@@ -13,6 +13,7 @@ export const setAvatarRoute = `${host}/api/auth/setavatar`
 export const updateUser = `${host}/api/auth/updateUser`
 export const updateProfile = `${host}/api/auth/updateProfile`
 export const getUserProfile = `${host}/api/auth/getUserProfile`
+export const getProfilePictureURL = `${host}/api/auth/getProfilePictureURL`
 export const countUsers = `${host}/api/auth/countUsers`
 
 export const reportJob = `${host}/api/auth/reportJob`

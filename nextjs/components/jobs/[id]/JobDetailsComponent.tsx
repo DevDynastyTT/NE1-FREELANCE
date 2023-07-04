@@ -254,7 +254,7 @@ export default function JobDetailsComponent(){
                         /> : 
                         <img 
                           id="title-profile-picture" 
-                          src={`http://localhost:3000/images/${job.profilePicture}`} 
+                          src={job.profilePicture} 
                           alt="thumbnail" 
                         />
                       )}
@@ -280,7 +280,7 @@ export default function JobDetailsComponent(){
                   <div className="paper">
                     <img 
                       id="job-thumbnail" 
-                      src={`http://localhost:3000/images/${job.thumbnail}`} 
+                      src={job.thumbnail} 
                       alt="thumbnail" 
                     />
                   </div>

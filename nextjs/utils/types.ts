@@ -55,11 +55,10 @@ export type SessionType = {
 
 
 export type Profile = {
-  _id: string;
   userID: string;
-  bio: string;
-  profilePicture: string;
-  creditCard: number;
+  bio?: string;
+  profilePicture?: string;
+  creditCard?: number;
 }
 
 

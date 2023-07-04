@@ -1,10 +1,9 @@
 'use client'
 
 import { Profile, SessionType } from '@utils/types';
-import GlobalNavbar from '@components/GlobalNavbar'
 import { getUserSession } from '@utils/reuseableCode';
-import { updateUser, getUserProfile, updateProfile } from '@utils/APIRoutes';
-
+import { updateUser, getUserProfile, updateProfile, getProfilePictureURL } from '@utils/APIRoutes';
+import GlobalNavbar from '@components/GlobalNavbar';
 import axios from 'axios';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -13,13 +12,13 @@ import { usePathname } from 'next/navigation';
 
 export default function ProfileComponent(){
 
-    const router = useRouter()
-    const pathname = usePathname()
-    const [session, setSession] = useState<SessionType>();
-    const [userProfile, setUserProfile] = useState<Profile>()
-
-    const [userBio, setBio] = useState<string>();
-    const [message, setMessage] = useState<string>()
+    const router = useRouter();
+  const pathname = usePathname();
+  const [session, setSession] = useState<SessionType>();
+  const [userProfile, setUserProfile] = useState<Profile>();
+  const [profilePictureURL, setProfilePictureURL] = useState<string>();
+  const [userBio, setBio] = useState<string>();
+  const [message, setMessage] = useState<string>();
   
     const [values, setValues] = useState({
     username: "",
@@ -79,41 +78,54 @@ export default function ProfileComponent(){
         }
     }
 
-
-    async function handleProfileUploadFormSubmit(event:FormEvent<HTMLFormElement>){
-        event.preventDefault()
-
+    async function handleProfileUploadFormSubmit(event:FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+      
         const formData = new FormData();
-        formData.append('userID', (session && Object.keys(session)?.length > 0) ? session._id : '')
-        formData.append('bio', (userBio  && userBio.length > 0) ? userBio : '')
+        formData.append('userID', (session && session?._id) ? session._id : '');
+        formData.append('bio', (userBio && userBio.length > 0) ? userBio : '');
         formData.append('profile_picture', event.currentTarget.profilepicture.files[0]);
-        
-        try{
-            if(!userBio) setBio('undefined')
+      
+        try {
+          if (!userBio) setBio('undefined');
+      
+          const response = await axios.put(`${updateProfile}`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }, // Ensure the correct content type for FormData
+          });
+          const data = response.data
+          // Check the response status code
+          if (response.status !== 200) {
+            setMessage(data.error);
+            console.log(data.error);
+            return
+          } 
 
-            const response = await axios.post(`${updateProfile}`, formData)
-        
+          setMessage(data.message);
+          // Fetch the pre-signed URL from the response data
+            const signedUrl = response.data.signedUrl;
 
-            // Check the response status code
-            if (response.data.message) {
-                // Set the message
-                setMessage(response.data.message);
-        
-                // Log the message
-                console.log(response.data.message);
-        
-                
-            } else {
-                // Set the message
-                setMessage(response.data.message);
-        
-                // Log the message
-                console.log(response.data.message);
-            }
-        }catch(error){
-            console.log(error)
+            // Use the pre-signed URL to fetch the image
+            const imageResponse = await axios.get(signedUrl, {
+                responseType: 'blob', // Set the response type to blob
+            });
+
+            // Create a URL for the image blob
+            const imageUrl = URL.createObjectURL(imageResponse.data);
+
+            // Set the image URL to display the image
+            setUserProfile(prevUserProfile => ({
+                userID: prevUserProfile ? prevUserProfile.userID : '',
+                bio: userProfile?.bio,
+                profilePicture: imageUrl,
+                creditCard: userProfile?.creditCard
+              }));
+              
+              
+
+        } catch (error) {
+          console.log(error);
         }
-    }
+      }
 
     async function handleUpdateUserSubmit(event:FormEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -153,10 +165,11 @@ export default function ProfileComponent(){
 
     
     useEffect(()=>{
-        (session && session?._id) ? profile() : null
+        if(session && session?._id) profile()
+        
     }, [session])
 
-    useEffect(()=> getUserSession(setSession), [])
+    useEffect(() => getUserSession(setSession), []);
   
     return (
         <>
@@ -166,10 +179,7 @@ export default function ProfileComponent(){
                 <GlobalNavbar session={session} />
 
                 <main className="profile-main-container">
-        
-        
                     <div className="profile-flex-container">
-        
                         <div className="left">
         
                         {/*Profile picture is stored here*/}
@@ -186,10 +196,10 @@ export default function ProfileComponent(){
                                 <div className="profile-pic">
                                     {/* USER PROFILE PICTURE */}
                                     
-                                    {userProfile?.profilePicture != "undefined" || userProfile?.profilePicture != undefined? (
-                                        <Image 
+                                    {userProfile && userProfile?.profilePicture != "undefined" || userProfile?.profilePicture != undefined? (
+                                        <Image
                                             className="profile-picture"
-                                            src={`http://localhost:3000/images/${userProfile?.profilePicture}`}
+                                            src={userProfile.profilePicture || '"http://localhost:3000/images/default.jpeg'}
                                             alt='profile picture'
                                             width={100}
                                             height={100}

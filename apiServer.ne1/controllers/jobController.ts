@@ -15,7 +15,18 @@ import template from './invoiceTemplate';
 import nodemailer from 'nodemailer';
 import bcrypt from 'bcrypt';
 
+const AWS = require('aws-sdk');
 
+// Configure Wasabi credentials
+AWS.config.update({
+  accessKeyId: process.env.WASABI_ACCESS_KEY_ID,
+  secretAccessKey: process.env.WASABI_SECRET_ACCESS_KEY_ID,
+});
+
+// Create a new instance of the S3 client
+const s3 = new AWS.S3({
+  endpoint: process.env.SECRET_ENDPOINT,
+});
 async function checkTransactionIdExists(transaction_id) {
   const existingInvoice = await Invoice.findOne({ transaction_id });
   return !!existingInvoice;
@@ -48,10 +59,10 @@ const getAllJobs = async (request, response) => {
       },
     ]);
 
-    console.log(jobs)
     const job_list:JobsType[] = [];
     const reversedJobList:JobsType[] = []
-    jobs.forEach(job => {
+    for (const job of jobs) {
+      const jobThumbnail = await getImages(job.thumbnail);
       const str1 = job.category.replace("{ name: '", "")
       const str2 = str1.replace("' }", "")
       job_list.push({
@@ -60,17 +71,16 @@ const getAllJobs = async (request, response) => {
         username: job.user[0]?.username,
         title: job.title,
         description: job.description,
-        thumbnail: job.thumbnail,
+        thumbnail: jobThumbnail,
         price: job.price,
         category: str2,
       });
-    });
+    };
 
     for(let i = job_list.length - 1; i>= 0; i--){
       reversedJobList.push(job_list[i])
     }
 
-    console.log(job_list)
     if (job_list.length == 0)  return response.json({ error: "There are currently no jobs available :(" });
     return response.status(200).json({ reversedJobList });
 
@@ -79,6 +89,27 @@ const getAllJobs = async (request, response) => {
       return response.status(500).json({error: 'Internal Server Error'});
     }
 };
+
+const getImages = async (fileName:string):  Promise<string> => {
+  
+  try {
+    const bucketName = 'ne1-freelance'; // Replace with your Wasabi bucket name
+
+    // Generate a pre-signed URL for the profile picture
+    const params = {
+      Bucket: bucketName,
+      Key: fileName,
+      Expires: 3600, // URL expiration time in seconds (e.g., 1 hour)
+    };
+
+    const signedUrl = await s3.getSignedUrlPromise('getObject', params);
+    // Return the pre-signed URL in the response
+    return signedUrl
+  } catch (error) {
+    console.error(error);
+    return 'undefined'
+  }
+}
 
 
 const searchJobs = async (request, response) => {
@@ -229,22 +260,22 @@ const jobDetails = async(request, response) => {
 
 
   const jobDetails:JobsType[] = []
-
+  const jobThumbnail = await getImages(job.thumbnail);
+  const profilePictureUrl = await getImages(profile[0]?.profilePicture);
   const jobDetails_list:JobDetails = {
     _id: job._id,
     freeLancerID: job.freeLancerID,
     title: job.title,
     description: job.description,
-    thumbnail: job.thumbnail,
+    thumbnail: jobThumbnail,
     price: job.price,
     category: job.category,
     username: user.username,
     userBio: (profile && profile[0].bio !== 'undefined') ? profile[0]?.bio : '',
-    profilePicture: (profile && profile?.length > 0) ? profile[0]?.profilePicture : '',
+    profilePicture: profilePictureUrl,
   };
 
   jobDetails.push(jobDetails_list)
-
   return response.status(200).json({jobDetails});
 };
 
@@ -259,16 +290,27 @@ const createJob = async (request, response) => {
   try {
     const {freeLancerID, title, description, price, category} = request.body
     let thumbnail = '';
+    const bucketName = 'ne1-freelance'; // Replace with your Wasabi bucket name
+
     if (request.file) {
-      thumbnail = request.file.filename
-      console.log(thumbnail + ' is thumbnail')
+      const fileContent = request.file.buffer;
+      const fileName = Date.now() + '-' + request.file.originalname;
+
+      // Upload the file to Wasabi
+      const params = {
+        Bucket: bucketName,
+        Key: fileName,
+        Body: fileContent,
+      };
+      await s3.upload(params).promise();
+      thumbnail = fileName;
+      console.log('File uploaded successfully');
       // do something with the file
     } else {
       console.log('No file uploaded\n');
       // handle the case where no file was uploaded
     }
 
-    console.log('user id:', freeLancerID, '\ntitle:', title, 'description:', description, 'price:', price, 'category:', category, 'thumbnail:', thumbnail)
     await Jobs.create({
       freeLancerID,
       title,
@@ -278,6 +320,7 @@ const createJob = async (request, response) => {
       category,
     });
 
+   
     return response.status(200).json({ message: 'Created job successfully' });
   } catch (error) {
     console.log('An error occurred while creating job', error);

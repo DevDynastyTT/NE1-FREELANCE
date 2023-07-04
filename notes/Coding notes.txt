@@ -32,3 +32,11 @@ cy.contains(content)
 cy.contains(content, options)
 cy.contains(selector, content)
 cy.contains(selector, content, options)
+
+keyID: 005ee51636a64410000000001 
+keyName: NE1-FREELANCE-KEY 
+applicationKey: K005CHZhX7bXLagc/OW1Hyxru0yTJMY
+Bucket ID:9ece75f1769316da86940411
+
+access-key= 4OSEJXT5PXOZL1G5RL88
+secret-key= zSmNEe4IBHH0gMAEh1otMDO6YeFTfVPFy7Z62Da3

@@ -16,7 +16,6 @@ import {
 import { 
   getAllJobs, 
   searchJobs, 
-  searchResults, 
   jobDetails, 
   createJob, 
   getCategories, 
@@ -61,8 +60,7 @@ router.get("/getAllUserInfo", getAllUserInfo);
 router.get("/countUsers", countUsers);
 
 router.post("/createJob", upload.single('thumbnail'), createJob);
-router.post("/searchJobs", searchJobs);
-router.post("/searchResults", searchResults);
+router.get("/searchJobs/:jobCategory/:search", searchJobs);
 
 router.post("/updateServices", upload.single('thumbnail'), updateServices)
 router.post("/deleteServices", upload.single('thumbnail'), deleteServices)

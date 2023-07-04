@@ -6,7 +6,7 @@ export type JobsType = {
   username: string;
   title: string;
   description: string;
-  thumbnail: string | Promise<string>;
+  thumbnail: string;
   price: number;
   category: string;
 }

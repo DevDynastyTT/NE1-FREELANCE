@@ -83,27 +83,37 @@ export default function Signup(){
   
     const handleSubmit = async (event: FormEvent) => {
       event.preventDefault();
-      if (handleValidation()) {
-        console.log('passed validation')
-        const { email, username, password } = values;
-        const response = await axios.post(signupRoute, { username, email, password}, {withCredentials: true});
-        const data = response.data
-        if(response.status !== 200){
-          console.log(data.error)
-          setMessage(data.error)
-          return
-        }
-        console.log(data)
-        sessionStorage.setItem('user', JSON.stringify(data.user))
-         
-        const userSessionStorage = sessionStorage.getItem('user')
-        if((userSessionStorage && userSessionStorage !== undefined) && router){
-          console.log(JSON.parse(userSessionStorage))
-          setSession(JSON.parse(userSessionStorage)) 
-          console.log('Redirecting to jobs page...')
-        if(router) router.push('/jobs')
 
-        }
+      if (handleValidation()) {
+        try{
+            const { email, username, password } = values;
+            const response = await axios.post(signupRoute, { username, email, password}, {withCredentials: true});
+            const data = response.data
+            if(response.status !== 200){
+              console.log(data.error)
+              setMessage(data.error)
+              return
+            }
+            console.log(data)
+            sessionStorage.setItem('user', JSON.stringify(data.user))
+            
+            const userSessionStorage = sessionStorage.getItem('user')
+            if((userSessionStorage && userSessionStorage !== undefined) && router){
+              console.log(JSON.parse(userSessionStorage))
+              setSession(JSON.parse(userSessionStorage)) 
+              console.log('Redirecting to jobs page...')
+              router.push('/jobs')
+    
+            }
+        } catch(error:any){
+          if(error.response.data.error && error.response.status === 400){
+            console.log(error.response.data.error)
+            setMessage(error.response.data.error)
+            return
+          }
+          setMessage("Unfortunately our servers are down. Please try again later.")
+        } console.log('passed validation')
+       
       }
     };
   
@@ -114,7 +124,7 @@ export default function Signup(){
         router.push('/jobs')
         console.log('Redirecting to jobs page...')
       }
-    },[])
+    },[router])
 
   return (
     <>

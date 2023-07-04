@@ -42,8 +42,10 @@ export default function LoginComponent(){
           const { email, password } = values;
     
         try{
-            const { data } = await axios.post(loginRoute, { email, password,}, {withCredentials: true});
-            if (data.error) {
+            const response = await axios.post(loginRoute, { email, password,}, {withCredentials: true});
+            const data = response.data
+
+            if (response.status !== 200){ 
               console.error(data.error);
               setMessage(data.error)
               return
@@ -56,9 +58,13 @@ export default function LoginComponent(){
               setSession(JSON.parse(userSessionStorage)) 
             }
 
-            if(router) router.push("/jobs")
-          }catch(error){
-            console.log('Login Error\n', error)
+            router.push("/jobs")
+          }catch(error:any){
+            if(error.response.data.error && error.response.status === 400){
+              console.log(error.response.data.error)
+              setMessage(error.response.data.error)
+              return
+            }
             setMessage("Unfortunately our servers are down. Please try again later.")
           }
         }
@@ -67,12 +73,10 @@ export default function LoginComponent(){
       useEffect(() => {
         const checkSession = sessionStorage.getItem('user');
         if (checkSession && checkSession !== undefined) {
-          if(router) {
             router.push('/jobs')
-          }
-          setSession(JSON.parse(checkSession));
+            setSession(JSON.parse(checkSession));
         }
-      },[])
+      },[router])
     return (
         <>
         <GlobalNavbar session={session}/>

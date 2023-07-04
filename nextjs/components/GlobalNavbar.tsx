@@ -74,7 +74,7 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
 
           if(pathname !== '/jobs'){
             console.log('redirecting')
-             if(router) router.push("/jobs")
+             router.push("/jobs")
           }
           else
               window.location.href = 'jobs'

@@ -1,4 +1,4 @@
-the components that u see in here is from react,
+the components that u see in here is from react and the pages ur supposed to make,
 your job is to convert them to typescript using [fileName].tsx 
 
 put them in their respective folders. The typical structure wud be to

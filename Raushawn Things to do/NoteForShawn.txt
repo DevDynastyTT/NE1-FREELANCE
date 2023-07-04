@@ -1,0 +1,30 @@
+the components that u see in here is from react and the pages ur supposed to make,
+your job is to convert them to typescript using [fileName].tsx 
+
+put them in their respective folders. The typical structure wud be to
+create a page.tsx file in the app folder(nest folders if needed) and
+then create a component folder and file for that component. For example,
+if u are working on the about us page, create a folder(already created) like this
+
+- app (already created)
+  - about (already created)
+   -page.tsx (already created)
+
+In the page.tsx file, name the function AboutUsPage()
+
+create another folder in the root directory(nextjs folder)
+
+- components(already created)
+  - about
+   - aboutUSComponent.tsx 
+
+in the aboutUsComponent name the function AboutUsComponent()
+
+After setting this up, navigate to your AboutUsPage() and import the aboutUsComponent.tsx(watch my jobs/page.tsx to see an example)
+
+the reason for this is so that when nextjs renders the page it will render it first as a 
+server componet which is faster than a client component, also note that in the 
+component folder, most times u will have to type
+'use client' above the file if u are using useState, useEffect and any other Hooks.
+
+If anything is confusing u let me know

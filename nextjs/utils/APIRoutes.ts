@@ -21,9 +21,9 @@ export const countUsers = `${host}/api/auth/countUsers`
 /***************JOB ROUTES***************/
 export const getAllJobs = `${host}/api/auth/getAllJobs`
 export const searchJobs = `${host}/api/auth/searchJobs`
+export const searchJobsByCategory = `${host}/api/auth/searchJobs`
 export const reportJob = `${host}/api/auth/reportJob`
 export const makePayment = `${host}/api/auth/makePayment`
-export const searchResults = `${host}/api/auth/searchResults`
 export const jobDetails = `${host}/api/auth/jobDetails`
 export const createJob = `${host}/api/auth/createJob`
 export const countJobs = `${host}/api/auth/countJobs`

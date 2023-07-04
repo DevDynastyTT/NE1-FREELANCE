@@ -61,6 +61,7 @@ const getAllJobs = async (request, response) => {
 
     const job_list:JobsType[] = [];
     const reversedJobList:JobsType[] = []
+
     for (const job of jobs) {
       const jobThumbnail = await getImages(job.thumbnail);
       const str1 = job.category.replace("{ name: '", "")
@@ -90,7 +91,7 @@ const getAllJobs = async (request, response) => {
     }
 };
 
-const getImages = async (fileName:string):  Promise<string> => {
+const getImages = async (fileName:string): Promise<string> => {
   
   try {
     const bucketName = 'ne1-freelance'; // Replace with your Wasabi bucket name
@@ -107,99 +108,43 @@ const getImages = async (fileName:string):  Promise<string> => {
     return signedUrl
   } catch (error) {
     console.error(error);
-    return 'undefined'
+    return fileName
   }
 }
 
 
 const searchJobs = async (request, response) => {
-  const { jobCategory, search } = request.body;
-
+  const { jobCategory, search } = request.params;
   try {
     // Get the jobs and users
-    const jobs = await Jobs.find({
+    const jobs:JobsType[] = await Jobs.find({
       $or: [
         { title: { $regex: search, $options: "m" } },
         { description: { $regex: search, $options: "m" } },
         { category: { $regex: search, $options: "m" } },
       ],
     });
+    if (jobCategory && jobCategory != 'undefined') {
+      const jobCategories = await JobCategories.find({name: jobCategory});
+        if (jobCategories?.length <= 0) 
+          return response.status(400).json({ error: "There are currently no jobs available in this category :(" });
 
-    if (jobCategory.length > 0) {
-      const jobCategories = await JobCategories.find({
-        name: jobCategory,
-      });
-      if (jobCategories.length > 0) {
         const jobCategoryId = jobCategories[0]._id;
         const jobsInCategory = await Jobs.find({
           category: jobCategoryId,
         });
-        response.status(200).json({jobCategory});
-      } else {
-        response.status(400).json({ error: "There are currently no jobs available in this category :(" });
-      }
-    } else {
-      response.status(200).json(jobs);
+        console.log(jobCategory)
+        return response.status(200).json({jobCategory});
+    } 
+
+    for(const job of jobs){
+      job.thumbnail = await getImages(job.thumbnail);
     }
+
+    return response.status(200).json({job_list: jobs});
   } catch (err) {
     console.log(err);
-    response.status(500).json({error: 'Internal Server Error'});
-  }
-};
-
-const searchResults = async (request, response) => {
-  try {
-    // Get the query parameters
-    const {term, category} = request.body;
-    
-    const query:any = {
-      $or: [
-        { title: { $regex: term, $options: "m" } },
-        { description: { $regex: term, $options: "m" } },
-        { category: { $regex: term, $options: "m" } },
-      ]
-    };
-    // If a category is specified, add it to the query
-    if (category) query.category = category;
-
-    // Find the jobs that match the query
-    const jobs:any = await Jobs.find(query);
-
-    // If no jobs are found, return an error message
-    if (jobs.length === 0) return response.status(404).json({error: "No jobs found for " + term,category});
-
-    const job_category:any = await JobCategories.findOne({ _id: jobs.category }).exec();
-
-    const job_list:JobsType[] = []
-    
-    // Convert the jobs to a JSON object
-    const jobList: JobsType[] = jobs.map(job => {
-      if (!job_category) {
-        throw new Error(`No category found for job ${job._id}`);
-      }
-
-      return {
-        _id: job._id,
-        freeLancerID: job.freeLancerID,
-        username: category.username,
-        title: job.title,
-        description: job.description,
-        thumbnail: job.thumbnail,
-        price: job.price,
-        category: job.category,
-      };
-});
-    job_list.push(...jobList) //push each element of jobList into job_list
-    job_list.forEach(job=> console.log(job));
-    // Return the job list to the client
-    response.status(200).json({job_list});
-
-  } catch (err) {
-    console.log('CATCH ERROR:\n', err);
-    response.status(500).json({
-      error: "An error occurred",
-      err,
-    });
+    return response.status(500).json({error: 'Internal Server Error'});
   }
 };
 

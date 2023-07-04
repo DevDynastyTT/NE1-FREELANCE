@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 
 import { FormEvent, useEffect, useState } from 'react'
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context';
+import { Form } from 'react-bootstrap';
 export default function JobsComponent() {
 
     //Used for navigating urls
@@ -28,40 +29,39 @@ export default function JobsComponent() {
     const [message, setMessage] = useState<string>('Finding available jobs')
     const [isSearching, setIsSearching] = useState<boolean>(false)
  
-    async function handleSearchSubmit(event: FormEvent){
-        setIsSearching(true)
-        event.preventDefault();
-
-        try{
-            const response = await axios.post(searchJobs, {jobCategory, search})
-
-            const data = response.data;
-                if(data.error){
-                    setMessage(data.error)
-                }
-                    setJobs(data.job_list)
-
-                    let url = `/jobs`;
-                    if (data.jobCategory) {
-                    url += `category:${data.jobCategory}/`;
-                    }
-                    if (search) {
-                    url += `term:${search}/`;
-                    }
-                    router.push(url);
-
-        }catch(error){
-            console.log('CATCH ERROR WHILE FETCHING\n' + error)
+    async function handleSearchSubmit() {
+        setIsSearching(true); // Set isSearching to true to indicate that a search is in progress
+      
+        try {
+          const response = await axios.get(`${searchJobs}/${jobCategory}/${search}`);
+          const data = response.data;
+      
+          if (response.status !== 200) {
+            setMessage(data.error);
+            console.log(data.error);
+          } else {
+            setJobs(data.job_list);
+            console.log('Results = ', data.job_list);
+          }
+        } catch (error) {
+          console.log('CATCH ERROR WHILE FETCHING\n' + error);
         }
-        setIsSearching(false)
-    };
- 
-    useEffect(()=>{
-        getUserSession(setSession)
-        fetchJobs(getAllJobs, setJobs, setMessage)
-        fetchCategories(setJobCategories, getCategories)
-    }, [isSearching])
-    
+      
+        setIsSearching(false); // Set isSearching back to false after the search is completed
+      }
+    useEffect(() => {
+        getUserSession(setSession);
+        if (!isSearching) {
+          if (jobCategory) {
+            // Only fetch jobs in a specific category if jobCategory is defined
+            fetchJobs(getAllJobs, setJobs, setMessage);
+          }
+        } else {
+          handleSearchSubmit();
+        }
+        fetchCategories(setJobCategories, getCategories);
+      }, [isSearching, jobCategory]);
+    //TODO upon search, re-render the page with the results
   return (
     <>
         <GlobalNavbar session={session}/>
@@ -71,7 +71,9 @@ export default function JobsComponent() {
                     <div className={`${jobs && jobs.length <= 5 ? 'top-no-padding': 'top-padding'}`}>
                             <h2>Available jobs</h2>
 
-                            <form className="search-form row g-3" onSubmit={handleSearchSubmit}>
+                            <form 
+                                className="search-form row g-3"
+                                onSubmit={(event)=>event.preventDefault()}>
                                 {/* {% csrf_token %} */}
                                 <input 
                                     className="search-input-field form-control" 
@@ -102,7 +104,12 @@ export default function JobsComponent() {
                                 </select>
 
 
-                                <button className="btn btn-primary search-btn" type="submit">Search</button>
+                                <button 
+                                    className="btn btn-primary search-btn" 
+                                    type="submit"
+                                    onClick={()=>setIsSearching(true)}
+                                >   Search
+                                </button>
 
                             </form>
 

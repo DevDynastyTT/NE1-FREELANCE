@@ -1,23 +1,23 @@
 import mongoose from "mongoose"
 
 const ReportJobSchema = new mongoose.Schema({
-    job_id : {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Jobs',
+    jobID : {
+        type: String,
+        ref: 'jobs',
         required : true
     },
     jobTitle: {
         type: String,
         required: true
     },
-    user_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Users',
+    userID: {
+        type: String,
+        ref: 'users',
         required: true
     },
-    freelancer_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Users',
+    freelancerID: {
+        type: String,
+        ref: 'users',
         required: true
     },
     reason: {

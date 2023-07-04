@@ -2,11 +2,11 @@ import { ObjectId } from "mongodb";
 
 export type JobsType = {
   _id: ObjectId;
-  freeLancerID: ObjectId;
+  freeLancerID: string;
   username: string;
   title: string;
   description: string;
-  thumbnail: string;
+  thumbnail: string | Promise<string>;
   price: number;
   category: string;
 }

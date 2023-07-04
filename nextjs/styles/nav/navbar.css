@@ -22,6 +22,7 @@
 .logged_in-navbar .dropdown-menu {
   width: 10%;
   border-radius: 0.4rem;
+  z-index: 2;
 }
 
 .logged_in-navbar, .logged_out-navbar {
@@ -34,6 +35,7 @@
   width: 100%;
   position: sticky;
   top: 0;
+  z-index: 1;
 }
 .logged_in-navbar .logo-wrapper, .logged_out-navbar .logo-wrapper {
   width: 30%;
@@ -44,9 +46,6 @@
   height: 100%;
   -o-object-fit: contain;
      object-fit: contain;
-}
-.logged_in-navbar .logo-wrapper .pc-logo:hover, .logged_out-navbar .logo-wrapper .pc-logo:hover {
-  cursor: pointer;
 }
 .logged_in-navbar .navbar-search-form, .logged_out-navbar .navbar-search-form {
   width: 45%;

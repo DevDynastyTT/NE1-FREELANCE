@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 
 const creditCardSchema = new mongoose.Schema({
-  user_id: {
-    type: mongoose.Schema.Types.ObjectId,
+  userID: {
+    type: String,
     ref: 'User',
     required: true,
     unique: true,
@@ -29,5 +29,5 @@ const creditCardSchema = new mongoose.Schema({
   },
 });
 
-const CreditCard = mongoose.model('CreditCard', creditCardSchema);
+const CreditCard = mongoose.model('creditcard', creditCardSchema);
 export default CreditCard

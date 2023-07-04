@@ -41,7 +41,7 @@ export default function JobsComponent() {
                 }
                     setJobs(data.job_list)
 
-                    let url = `/jobs/search/`;
+                    let url = `/jobs`;
                     if (data.jobCategory) {
                     url += `category:${data.jobCategory}/`;
                     }
@@ -66,7 +66,7 @@ export default function JobsComponent() {
     <>
         <GlobalNavbar session={session}/>
         <br />
-        <main className={`jobs-main-container search ${jobs.length === 0 && 'no-jobs'}`}>
+        <main className={`jobs-main-container search ${jobs?.length === 0 && 'no-jobs'}`}>
                     
                     <div className={`${jobs && jobs.length <= 5 ? 'top-no-padding': 'top-padding'}`}>
                             <h2>Available jobs</h2>
@@ -116,12 +116,12 @@ export default function JobsComponent() {
                                     <div
                                         className="job-card"
                                         key={job._id}
-                                        onClick={() => router.push(`/jobs/details?jobID=${job._id}`)}>
+                                        onClick={() => router.push(`/jobs/${job._id}`)}>
 
                                         {/* <!--Display the job's thumbnail--> */}
                                         <div className="thumbnail-container" style={{ overflow: "hidden" }}>
                                             <img 
-                                                src={`http://localhost:3000/images/${job.thumbnail}`} 
+                                                src={job.thumbnail} 
                                                 alt="job thumbnail" 
                                             />
                                         </div>

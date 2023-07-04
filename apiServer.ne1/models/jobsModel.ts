@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
 const jobSchema = new mongoose.Schema({
-  user_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+  freeLancerID: {
+    type: String,
+    ref: 'users',
     required: true,
   },
   title: {
@@ -25,7 +25,7 @@ const jobSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    ref: 'JobCategories',
+    ref: 'jobcategories',
   },
 });
 

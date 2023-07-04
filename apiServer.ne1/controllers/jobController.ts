@@ -6,6 +6,7 @@ import Users from "../models/userModel";
 import Services from "../models/serviceModel";
 import Invoice from "../models/invoiceModel";
 import CreditCard from "../models/creditCardModel";
+import userProfiles from "../models/userProfileModel";
 import { ObjectId } from 'mongodb';
 
 import crypto from 'crypto'; //Used for random characters
@@ -14,7 +15,18 @@ import template from './invoiceTemplate';
 import nodemailer from 'nodemailer';
 import bcrypt from 'bcrypt';
 
+const AWS = require('aws-sdk');
 
+// Configure Wasabi credentials
+AWS.config.update({
+  accessKeyId: process.env.WASABI_ACCESS_KEY_ID,
+  secretAccessKey: process.env.WASABI_SECRET_ACCESS_KEY_ID,
+});
+
+// Create a new instance of the S3 client
+const s3 = new AWS.S3({
+  endpoint: process.env.SECRET_ENDPOINT,
+});
 async function checkTransactionIdExists(transaction_id) {
   const existingInvoice = await Invoice.findOne({ transaction_id });
   return !!existingInvoice;
@@ -40,7 +52,7 @@ const getAllJobs = async (request, response) => {
       {
         $lookup: {
           from: 'users',
-          localField: 'user_id',
+          localField: 'freeLancerID',
           foreignField: '_id',
           as: 'user',
         },
@@ -49,20 +61,21 @@ const getAllJobs = async (request, response) => {
 
     const job_list:JobsType[] = [];
     const reversedJobList:JobsType[] = []
-    jobs.forEach(job => {
+    for (const job of jobs) {
+      const jobThumbnail = await getImages(job.thumbnail);
       const str1 = job.category.replace("{ name: '", "")
       const str2 = str1.replace("' }", "")
       job_list.push({
         _id: job._id,
-        freeLancerID: job.user_id,
-        username: job.user[0].username,
+        freeLancerID: job.freeLancerID,
+        username: job.user[0]?.username,
         title: job.title,
         description: job.description,
-        thumbnail: job.thumbnail,
+        thumbnail: jobThumbnail,
         price: job.price,
         category: str2,
       });
-    });
+    };
 
     for(let i = job_list.length - 1; i>= 0; i--){
       reversedJobList.push(job_list[i])
@@ -76,6 +89,27 @@ const getAllJobs = async (request, response) => {
       return response.status(500).json({error: 'Internal Server Error'});
     }
 };
+
+const getImages = async (fileName:string):  Promise<string> => {
+  
+  try {
+    const bucketName = 'ne1-freelance'; // Replace with your Wasabi bucket name
+
+    // Generate a pre-signed URL for the profile picture
+    const params = {
+      Bucket: bucketName,
+      Key: fileName,
+      Expires: 3600, // URL expiration time in seconds (e.g., 1 hour)
+    };
+
+    const signedUrl = await s3.getSignedUrlPromise('getObject', params);
+    // Return the pre-signed URL in the response
+    return signedUrl
+  } catch (error) {
+    console.error(error);
+    return 'undefined'
+  }
+}
 
 
 const searchJobs = async (request, response) => {
@@ -146,7 +180,7 @@ const searchResults = async (request, response) => {
 
       return {
         _id: job._id,
-        freeLancerID: job.user_id,
+        freeLancerID: job.freeLancerID,
         username: category.username,
         title: job.title,
         description: job.description,
@@ -188,63 +222,97 @@ const jobDetails = async(request, response) => {
 
   const { jobID } = request.params;
 
+  //Fetch job related to user by their ID
   const job = await Jobs.findOne({ _id: jobID });
 
   if (!job) {
     console.log("No job found with ID: " + jobID);
     return response.status(404).json({ error: "No job found with ID: " + jobID });
   }
-
-  const user:any = await Users.findOne({ _id: job.user_id });
+  //Fetch user related to job by their job's freelancer ID
+  const user:any = await Users.findOne({ _id: job.freeLancerID });
 
   if (!user) {
-    console.log("No user found with ID: " + job.user_id);
-    return response.status(404).json({ error: "No user found with ID: " + job.user_id });
+    console.log("No user found with ID: " + job.freeLancerID);
+    return response.status(404).json({ error: "No user found with ID: " + job.freeLancerID });
   }
+  
+   // Find the profile and user data for the specified user ID.
+   const profile: any = await userProfiles.aggregate([
+    { $match: { userID: job.freeLancerID } },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'userID',
+        foreignField: '_id',
+        as: 'profile',
+      },
+    },
+    // { $unwind: '$profile' },
+    {
+      $project: {
+        bio: 1,
+        profilePicture: 1,
+      },
+    },
+  ]);
+  
+
 
   const jobDetails:JobsType[] = []
+  const jobThumbnail = await getImages(job.thumbnail);
+  const profilePictureUrl = await getImages(profile[0]?.profilePicture);
   const jobDetails_list:JobDetails = {
     _id: job._id,
-    freeLancerID: job.user_id,
+    freeLancerID: job.freeLancerID,
     title: job.title,
     description: job.description,
-    thumbnail: job.thumbnail,
+    thumbnail: jobThumbnail,
     price: job.price,
     category: job.category,
     username: user.username,
-    userBio: user.bio,
-    profilePicture: user.profile_picture,
+    userBio: (profile && profile[0].bio !== 'undefined') ? profile[0]?.bio : '',
+    profilePicture: profilePictureUrl,
   };
 
   jobDetails.push(jobDetails_list)
-
-
   return response.status(200).json({jobDetails});
 };
 
 const getSeller = async(request, response) => {
   const seller_id = request.params;
  
-  // const seller = {seller_id: job.user_id}
+  // const seller = {seller_id: job.freeLancerID}
   // console.log(seller);
 
 }
 const createJob = async (request, response) => {
   try {
-    const {user_id, title, description, price, category} = request.body
+    const {freeLancerID, title, description, price, category} = request.body
     let thumbnail = '';
+    const bucketName = 'ne1-freelance'; // Replace with your Wasabi bucket name
+
     if (request.file) {
-      thumbnail = request.file.filename
-      console.log(thumbnail + ' is thumbnail')
+      const fileContent = request.file.buffer;
+      const fileName = Date.now() + '-' + request.file.originalname;
+
+      // Upload the file to Wasabi
+      const params = {
+        Bucket: bucketName,
+        Key: fileName,
+        Body: fileContent,
+      };
+      await s3.upload(params).promise();
+      thumbnail = fileName;
+      console.log('File uploaded successfully');
       // do something with the file
     } else {
       console.log('No file uploaded\n');
       // handle the case where no file was uploaded
     }
 
-    console.log('user id:', user_id, '\ntitle:', title, 'description:', description, 'price:', price, 'category:', category, 'thumbnail:', thumbnail)
-    const job = await Jobs.create({
-      user_id,
+    await Jobs.create({
+      freeLancerID,
       title,
       description,
       thumbnail,
@@ -252,6 +320,7 @@ const createJob = async (request, response) => {
       category,
     });
 
+   
     return response.status(200).json({ message: 'Created job successfully' });
   } catch (error) {
     console.log('An error occurred while creating job', error);
@@ -399,10 +468,10 @@ const makePayment = async (request, response) => {
             return response.status(500).json({ error: 'There a problem generating your invoice' });
           }
   
-          const findCard = await CreditCard.findOne({user_id: info._id})
+          const findCard = await CreditCard.findOne({userID: info._id})
           if(!findCard){
             const creditCard = await CreditCard.create({
-              user_id: new ObjectId(info._id),
+              userID: new ObjectId(info._id),
               cardNumber: hashedCardNumber,
               expiryDate: hashedExpiryDate,
               securityCode: hashedSecurityCode,

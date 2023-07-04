@@ -16,15 +16,15 @@ const UserSchema = new mongoose.Schema({
     required: [true, 'Password is required!'],
     min: 8,
   },
-  is_staff: {
+  isStaff: {
     type: Boolean,
     default: false
   },
-  is_active: {
+  isActive: {
     type: Boolean,
     default: false
   },
-  date_joined: {
+  dateJoined: {
     type: Date,
     default: Date.now
   }

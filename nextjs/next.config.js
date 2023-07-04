@@ -5,7 +5,12 @@ const nextConfig = {
       serverComponentsExternalPackages: ["mongoose"],
     },
     images: {
-      domains: ['lh3.googleusercontent.com', "fiverr-res.cloudinary.com", "localhost:3000"],
+      domains: [
+        "ne1-freelance.s3.wasabisys.com",
+        "s3.eu-west-1.wasabisys.com",
+        'lh3.googleusercontent.com', 
+        "fiverr-res.cloudinary.com", 
+        "localhost"],
     },
     webpack(config) {
       config.experiments = {
@@ -13,7 +18,16 @@ const nextConfig = {
         topLevelAwait: true,
       }
       return config
-    }
+    },
+    extraModules: [
+      "./node_modules/@fortawesome/free-regular-svg-icons", 
+      "./node_modules/@fortawesome/free-solid-svg-icons", 
+      "./node_modules/@fortawesome/free-brands-svg-icons",
+      "./node_modules/@fortawesome/free-regular-svg-icons",
+      "./node_modules/@fortawesome/free-solid-svg-icons",
+      "@fortawesome/react-fontawesome",
+    ],
+
   }
   
   module.exports = nextConfig

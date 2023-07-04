@@ -3,7 +3,7 @@ const host = process.env.NODE_ENV === 'production' ? 'https://ne1freelance.onren
 export const heartBeat = `${host}/api/heartbeat`
 
 export const loginRoute = `${host}/api/auth/login`
-export const registerRoute = `${host}/api/auth/signup`
+export const signupRoute = `${host}/api/auth/signup`
 export const allUsersRoute = `${host}/api/auth/allusers`
 export const getAllUserInfo = `${host}/api/auth/getAllUserInfo`
 export const sendMessageRoute = `${host}/api/messages/addmsg`
@@ -13,6 +13,7 @@ export const setAvatarRoute = `${host}/api/auth/setavatar`
 export const updateUser = `${host}/api/auth/updateUser`
 export const updateProfile = `${host}/api/auth/updateProfile`
 export const getUserProfile = `${host}/api/auth/getUserProfile`
+export const getProfilePictureURL = `${host}/api/auth/getProfilePictureURL`
 export const countUsers = `${host}/api/auth/countUsers`
 
 export const reportJob = `${host}/api/auth/reportJob`

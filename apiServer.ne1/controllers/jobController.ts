@@ -615,7 +615,6 @@ const deleteServices = async (request, response) => {
 export {
   getAllJobs,
   searchJobs,
-  searchResults,
   getCategories,
   jobDetails,
   getSeller,

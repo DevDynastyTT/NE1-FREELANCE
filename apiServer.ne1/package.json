@@ -10,10 +10,11 @@
   "author": "Drgn Studio",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon --exec ts-node index.ts",
+    "start": "nodemon --exec ts-node-dev index.ts",
     "build": "tsc"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.363.0",
     "aws-sdk": "^2.1410.0",
     "b2-sdk": "^1.7.0",
     "bcrypt": "^5.0.1",
@@ -25,7 +26,6 @@
     "nodemon": "^2.0.22",
     "path": "^0.12.7",
     "socket.io": "^4.6.2",
-    "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
   },
   "devDependencies": {
@@ -38,7 +38,8 @@
     "form-data": "^4.0.0",
     "mailgun.js": "^9.0.0",
     "moment": "^2.29.4",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "ts-node-dev": "^2.0.0"
   },
   "engines": {
     "node": ">=14.20.1"

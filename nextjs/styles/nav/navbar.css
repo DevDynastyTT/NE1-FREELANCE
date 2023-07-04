@@ -35,7 +35,7 @@
   width: 100%;
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: 2;
 }
 .logged_in-navbar .logo-wrapper, .logged_out-navbar .logo-wrapper {
   width: 30%;

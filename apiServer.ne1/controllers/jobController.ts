@@ -14,6 +14,7 @@ import moment from 'moment'; //User for dates
 import template from './invoiceTemplate';
 import nodemailer from 'nodemailer';
 import bcrypt from 'bcrypt';
+import User from "../models/userModel";
 
 const AWS = require('aws-sdk');
 
@@ -64,12 +65,13 @@ const getAllJobs = async (request, response) => {
 
     for (const job of jobs) {
       const jobThumbnail = await getImages(job.thumbnail);
+      const freeLancerUserName:any = await User.findOne({ _id: job.freeLancerID });
       const str1 = job.category.replace("{ name: '", "")
       const str2 = str1.replace("' }", "")
       job_list.push({
         _id: job._id,
         freeLancerID: job.freeLancerID,
-        username: job.user[0]?.username,
+        username: freeLancerUserName.username,
         title: job.title,
         description: job.description,
         thumbnail: jobThumbnail,
@@ -115,38 +117,71 @@ const getImages = async (fileName:string): Promise<string> => {
 
 const searchJobs = async (request, response) => {
   const { jobCategory, search } = request.params;
+
   try {
-    // Get the jobs and users
-    const jobs:JobsType[] = await Jobs.find({
+    // Query to find jobs that match the search criteria
+    const jobQuery:any = {
       $or: [
-        { title: { $regex: search, $options: "m" } },
-        { description: { $regex: search, $options: "m" } },
+        { title: { $regex: search, $options: "i" } }, // Case-insensitive search for title
+        { description: { $regex: search, $options: "i" } }, // Case-insensitive search for description
         { category: { $regex: search, $options: "m" } },
+
       ],
-    });
-    if (jobCategory && jobCategory != 'undefined') {
-      const jobCategories = await JobCategories.find({name: jobCategory});
-        if (jobCategories?.length <= 0) 
-          return response.status(400).json({ error: "There are currently no jobs available in this category :(" });
+    };
 
-        const jobCategoryId = jobCategories[0]._id;
-        const jobsInCategory = await Jobs.find({
-          category: jobCategoryId,
-        });
-        console.log(jobCategory)
-        return response.status(200).json({jobCategory});
-    } 
-
-    for(const job of jobs){
-      job.thumbnail = await getImages(job.thumbnail);
+    // If jobCategory is provided, add category search condition to the query
+    if (jobCategory && jobCategory !== 'undefined') {
+      jobQuery.category = jobCategory;
     }
 
-    return response.status(200).json({job_list: jobs});
+    // Find the matching jobs
+    const jobs = await Jobs.find(jobQuery);
+
+    if (jobs.length === 0 && jobCategory == 'undefined') {
+      return response.status(404).json({ error: `No results found for '${search}'` });
+    }else if(jobs.length === 0 && jobCategory != 'undefined'){
+      return response.status(404).json({ error: `No results found for '${search}' in  [${jobCategory}] category` });
+    }
+
+    // Fetch job categories for category filtering
+    let jobCategoryFilter:any = null;
+    if (jobCategory && jobCategory !== 'undefined') {
+      jobCategoryFilter = await JobCategories.findOne({ name: jobCategory });
+      if (!jobCategoryFilter) {
+        return response.status(400).json({ error: "Violation! Job Category does not exist" });
+      }
+    }
+
+    // Format the response
+    const jobList = await Promise.all(
+      jobs.map(async (job) => {
+        const jobData:any = job.toObject();
+        jobData.thumbnail = await getImages(jobData.thumbnail);
+        const freeLancerUserName:any = await User.find({ _id: jobData.freeLancerID });
+        jobData.username = freeLancerUserName[0].username;
+        return jobData;      })
+    );
+
+    if (jobCategoryFilter) {
+      // If jobCategory is provided, return the filtered jobs in the category
+      const jobsInCategory = jobList.filter((job) => job.category === jobCategoryFilter?.name);
+      
+      return response.status(200).json({ job_list: jobsInCategory });
+    } else {
+      // If no jobCategory is provided, return all the matched jobs
+      
+      for (const job of jobList) {
+        const freeLancerUserName:any = await User.find({ _id: job.freeLancerID });
+        job.username = freeLancerUserName[0].username;
+      }
+      return response.status(200).json({ job_list: jobList });
+    }
   } catch (err) {
     console.log(err);
-    return response.status(500).json({error: 'Internal Server Error'});
+    return response.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 
 const getCategories = async(request, response) => {
   try{
@@ -155,6 +190,7 @@ const getCategories = async(request, response) => {
         _id: false,
         name: true
       });
+
       return response.status(200).json({categories})
 
   }catch(error){

@@ -59,16 +59,15 @@ router.get("/getUserProfile/:id", getUserProfile);
 router.get("/getAllUserInfo", getAllUserInfo);
 router.get("/countUsers", countUsers);
 
+router.get("/getAllJobs", getAllJobs);
 router.post("/createJob", upload.single('thumbnail'), createJob);
 router.get("/searchJobs/:jobCategory/:search", searchJobs);
-
 router.post("/updateServices", upload.single('thumbnail'), updateServices)
 router.post("/deleteServices", upload.single('thumbnail'), deleteServices)
 router.post("/makePayment", makePayment)
 router.get('/getCategories', getCategories);
 // router.get('/countCategories',countCategories);
 router.get("/jobDetails/:jobID", jobDetails);
-router.get("/getAllJobs", getAllJobs);
 router.get('/countJobs',countJobs);
 router.get('/countInvoices', countInvoices);
 router.get('/countInvoiceDates', countInvoiceDates);

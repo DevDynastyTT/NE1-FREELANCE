@@ -5,7 +5,7 @@ import '@styles/nav/navbar.css'
 import PcLogo from '@public/images/logo2.png'
 import MobileLogo from '@public/images/N.png'
 
-import {JobCategory, SessionType} from '@utils/types'
+import {SessionType} from '@utils/types'
 import { fetchCategories } from '@utils/reuseableCode'
 import { getCategories} from '@utils/APIRoutes'
 
@@ -20,55 +20,12 @@ import { usePathname, useRouter } from 'next/navigation';
 export default function GlobalNavbar({session}:{session:SessionType | undefined}) { 
   const router = useRouter()
   const pathname = usePathname()
-  const [jobCategory, setJobCategory] = useState<JobCategory[]>()
-  const [jobCategories, setJobCategories] = useState<JobCategory[]>([])
-  
-  const [search, setSearch] = useState<String>()
-  const [isSearching, setIsSearching] = useState<Boolean>(false)
-
-  const [message, setMessage] = useState<String>('Finding available jobs')
 
   const [isMenuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
   };
-      async function handleSearchSubmit(event: React.FormEvent){
-        setIsSearching(true)
-        console.log('Searching: ' + isSearching)
-        console.log(`Searching for ${search}`)
-        event.preventDefault();
-
-
-        try{
-            const response = await fetch(`http://localhost:3001/jobs_search/`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({jobCategory, search})
-            });
-            const data = await response.json();
-                if(data.error){
-                    console.error(data.error)
-                    setMessage(data.error)
-                }
-
-                    let url = `/jobs`;
-                    if (data.jobCategory) {
-                    url += `category:${data.jobCategory}/`;
-                    }
-                    if (search) {
-                    url += `term:${search}/`;
-                    }
-                    router.push(url);
-
-        }catch(error){
-            console.log('CATCH ERROR WHILE FETCHING\n' + error)
-        }
-        setIsSearching(false)
-        console.log('Searching: ' + isSearching)
-      };
-
-   
       function handleLogOut() {
           sessionStorage.removeItem('user')
 
@@ -79,9 +36,6 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
           else
               window.location.href = 'jobs'
       }
-
-      useEffect(()=>{fetchCategories(setJobCategories, getCategories)}, [])
-
       // Load bootstrap js functionality when the DOM has fully rednered
       useEffect(() => {
         if (typeof document !== 'undefined') {

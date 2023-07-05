@@ -22,15 +22,16 @@ export default function JobsComponent() {
     // Jobs State
     const [jobs, setJobs] = useState<JobsType[]>([])
     const [jobCategories, setJobCategories] = useState<JobCategory[]>([])
-    const [jobCategory, setJobCategory] = useState<JobCategory[]>()
+    const [jobCategory, setJobCategory] = useState<string>()
 
     //Search State
     const [search, setSearch] = useState<string>()
     const [message, setMessage] = useState<string>('Finding available jobs')
     const [isSearching, setIsSearching] = useState<boolean>(false)
  
-    async function handleSearchSubmit() {
-        setIsSearching(true); // Set isSearching to true to indicate that a search is in progress
+    async function handleSearchSubmit(event:FormEvent<HTMLFormElement>) {
+      event.preventDefault()
+      setIsSearching(true); // Set isSearching back to false after the search is completed
       
         try {
           const response = await axios.get(`${searchJobs}/${jobCategory}/${search}`);
@@ -39,28 +40,29 @@ export default function JobsComponent() {
           if (response.status !== 200) {
             setMessage(data.error);
             console.log(data.error);
-          } else {
+            return
+          } 
             setJobs(data.job_list);
             console.log('Results = ', data.job_list);
+        
+        } catch (error:any) {
+          if(error.response.data.error){
+            console.log(error.response.data.error)
+            setMessage(error.response.data.error)
+            setJobs([])
           }
-        } catch (error) {
-          console.log('CATCH ERROR WHILE FETCHING\n' + error);
+          else console.log(error)
         }
       
-        setIsSearching(false); // Set isSearching back to false after the search is completed
       }
-    useEffect(() => {
+      useEffect(() => {
         getUserSession(setSession);
-        if (!isSearching) {
-          if (jobCategory) {
-            // Only fetch jobs in a specific category if jobCategory is defined
-            fetchJobs(getAllJobs, setJobs, setMessage);
-          }
-        } else {
-          handleSearchSubmit();
-        }
+      
+        fetchJobs(getAllJobs, setJobs, setMessage); // Fetch jobs regardless of search state
+      
         fetchCategories(setJobCategories, getCategories);
-      }, [isSearching, jobCategory]);
+      }, []);
+      
     //TODO upon search, re-render the page with the results
   return (
     <>
@@ -73,7 +75,7 @@ export default function JobsComponent() {
 
                             <form 
                                 className="search-form row g-3"
-                                onSubmit={(event)=>event.preventDefault()}>
+                                onSubmit={handleSearchSubmit}>
                                 {/* {% csrf_token %} */}
                                 <input 
                                     className="search-input-field form-control" 
@@ -88,11 +90,15 @@ export default function JobsComponent() {
                                     className="form-select select-category" 
                                     name="category" 
                                     defaultValue="All Categories" 
-                                    onChange={(event) => setJobCategory([{name:event.target.value}])}>
+                                    onChange={(event) => setJobCategory(event.target.value)}>
                                     
                                     <option value="">All categories</option>
-                                    
-                                    {jobCategories.map(category => {
+                                    {/* <option value="Administration">Administration</option>
+                                    <option value="Esthetics">Esthetics</option>
+                                    <option value="Transportation">Transportation</option>
+                                    <option value="Cleaning">Cleaning</option>
+                                     */}
+                                    {jobCategories?.map(category => {
                                         return(
                                             <option 
                                                 value={category.name} 
@@ -107,7 +113,6 @@ export default function JobsComponent() {
                                 <button 
                                     className="btn btn-primary search-btn" 
                                     type="submit"
-                                    onClick={()=>setIsSearching(true)}
                                 >   Search
                                 </button>
 
@@ -116,7 +121,7 @@ export default function JobsComponent() {
                     </div>
                 
                     {/* Render jobs if there are no jobs available */}
-                    {jobs && message !== "There are currently no jobs available" ? (
+                    {jobs && jobs?.length > 0 ? (
                         <div className="job-list-flex">
                             {jobs?.map(function (job) {
                                 return (
@@ -152,12 +157,12 @@ export default function JobsComponent() {
                                 );
                             })}
                     </div>
-                    ) : (
-                    <>
-                        <br />
-                        <h1>{message}</h1>
-                    </>
-                    )}
+                    ) : 
+                        <h1>
+                          <br />
+                          {message}
+                        </h1>
+                    }
 
 
                     

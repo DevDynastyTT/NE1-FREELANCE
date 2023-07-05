@@ -155,14 +155,14 @@ export default function CreateJobComponent(){
                                 required>
 
                                 <option value="">All categories</option>
-                                <option value="Administration">Administration</option>
-                                {/* {jobCategories?.map(category => {
+                                {/* <option value="Administration">Administration</option> */}
+                                {jobCategories?.map(category => {
                                     return <option 
                                             value={category.name} 
                                             key={category.name}>
                                                     {category.name}
                                             </option>
-                                })} */}
+                                })}
                             </select>
                         </div>
 

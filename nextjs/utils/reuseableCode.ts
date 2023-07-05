@@ -42,11 +42,10 @@ async function fetchCategories(setJobCategories:any, getCategories:any) {
       const response = await axios.get(getCategories)
       const data = response.data
 
-      if(!data.categories){
+      if(response.status !== 200){
         console.error(data.error)
         return
       }
-
       setJobCategories(data.categories)
   
   }catch(error){

@@ -78,6 +78,7 @@ const setOnlineUser = (userID: string, socketID: string): void => {
 // ...
 
 io.on("connection", (socket) => {
+  console.log('Client Connected')
   socket.on("online-users", (data:any) => {
     setOnlineUser(data.userID, socket.id);
   });

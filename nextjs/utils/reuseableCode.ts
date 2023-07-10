@@ -23,16 +23,23 @@ async function fetchJobs(
 
 }
 
-function getUserSession(setSession: Dispatch<SetStateAction<SessionType | undefined>>):void{
-  const checkSession = sessionStorage.getItem('user');
-  if (checkSession) {
+async function getUserSession(): Promise<SessionType | undefined> {
+  return new Promise((resolve) => {
+    const checkSession = sessionStorage.getItem('user');
+    if (checkSession) {
       try {
-          const parsedSession = JSON.parse(checkSession);
-          setSession(parsedSession);
+        const parsedSession = JSON.parse(checkSession);
+        resolve(parsedSession);
+        return parsedSession
       } catch (error) {
-          console.error('Error parsing session:', error);
+        console.error('Error parsing session:', error);
+        resolve(undefined);
       }
-  }
+    } else {
+      console.log('no session')
+      resolve(undefined);
+    }
+  });
 }
 
 async function fetchCategories(setJobCategories:any, getCategories:any) {

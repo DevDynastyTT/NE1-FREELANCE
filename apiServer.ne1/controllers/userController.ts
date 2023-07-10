@@ -336,7 +336,6 @@ const getAllUsers = async (request, response) => {
     
     return response.json({ users: updatedUsers });
     
-    return response.json({users:updatedUsers});
   } catch (ex) {
     (ex);
   }
@@ -344,10 +343,16 @@ const getAllUsers = async (request, response) => {
 //Message page
 const getAllUserInfo = async (request, response) => {
   try {
-    const userInfo = await User.find();
-    response.json(userInfo);
-  } catch (ex) {
-    (ex);
+    const userInfo = await User.find().lean();
+
+    if(!userInfo){
+      console.log('Users not found');
+      return response.status(404).json({ error: 'Users not found' });
+    }
+    return response.status(200).json({userInfo});
+  } catch (error) {
+    console.error(error.message);
+    return response.status(500).json({ error: 'Internal Server Error' });
   }
 };
 //Admin user info page

@@ -2,7 +2,7 @@ import reportJob from "../controllers/reportController";
 import sendEmail from "../controllers/contactController";
 import heartBeat from "../controllers/heartBeatController";
 import { updateAbout, getAboutInfo } from "../controllers/aboutController";
-
+import { sendMessage, receiveMessage } from '../controllers/messagesController';
 import { 
   login, 
   signup, 
@@ -58,6 +58,8 @@ router.get("/allusers/:id", getAllUsers);
 router.get("/getUserProfile/:id", getUserProfile);
 router.get("/getAllUserInfo", getAllUserInfo);
 router.get("/countUsers", countUsers);
+router.post("/send", sendMessage);
+router.get("/receive/:senderID/:receiverID", receiveMessage);
 
 router.get("/getAllJobs", getAllJobs);
 router.post("/createJob", upload.single('thumbnail'), createJob);
@@ -91,4 +93,4 @@ router.post("/sendEmail", sendEmail);
 // Check if the server is up every 5 seconds
 router.get('/heartbeat', heartBeat);
 
-module.exports = router;
+export const authRoutes = router

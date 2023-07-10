@@ -56,10 +56,13 @@ export default function CreateJobComponent(){
         }
     }
       
-
+    async function fetchUserSession(){
+        const userSession = await getUserSession()
+        setSession(userSession)
+    }
     useEffect(()=> {
         //Check user authentication
-        getUserSession(setSession)
+        fetchUserSession()
         //Categories fetch for selection field
         fetchCategories(setJobCategories, getCategories)
     }, []);

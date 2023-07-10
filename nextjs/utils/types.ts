@@ -46,7 +46,7 @@ export type SessionType = {
   _id: string;
   username: string;
   email: string;
-  password: string;
+  password?: string;
   isStaff: boolean;
   isActive: boolean;
   dateJoined: string;
@@ -59,6 +59,14 @@ export type Profile = {
   bio?: string;
   profilePicture?: string;
   creditCard?: number;
+}
+
+export type MessagesType = {
+  content: string,
+  sender: string,
+  receiver: string,
+  isSender: boolean,
+  sentAt: string
 }
 
 

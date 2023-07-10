@@ -1,4 +1,4 @@
-import MessagesComponent from "@components/auth/messages/MessagesComponent";
+import ChatComponent from "@components/auth/messages/ChatComponent";
 import GlobalFooter from '@components/GlobalFooter'
 import { Metadata } from 'next'
 
@@ -8,8 +8,8 @@ export const metadata:Metadata = {
 export default function MessagesPage() {
   return (
     <>
-        <MessagesComponent />
-        <GlobalFooter/>
+        <ChatComponent />
+        {/* <GlobalFooter/> */}
 
     </>
   )

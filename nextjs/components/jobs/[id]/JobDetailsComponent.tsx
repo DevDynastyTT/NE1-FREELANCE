@@ -201,9 +201,14 @@ export default function JobDetailsComponent(){
         console.log('report Form is ', reportForm)
       }
     }
+
+    async function fetchUserSession(){
+      const userSession = await getUserSession()
+      setSession(userSession)
+    }
     
     useEffect(() => {
-      getUserSession(setSession)
+      fetchUserSession()
       fetchJobDetails()
   }, []);
   

@@ -169,12 +169,18 @@ export default function ProfileComponent(){
         
     }, [session])
 
-    useEffect(() => getUserSession(setSession), []);
+    async function fetchUserSession(){
+        const userSession =  await getUserSession()
+        setSession(userSession)
+    }
+    useEffect(() => {
+        fetchUserSession()
+    }, []);
   
     return (
         <>
 
-        {(session && Object.keys(session)?.length > 0) ? (
+        {(session && session?._id) ? (
             <>
                 <GlobalNavbar session={session} />
 

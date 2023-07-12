@@ -8,7 +8,9 @@ import { FormEvent, useEffect, useState } from "react";
 import io from "socket.io-client";
 
 
-const socket = io("https://ne1freelance.onrender.com");
+// const socket = io("https://ne1freelance.onrender.com");
+const socket = io("http://localhost:3002");
+
 
 export default function ChatComponent() {
 
@@ -95,18 +97,20 @@ export default function ChatComponent() {
 
               setNotify('Message sent')
 
+              const receivedMessage = {
+                content: message,
+                sender: session?.username,
+                receiver: receiver?.username,
+                isSender: true,
+                sentAt: new Date().toISOString(),
+              };
+              
+              //Append the new messages to the current messages array
               setReceivedMessages((prevMessages) => [
                 ...prevMessages,
-                {
-                  content: message,
-                  sender: session?.username,
-                  receiver: receiver?.username,
-                  isSender: true,
-                  sentAt: new Date().toISOString()
-                }
+                receivedMessage,
               ]);
-        
-              
+
           }catch(error){
             alert('Server down')
             console.log(error)
@@ -151,9 +155,6 @@ export default function ChatComponent() {
       }
     }
 
-    
-
-
     async function fetchAllUsers() {
       try {
         const response = await axios.get(`${getAllUserInfo}`);
@@ -183,63 +184,67 @@ export default function ChatComponent() {
     }, [session, receiver]);
   
   return (
-    <div>
-      <div>
-        <h2>Chat</h2>
-        <p>{topMessage}</p>
-        <span>{notify}</span>
+    <>
+      {session && session?._id && (
+        <div>
+        <div>
+          <h2>Chat</h2>
+          <p>{topMessage}</p>
+          <span>{notify}</span>
 
 
-        {receivedMessages?.map((msg:any, index:any) => (
-          <div
-            key={index}
-            style={{
-              display: "flex",
-              justifyContent: msg.isSender ? "flex-end" : "flex-start",
-              marginBottom: "10px",
-            }}
-          >
+          {receivedMessages?.map((msg:any, index:any) => (
             <div
+              key={index}
               style={{
-                background: msg.isSender ? "#00bfff" : "#f5f5f5",
-                color: msg.isSender ? "#fff" : "#000",
-                borderRadius: "5px",
-                padding: "5px 10px",
+                display: "flex",
+                justifyContent: msg.isSender ? "flex-end" : "flex-start",
+                marginBottom: "10px",
               }}
             >
-              {msg.content}
+              <div
+                style={{
+                  background: msg.isSender ? "#00bfff" : "#f5f5f5",
+                  color: msg.isSender ? "#fff" : "#000",
+                  borderRadius: "5px",
+                  padding: "5px 10px",
+                }}
+              >
+                {msg.content}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
-
-      <form onSubmit={sendMessage}>
-        <input
-          type="text"
-          value={message}
-          required
-          onChange={(e) => setMessage(e.target.value)}
-        />
-        <button type="submit">Send-Message</button>
-      </form>
-
-      {users && users?.length > 0 && (
-        <div>
-          <h3>Users</h3>
-          <ul>
-          {users?.map((currentUser, currentIndex) => (
-            currentUser._id !== session?._id && (
-              <li
-                key={currentIndex}
-                style={{cursor: 'pointer'}}
-                onClick={()=>handleOpenChat(currentUser)}
-              >{currentUser.username}</li>
-            )
           ))}
-          </ul>
+        </div>
+
+        <form onSubmit={sendMessage}>
+          <input
+            type="text"
+            value={message}
+            required
+            onChange={(e) => setMessage(e.target.value)}
+          />
+          <button type="submit">Send-Message</button>
+        </form>
+
+        {users && users?.length > 0 && (
+          <div>
+            <h3>Users</h3>
+            <ul>
+            {users?.map((currentUser, currentIndex) => (
+              currentUser._id !== session?._id && (
+                <li
+                  key={currentIndex}
+                  style={{cursor: 'pointer'}}
+                  onClick={()=>handleOpenChat(currentUser)}
+                >{currentUser.username}</li>
+              )
+            ))}
+            </ul>
+          </div>
+        )}
+
         </div>
       )}
-     
-    </div>
+    </>
   );
 }

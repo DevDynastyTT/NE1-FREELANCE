@@ -86,10 +86,8 @@ io.on("connection", (socket) => {
   socket.on("send-message", (data:any) => {
     const {message, sender, receiver, receiverID, senderID,  } = data;
 
-    if (!onlineUsers.has(receiverID)) {
-      console.log(onlineUsers.get(`Name: ${sender}, ID: ${receiverID}, does not exist`));
-      return console.log("User is not authorized to send message");
-    }
+    if (!onlineUsers.has(receiverID)) return console.log(receiver, "is not online");
+    
 
     const onlineUserSocketID = onlineUsers.get(receiverID);
     if (onlineUserSocketID) {

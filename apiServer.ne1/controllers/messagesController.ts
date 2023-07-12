@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Messages from '../models/messagesModel'
 import User from '../models/userModel'
 
@@ -11,7 +12,19 @@ const sendMessage = async (request, response)=> {
             return response.status(404).json({error: 'You aren\'t Authorized to send a message'});
         }
     
+
+        //Check if a chat between sender and receiver already exists
+        const existingChat = await Messages.findOne({
+          $or: [
+            { senderID: senderID, receiverID: receiverID },
+            { senderID: receiverID, receiverID: senderID }
+          ]
+        })
+
+        let chatID = existingChat ? existingChat.chatID : new mongoose.Types.ObjectId()
+        
         const newMessage = await Messages.create({
+            chatID,
             sender, senderID,
             receiver, receiverID,
             content, 
@@ -40,17 +53,13 @@ const receiveMessage = async (request, response)=> {
     }
 
     try{
-
-        const sender = await User.findById({ _id: senderID });
-        const receiver = await User.findById({ _id: receiverID });
-
         //Fetch the messages that matches the sender and receiver IDs, and return them in order of date sent
         const chatMessages = await Messages.aggregate([
             {
               $match: {
                 $or: [
-                  { "senderID": senderID, "receiverID": receiverID },
-                  { "senderID": receiverID, "receiverID": senderID },
+                  { senderID: { $eq: new mongoose.Types.ObjectId(senderID) }, receiverID: { $eq: new mongoose.Types.ObjectId(receiverID) } },
+                  { senderID: { $eq: new mongoose.Types.ObjectId(receiverID) }, receiverID: { $eq: new mongoose.Types.ObjectId(senderID) } }
                 ],
               },
             },
@@ -62,6 +71,7 @@ const receiveMessage = async (request, response)=> {
                 as: 'sender',
               },
             },
+            {$unwind:  '$sender'},
             {
               $lookup: {
                 from: 'users',
@@ -70,13 +80,14 @@ const receiveMessage = async (request, response)=> {
                 as: 'receiver',
               },
             },
+            {$unwind:  '$receiver'},
             {
               $project: {
                 "_id": 0,
-                // "senderID": 1,
-                "sender.username": 1,
-                // "receiverID": 1,
-                "receiver.username": 1,
+                "senderID": 1,
+                "sender": "$sender.username",
+                "receiverID": 1,
+                "receiver": "$receiver.username",
                 "content": 1,
                 "sentAt": 1,
               },
@@ -91,14 +102,7 @@ const receiveMessage = async (request, response)=> {
             return response.status(404).json({ message: 'Say Hello' });
           }
 
-        let messages:any = []
 
-        chatMessages.forEach(message => {
-            message.sender = sender.username
-            message.receiver = receiver.username
-
-            messages.push(message)
-        })
         return response.status(200).json({messages: chatMessages});
         
     }catch(error){
@@ -112,40 +116,3 @@ export {
     sendMessage,
     receiveMessage
 }
-
-// db.messages.aggregate([
-//     {
-//       $match: {
-//         $or: [{
-//           "sender": { $eq: "user1" },
-//         }, {
-//           "receiver": { $eq: "user2" },
-//         }]
-//       }
-//     },
-//     {
-//       $lookup: {
-//         from: "users",
-//         localField: "sender",
-//         foreignField: "_id",
-//         as: "sender"
-//       }
-//     },
-//     {
-//       $lookup: {
-//         from: "users",
-//         localField: "receiver",
-//         foreignField: "_id",
-//         as: "receiver"
-//       }
-//     },
-//     {
-//       $project: {
-//         "_id": 1,
-//         "sender.name": 1,
-//         "receiver.name": 1,
-//         "message": 1
-//       }
-//     }
-//   ])
-  

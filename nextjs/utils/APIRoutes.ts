@@ -1,4 +1,4 @@
-const host = process.env.NODE_ENV === 'production' ? 'https://ne1freelance.onrender.com' : 'http://localhost:3001';
+const host = process.env.NODE_ENV === 'production' ? 'https://ne1freelance.onrender.com' : 'http://localhost:3002';
 
 export const heartBeat = `${host}/api/heartbeat`
 

@@ -19,15 +19,20 @@ export default function ChatComponent() {
     const [users, setUsers] = useState<SessionType[]>([])
 
     const [message, setMessage] = useState<string>("");
-    const [notify, setNotify] = useState<string>();
-    const [topMessage, setTopMessage] = useState<string>("Click on a name to message");
+    const [chatName, setChatName] = useState<string>();
+    
+    const [isTyping, setIsTyping] = useState<boolean>(false);
     const [receivedMessages, setReceivedMessages] = useState<MessagesType[]>([]);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     
    
     function setOnlineUser(userSession:SessionType){ socket.emit('online-users', {userID: userSession?._id}) }
+    function sendTypingAlert(){
+      if(session && session?._id && receiver && receiver?._id)
+        socket.emit('typing-alert', ({senderID: session._id, receiverID: receiver._id}))
       
+    }
     async function fetchUserSession() {
       const userSession = await getUserSession();
 
@@ -54,6 +59,15 @@ export default function ChatComponent() {
             receivedMessage,
           ]);
         });
+
+        socket.on('receive-typing-alert', (data) => {
+          if(data.isTyping) {
+            setIsTyping(true)
+            setTimeout(() => {
+              setIsTyping(false)
+            }, 3000)
+          }
+        })
       } else {
         alert('Login to message');
       }
@@ -64,7 +78,7 @@ export default function ChatComponent() {
       if (session && session?._id) {
         setReceivedMessages([]); // Clear current chat messages
         setReceiver(currentUser);
-        setTopMessage(`${currentUser?.username}'s Chat`);
+        setChatName(`${currentUser?.username}`);
       }
     }
     
@@ -85,7 +99,7 @@ export default function ChatComponent() {
               const data = response.data
               
               if(response.status !== 200){
-                console.log(data.error);
+                console.error(data.error);
                 return
               }
               socket.emit('send-message', {
@@ -96,7 +110,6 @@ export default function ChatComponent() {
                 receiverID: receiver._id,
               })
 
-              setNotify('Message sent')
 
               const receivedMessage = {
                 content: message,
@@ -114,7 +127,7 @@ export default function ChatComponent() {
 
           }catch(error){
             alert('Server down')
-            console.log(error)
+            console.error(error)
           }
           // Clear the input field
           setMessage("");
@@ -127,14 +140,13 @@ export default function ChatComponent() {
     async function fetchAllMessages(userSession: SessionType, currentReceiver: SessionType) {
       try {
         if (currentReceiver) { // Check if the receiver state is defined
-          console.log('getting messages for chat with senderID', userSession?._id, 'receiverID', currentReceiver?._id)
           const response = await axios.get(
             `${receiveMessageRoute}/${userSession?._id}/${currentReceiver._id}`
           );
     
           const data = response.data;
           if (response.status !== 200) {
-            console.log(data.error);
+            console.error(data.error);
             return;
           }
     
@@ -146,14 +158,13 @@ export default function ChatComponent() {
             sentAt: message.sentAt
           }));
     
-          console.log(messages, ' in receiveMessages');
           setReceivedMessages((prevMessages: any) => [
             ...prevMessages,
             ...messages
           ]);
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     }
 
@@ -162,7 +173,7 @@ export default function ChatComponent() {
         const response = await axios.get(`${getAllUserInfo}`);
         const data = response.data;
         if (response.status !== 200) {
-          console.log(data.error);
+          console.error(data.error);
           return;
         }
         setUsers(data.userInfo);
@@ -172,24 +183,22 @@ export default function ChatComponent() {
     }
 
     useEffect(() => {
-      fetchUserSession();
-
+      fetchUserSession()
+    
       return () => {
-        socket.disconnect();
-      };
-    }, []);
+        socket.disconnect()
+      }
+    }, [])
+    
+    
 
     useEffect(() => {
-      if (session && receiver) {
-        fetchAllMessages(session, receiver);
-      }
-    }, [session, receiver]);
-
+      if (session && receiver) fetchAllMessages(session, receiver);
+    }, [session, receiver])
+    
     useEffect(() => {
-      if (messagesEndRef.current) {
-        messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-      }
-    }, [receivedMessages]);
+      if (messagesEndRef.current) messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }, [receivedMessages])
   
     return (
       <>
@@ -199,9 +208,11 @@ export default function ChatComponent() {
 
             <div>
               <div>
-                <h2 style={{ marginLeft: "8%", margin: "0 auto" }}>Chat</h2>
-                <span style={{ marginLeft: "8%", color: "red" }}>{topMessage}</span>
-                <span>{notify}</span>
+                <div style={{ marginLeft: "8%", height: "50px"}}>
+                  <span style={{fontSize: '2rem'}}>{chatName}</span>
+                  <span style={{color: 'grey'}}>{isTyping === false ? '' : '  typing...'}</span>
+                </div>
+
                 <div
                   style={{
                     border: "1px solid black",
@@ -241,14 +252,20 @@ export default function ChatComponent() {
                     value={message}
                     placeholder="Enter a message"
                     required
-                    onChange={(e) => setMessage(e.target.value)}
+                    onChange={(e) => {
+                      setMessage(e.target.value)
+                      sendTypingAlert()
+                    }}
                   />
                   <button type="submit">Send Message</button>
                 </form>
               </div>
+
               {users && users?.length > 0 && (
                 <div>
                   <h3>Users</h3>
+                  <span style={{color: 'red', fontSize: '2rem', marginLeft: '5%'}}>Click on a name to message</span>
+
                   <ul>
                     {users?.map((currentUser, currentIndex) =>
                       currentUser._id !== session?._id ? (
@@ -265,6 +282,7 @@ export default function ChatComponent() {
                 </div>
               )}
             </div>
+
           </>
         )}
       </>

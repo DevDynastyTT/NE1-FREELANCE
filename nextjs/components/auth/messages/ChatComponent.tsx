@@ -1,5 +1,6 @@
 'use client'
 
+import GlobalNavbar from "@components/GlobalNavbar";
 import { getAllUserInfo, receiveMessageRoute, sendMessageRoute } from "@utils/APIRoutes";
 import { getUserSession } from "@utils/reuseableCode";
 import { MessagesType, SessionType } from "@utils/types";
@@ -7,9 +8,8 @@ import axios from "axios";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 
-
-// const socket = io("https://ne1freelance.onrender.com");
-const socket = io("http://localhost:3002");
+const server = process.env.NODE_ENV === "development" ? "http://localhost:3002" : "https://ne1freelance.onrender.com";
+const socket = io(server);
 
 
 export default function ChatComponent() {
@@ -194,74 +194,78 @@ export default function ChatComponent() {
     return (
       <>
         {session && session?._id && (
-          <div>
+          <>
+            <GlobalNavbar session={session} />
+
             <div>
-              <h2 style={{ marginLeft: "8%", margin: "0 auto" }}>Chat</h2>
-              <span style={{ marginLeft: "8%", color: "red" }}>{topMessage}</span>
-              <span>{notify}</span>
-              <div
-                style={{
-                  border: "1px solid black",
-                  height: "40vh",
-                  overflowY: "scroll",
-                  padding: "3%",
-                  margin: "0 auto",
-                  width: "80%",
-                }}
-              >
-                {receivedMessages?.map((msg: any, index: any) => (
-                  <div
-                    key={index}
-                    style={{
-                      display: "flex",
-                      justifyContent: msg.isSender ? "flex-end" : "flex-start",
-                      marginBottom: "10px",
-                    }}
-                  >
+              <div>
+                <h2 style={{ marginLeft: "8%", margin: "0 auto" }}>Chat</h2>
+                <span style={{ marginLeft: "8%", color: "red" }}>{topMessage}</span>
+                <span>{notify}</span>
+                <div
+                  style={{
+                    border: "1px solid black",
+                    height: "40vh",
+                    overflowY: "scroll",
+                    padding: "3%",
+                    margin: "0 auto",
+                    width: "80%",
+                  }}
+                >
+                  {receivedMessages?.map((msg: any, index: any) => (
                     <div
+                      key={index}
                       style={{
-                        background: msg.isSender ? "#00bfff" : "#f5f5f5",
-                        color: msg.isSender ? "#fff" : "#000",
-                        borderRadius: "5px",
-                        padding: "5px 10px",
+                        display: "flex",
+                        justifyContent: msg.isSender ? "flex-end" : "flex-start",
+                        marginBottom: "10px",
                       }}
                     >
-                      {msg.content}
-                    </div>
-                  </div>
-                ))}
-                <div ref={messagesEndRef} />
-              </div>
-              <form onSubmit={sendMessage} style={{ marginLeft: "10%" }}>
-                <input
-                  type="text"
-                  value={message}
-                  placeholder="Enter a message"
-                  required
-                  onChange={(e) => setMessage(e.target.value)}
-                />
-                <button type="submit">Send Message</button>
-              </form>
-            </div>
-            {users && users?.length > 0 && (
-              <div>
-                <h3>Users</h3>
-                <ul>
-                  {users?.map((currentUser, currentIndex) =>
-                    currentUser._id !== session?._id ? (
-                      <li
-                        key={currentIndex}
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleOpenChat(currentUser)}
+                      <div
+                        style={{
+                          background: msg.isSender ? "#00bfff" : "#f5f5f5",
+                          color: msg.isSender ? "#fff" : "#000",
+                          borderRadius: "5px",
+                          padding: "5px 10px",
+                        }}
                       >
-                        {currentUser.username}
-                      </li>
-                    ) : null
-                  )}
-                </ul>
+                        {msg.content}
+                      </div>
+                    </div>
+                  ))}
+                  <div ref={messagesEndRef} />
+                </div>
+                <form onSubmit={sendMessage} style={{ marginLeft: "10%" }}>
+                  <input
+                    type="text"
+                    value={message}
+                    placeholder="Enter a message"
+                    required
+                    onChange={(e) => setMessage(e.target.value)}
+                  />
+                  <button type="submit">Send Message</button>
+                </form>
               </div>
-            )}
-          </div>
+              {users && users?.length > 0 && (
+                <div>
+                  <h3>Users</h3>
+                  <ul>
+                    {users?.map((currentUser, currentIndex) =>
+                      currentUser._id !== session?._id ? (
+                        <li
+                          key={currentIndex}
+                          style={{ cursor: "pointer" }}
+                          onClick={() => handleOpenChat(currentUser)}
+                        >
+                          {currentUser.username}
+                        </li>
+                      ) : null
+                    )}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </>
         )}
       </>
     );

@@ -26,6 +26,7 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { getUserSession } from '@utils/reuseableCode';
 import { useRouter, useParams } from 'next/navigation';
+const server = process.env.NODE_ENV === "development" ? "${server}" : "https://ne1freelance.onrender.com";
 //TODO check if u can change the freeLancerRatingsProgress['5'] and others to a number instead of string
 
 export default function JobDetailsComponent(){
@@ -255,7 +256,7 @@ export default function JobDetailsComponent(){
                         job.profilePicture == null ? 
                         <Image
                           id="title-profile-picture" 
-                          src="http://localhost:3000/images/default.jpeg" 
+                          src={`${server}/images/default.jpeg`} 
                           alt="thumbnail" 
                           width={100}
                           height={100}
@@ -369,7 +370,7 @@ export default function JobDetailsComponent(){
                           <div className="job-title">
 
                             <div className="job-thumbnail">
-                              <img src={`http://localhost:3000/images/${jobs[0].thumbnail}`} alt="" />
+                              <img src={`${server}/images/${jobs[0].thumbnail}`} alt="" />
                             </div>
                         
                             <p>{jobs[0].title}</p>

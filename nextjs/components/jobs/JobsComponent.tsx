@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 
 import { FormEvent, useEffect, useState } from 'react'
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context';
-import { Form } from 'react-bootstrap';
+
 export default function JobsComponent() {
 
     //Used for navigating urls

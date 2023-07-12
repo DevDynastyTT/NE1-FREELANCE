@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, FormEvent } from 'react'
 import { usePathname } from 'next/navigation';
+const server = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://ne1freelance.onrender.com";
 
 export default function ProfileComponent(){
 
@@ -205,7 +206,7 @@ export default function ProfileComponent(){
                                     {userProfile && userProfile?.profilePicture != "undefined" || userProfile?.profilePicture != undefined? (
                                         <Image
                                             className="profile-picture"
-                                            src={userProfile.profilePicture || '"http://localhost:3000/images/default.jpeg'}
+                                            src={userProfile.profilePicture || `${server}/images/default.png`}
                                             alt='profile picture'
                                             width={100}
                                             height={100}
@@ -214,7 +215,7 @@ export default function ProfileComponent(){
                                     ) : (
                                         <Image 
                                             className="profile-picture"
-                                            src="http://localhost:3000/images/default.jpeg"
+                                            src={`${server}/images/default.png`}
                                             alt="default image" 
                                             width={100}
                                             height={100}

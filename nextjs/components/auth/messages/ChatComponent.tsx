@@ -4,12 +4,12 @@ import { getAllUserInfo, receiveMessageRoute, sendMessageRoute } from "@utils/AP
 import { getUserSession } from "@utils/reuseableCode";
 import { MessagesType, SessionType } from "@utils/types";
 import axios from "axios";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 
 
-const socket = io("https://ne1freelance.onrender.com");
-// const socket = io("http://localhost:3002");
+// const socket = io("https://ne1freelance.onrender.com");
+const socket = io("http://localhost:3002");
 
 
 export default function ChatComponent() {
@@ -22,7 +22,8 @@ export default function ChatComponent() {
     const [notify, setNotify] = useState<string>();
     const [topMessage, setTopMessage] = useState<string>("Click on a name to message");
     const [receivedMessages, setReceivedMessages] = useState<MessagesType[]>([]);
-    
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
     
    
     function setOnlineUser(userSession:SessionType){ socket.emit('online-users', {userID: userSession?._id}) }
@@ -117,6 +118,7 @@ export default function ChatComponent() {
           }
           // Clear the input field
           setMessage("");
+          
       }
       else alert('Login to send-messages or select user')
     
@@ -182,69 +184,85 @@ export default function ChatComponent() {
         fetchAllMessages(session, receiver);
       }
     }, [session, receiver]);
+
+    useEffect(() => {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    }, [receivedMessages]);
   
-  return (
-    <>
-      {session && session?._id && (
-        <div>
-        <div>
-          <h2>Chat</h2>
-          <p>{topMessage}</p>
-          <span>{notify}</span>
-
-
-          {receivedMessages?.map((msg:any, index:any) => (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                justifyContent: msg.isSender ? "flex-end" : "flex-start",
-                marginBottom: "10px",
-              }}
-            >
+    return (
+      <>
+        {session && session?._id && (
+          <div>
+            <div>
+              <h2 style={{ marginLeft: "8%", margin: "0 auto" }}>Chat</h2>
+              <span style={{ marginLeft: "8%", color: "red" }}>{topMessage}</span>
+              <span>{notify}</span>
               <div
                 style={{
-                  background: msg.isSender ? "#00bfff" : "#f5f5f5",
-                  color: msg.isSender ? "#fff" : "#000",
-                  borderRadius: "5px",
-                  padding: "5px 10px",
+                  border: "1px solid black",
+                  height: "40vh",
+                  overflowY: "scroll",
+                  padding: "3%",
+                  margin: "0 auto",
+                  width: "80%",
                 }}
               >
-                {msg.content}
+                {receivedMessages?.map((msg: any, index: any) => (
+                  <div
+                    key={index}
+                    style={{
+                      display: "flex",
+                      justifyContent: msg.isSender ? "flex-end" : "flex-start",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        background: msg.isSender ? "#00bfff" : "#f5f5f5",
+                        color: msg.isSender ? "#fff" : "#000",
+                        borderRadius: "5px",
+                        padding: "5px 10px",
+                      }}
+                    >
+                      {msg.content}
+                    </div>
+                  </div>
+                ))}
+                <div ref={messagesEndRef} />
               </div>
+              <form onSubmit={sendMessage} style={{ marginLeft: "10%" }}>
+                <input
+                  type="text"
+                  value={message}
+                  placeholder="Enter a message"
+                  required
+                  onChange={(e) => setMessage(e.target.value)}
+                />
+                <button type="submit">Send Message</button>
+              </form>
             </div>
-          ))}
-        </div>
-
-        <form onSubmit={sendMessage}>
-          <input
-            type="text"
-            value={message}
-            required
-            onChange={(e) => setMessage(e.target.value)}
-          />
-          <button type="submit">Send-Message</button>
-        </form>
-
-        {users && users?.length > 0 && (
-          <div>
-            <h3>Users</h3>
-            <ul>
-            {users?.map((currentUser, currentIndex) => (
-              currentUser._id !== session?._id && (
-                <li
-                  key={currentIndex}
-                  style={{cursor: 'pointer'}}
-                  onClick={()=>handleOpenChat(currentUser)}
-                >{currentUser.username}</li>
-              )
-            ))}
-            </ul>
+            {users && users?.length > 0 && (
+              <div>
+                <h3>Users</h3>
+                <ul>
+                  {users?.map((currentUser, currentIndex) =>
+                    currentUser._id !== session?._id ? (
+                      <li
+                        key={currentIndex}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleOpenChat(currentUser)}
+                      >
+                        {currentUser.username}
+                      </li>
+                    ) : null
+                  )}
+                </ul>
+              </div>
+            )}
           </div>
         )}
-
-        </div>
-      )}
-    </>
-  );
-}
+      </>
+    );
+  }

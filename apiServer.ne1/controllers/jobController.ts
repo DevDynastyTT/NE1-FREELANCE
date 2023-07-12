@@ -2,8 +2,8 @@ import { JobDetails, JobsType } from "../types";
 
 import Jobs from "../models/jobsModel";
 import JobCategories from "../models/jobCategoriesModel";
-import Users from "../models/userModel";
 import Services from "../models/serviceModel";
+import Users from "../models/userModel";
 import Invoice from "../models/invoiceModel";
 import CreditCard from "../models/creditCardModel";
 import userProfiles from "../models/userProfileModel";
@@ -14,7 +14,7 @@ import moment from 'moment'; //User for dates
 import template from './invoiceTemplate';
 import nodemailer from 'nodemailer';
 import bcrypt from 'bcrypt';
-import User from "../models/userModel";
+import mongoose from "mongoose";
 
 const AWS = require('aws-sdk');
 
@@ -55,43 +55,49 @@ const getAllJobs = async (request, response) => {
           from: 'users',
           localField: 'freeLancerID',
           foreignField: '_id',
-          as: 'user',
+          as: 'jobs',
         },
       },
+      { '$unwind': '$jobs'},
+      {
+        $project: {
+          "_id": 1,
+          "freeLancerID": 1,
+          "username": "$jobs.username",
+          "title": 1,
+          "description": 1,
+          "thumbnail": 1,
+          "price": 1,
+          "category": 1,
+        }
+      }
     ]);
 
-    const job_list:JobsType[] = [];
+    if (jobs.length == 0)  return response.json({ error: "There are currently no jobs available :(" });
+
+    const job_list = await Promise.all(jobs.map(async (job) => ({
+      ...job,
+      thumbnail: await getImages(job.thumbnail),
+    })));
+    
     const reversedJobList:JobsType[] = []
-
-    for (const job of jobs) {
-      const jobThumbnail = await getImages(job.thumbnail);
-      const freeLancerUserName:any = await User.findOne({ _id: job.freeLancerID });
-      const str1 = job.category.replace("{ name: '", "")
-      const str2 = str1.replace("' }", "")
-      job_list.push({
-        _id: job._id,
-        freeLancerID: job.freeLancerID,
-        username: freeLancerUserName.username,
-        title: job.title,
-        description: job.description,
-        thumbnail: jobThumbnail,
-        price: job.price,
-        category: str2,
-      });
-    };
-
+  
     for(let i = job_list.length - 1; i>= 0; i--){
       reversedJobList.push(job_list[i])
     }
 
-    if (job_list.length == 0)  return response.json({ error: "There are currently no jobs available :(" });
     return response.status(200).json({ reversedJobList });
 
-    } catch (err) {
-      console.log(`Error retrieving jobs: ${err}`);
+    } catch (error) {
+      console.log(`Error retrieving jobs: ${error.message}`);
       return response.status(500).json({error: 'Internal Server Error'});
     }
 };
+
+
+
+
+
 
 const getImages = async (fileName:string): Promise<string> => {
   
@@ -109,7 +115,7 @@ const getImages = async (fileName:string): Promise<string> => {
     // Return the pre-signed URL in the response
     return signedUrl
   } catch (error) {
-    console.error(error);
+    console.error(error.message);
     return fileName
   }
 }
@@ -157,7 +163,7 @@ const searchJobs = async (request, response) => {
       jobs.map(async (job) => {
         const jobData:any = job.toObject();
         jobData.thumbnail = await getImages(jobData.thumbnail);
-        const freeLancerUserName:any = await User.find({ _id: jobData.freeLancerID });
+        const freeLancerUserName:any = await Users.find({ _id: jobData.freeLancerID });
         jobData.username = freeLancerUserName[0].username;
         return jobData;      })
     );
@@ -171,13 +177,13 @@ const searchJobs = async (request, response) => {
       // If no jobCategory is provided, return all the matched jobs
       
       for (const job of jobList) {
-        const freeLancerUserName:any = await User.find({ _id: job.freeLancerID });
+        const freeLancerUserName:any = await Users.find({ _id: job.freeLancerID });
         job.username = freeLancerUserName[0].username;
       }
       return response.status(200).json({ job_list: jobList });
     }
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.error(error.message);
     return response.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -194,71 +200,67 @@ const getCategories = async(request, response) => {
       return response.status(200).json({categories})
 
   }catch(error){
-    console.log('An error occurred while fetching categories', error)
+    console.error(error.message)
     return response.status(500).json({error: 'Internal Server Error'});
 
   }
 }
-const jobDetails = async(request, response) => {
-
+const jobDetails = async (request, response) => {
   const { jobID } = request.params;
 
-  //Fetch job related to user by their ID
-  const job = await Jobs.findOne({ _id: jobID });
-
-  if (!job) {
-    console.log("No job found with ID: " + jobID);
-    return response.status(404).json({ error: "No job found with ID: " + jobID });
-  }
-  //Fetch user related to job by their job's freelancer ID
-  const user:any = await Users.findOne({ _id: job.freeLancerID });
-
-  if (!user) {
-    console.log("No user found with ID: " + job.freeLancerID);
-    return response.status(404).json({ error: "No user found with ID: " + job.freeLancerID });
-  }
-  
-   // Find the profile and user data for the specified user ID.
-   const profile: any = await userProfiles.aggregate([
-    { $match: { userID: job.freeLancerID } },
-    {
-      $lookup: {
-        from: 'users',
-        localField: 'userID',
-        foreignField: '_id',
-        as: 'profile',
+  try {
+    const jobDetails = await Jobs.aggregate([
+      { $match: { _id: new mongoose.Types.ObjectId(jobID) } },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'freeLancerID',
+          foreignField: '_id',
+          as: 'user',
+        },
       },
-    },
-    // { $unwind: '$profile' },
-    {
-      $project: {
-        bio: 1,
-        profilePicture: 1,
+      {
+        $lookup: {
+          from: 'userprofiles',
+          localField: 'freeLancerID',
+          foreignField: 'userID',
+          as: 'profile',
+        },
       },
-    },
-  ]);
-  
+      {
+        $project: {
+          _id: 1,
+          freeLancerID: { $toString: '$freeLancerID' },
+          title: 1,
+          description: 1,
+          thumbnail: 1,
+          price: 1,
+          category: 1,
+          username: { $arrayElemAt: ['$user.username', 0] },
+          userBio: { $ifNull: [{ $arrayElemAt: ['$profile.bio', 0] }, ''] },
+          profilePicture: { $ifNull: [{ $arrayElemAt: ['$profile.profilePicture', 0] }, ''] },
+        },
+      },
+    ]);
 
+    if (jobDetails.length === 0) {
+      console.log("No job found with ID: " + jobID);
+      return response.status(404).json({ error: "No job found with ID: " + jobID });
+    }
 
-  const jobDetails:JobsType[] = []
-  const jobThumbnail = await getImages(job.thumbnail);
-  const profilePictureUrl = await getImages(profile[0]?.profilePicture);
-  const jobDetails_list:JobDetails = {
-    _id: job._id,
-    freeLancerID: job.freeLancerID,
-    title: job.title,
-    description: job.description,
-    thumbnail: jobThumbnail,
-    price: job.price,
-    category: job.category,
-    username: user.username,
-    userBio: (profile && profile[0].bio !== 'undefined') ? profile[0]?.bio : '',
-    profilePicture: profilePictureUrl,
-  };
+    const jobDetail = [jobDetails[0]];
+    jobDetail[0].thumbnail = await getImages(jobDetail[0].thumbnail);
+    jobDetail[0].profilePicture = await getImages(jobDetail[0].profilePicture);
 
-  jobDetails.push(jobDetails_list)
-  return response.status(200).json({jobDetails});
+    return response.status(200).json({ jobDetails: jobDetail });
+  } catch (error) {
+    console.log(`Error retrieving job details: ${error.message}`);
+    return response.status(500).json({ error: 'Internal Server Error' });
+  }
 };
+
+
+
 
 const getSeller = async(request, response) => {
   const seller_id = request.params;
@@ -304,7 +306,7 @@ const createJob = async (request, response) => {
    
     return response.status(200).json({ message: 'Created job successfully' });
   } catch (error) {
-    console.log('An error occurred while creating job', error);
+    console.log(error.message);
     return response.status(500).json({ error: 'Internal Server Error' });
   }
 };
@@ -335,7 +337,7 @@ const createService = async(request, response) => {
         console.log(`${title} Service Added`);
         return response.status(201).json({ message: `${title} Service Added Successfully` });
     }catch(error){
-      console.log('An error occurred while creating service', error);
+      console.log(error.message);
       return response.status(500).json({ error: 'Internal Server Error' });
     }
    
@@ -345,8 +347,8 @@ const getAllServices = async (req, res, next) => {
   try {
     const serviceInfo = await Services.find();
     res.json({serviceInfo});
-  } catch (ex) {
-    next(ex);
+  } catch (error) {
+    console.error(error.message);
   }
 };
 
@@ -491,7 +493,7 @@ const makePayment = async (request, response) => {
           return response.status(200).json(
             { message: 'Payment successful. Please check your email for an invoice' });
         } catch (error) {
-          console.error('Error sending invoice:', error);
+          console.error('Error sending invoice:', error.message);
           return response
             .status(400)
             .json({ error: 'There was an error while processing your transaction' });
@@ -508,7 +510,7 @@ const countJobs = async(request, response) => {
   console.log('Total number of jobs: ',job_count);
   response.json(job_count);
 }catch(error){
-  console.log('Error counting jobs: ',error);
+  console.error('Error counting jobs: ',error.message);
   response.status(500).json({error: 'Internal Server Error'});
 }
 };
@@ -519,7 +521,7 @@ const countServices = async(request, response) => {
   console.log('Total number of services: ',service_count);
   response.json(service_count);
 }catch(error){
-  console.log('Error counting services: ',error);
+  console.log('Error counting services: ',error.message);
   response.status(500).json({ error: "Internal Server Error" });
 }
 };
@@ -540,7 +542,7 @@ const countJobsInCategory = async (request, response) => {
 
     response.json({ categories, counts });
   } catch (error) {
-    console.error("Error counting jobs:", error);
+    console.error("Error counting jobs:", error.message);
     response.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -551,7 +553,7 @@ const countCategories = async (request, response) => {
     console.log('Total number of categories: ', catCount);
     response.json(catCount);
   } catch (error) {
-    console.log('Error counting categories: ', error);
+    console.log('Error counting categories: ', error.message);
     response.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -562,7 +564,7 @@ const countInvoices = async (request, response) => {
     console.log('Total number of invoices: ', invoiceCount);
     response.json(invoiceCount);
   } catch (error) {
-    console.log('Error counting categories: ', error);
+    console.log('Error counting categories: ', error.message);
     response.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -598,7 +600,7 @@ const countInvoiceDates = async (request, response) => {
     console.log('Invoice counts:', invoiceCounts);
     response.json(invoiceCounts);
   } catch (error) {
-    console.log('Error counting invoices:', error);
+    console.log('Error counting invoices:', error.message);
     response.status(500).json({ error: 'Internal Server Error' });
   }
 };
@@ -623,7 +625,7 @@ const updateServices = async (request, response) => {
     const updatedJob = await Services.findOneAndUpdate(query, update, options);
     response.json({message: `Updated ${chosenTitle} Successfully`, updatedJob});
   } catch (error) {
-    console.error(error);
+    console.error(error.message);
     // response.status(500).json({ error: 'Internal Server Error' });
   }
 };
@@ -641,7 +643,7 @@ const deleteServices = async (request, response) => {
     response.status(200).json({ message: 'Service deleted successfully.' });
   } catch (error) {
     // Handle any errors that occurred during deletion
-    console.error('Error deleting service:', error);
+    console.error('Error deleting service:', error.message);
 
     // Send an error response
     response.status(500).json({ error: 'Internal Server Error' });

@@ -3,7 +3,7 @@
 import '@styles/jobs/jobDetails.css'
 import ReportForm from '../ReportForm';
 import RatingForm from '../../RatingsForm';
-import StarRating from '../../StarRating';
+// import StarRating from '../../StarRating';
 import StarRatings from 'react-star-ratings';
 import GlobalNavbar from "../../GlobalNavbar";
 
@@ -21,10 +21,11 @@ import {
     getFreelancerRatingsProgress}  from '@utils/APIRoutes'
 
 import axios from 'axios';
+import Link from 'next/link';
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { getUserSession } from '@utils/reuseableCode';
 import { useRouter, useParams } from 'next/navigation';
-import Link from 'next/link';
 //TODO check if u can change the freeLancerRatingsProgress['5'] and others to a number instead of string
 
 export default function JobDetailsComponent(){
@@ -252,15 +253,21 @@ export default function JobDetailsComponent(){
                     <div className="freelancer-profile-picture-container">
                       {jobs && jobs.length > 0 && (
                         job.profilePicture == null ? 
-                        <img 
+                        <Image
                           id="title-profile-picture" 
                           src="http://localhost:3000/images/default.jpeg" 
                           alt="thumbnail" 
+                          width={100}
+                          height={100}
+                          layout='responsive'
                         /> : 
-                        <img 
+                        <Image
                           id="title-profile-picture" 
                           src={job.profilePicture} 
                           alt="thumbnail" 
+                          width={100}
+                          height={100}
+                          layout='responsive'
                         />
                       )}
                     </div>

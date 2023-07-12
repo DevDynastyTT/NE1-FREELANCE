@@ -36,7 +36,8 @@ async function getUserSession(): Promise<SessionType | undefined> {
         resolve(undefined);
       }
     } else {
-      console.log('no session')
+      alert('Login to view this page')
+      window.location.href = '/auth/login'
       resolve(undefined);
     }
   });

@@ -29,9 +29,10 @@ export default function ChatComponent() {
    
     function setOnlineUser(userSession:SessionType){ socket.emit('online-users', {userID: userSession?._id}) }
     function sendTypingAlert(){
-      if(session && session?._id && receiver && receiver?._id)
+      if(session && session?._id && receiver && receiver?._id){
+        console.log('ur typing')
         socket.emit('typing-alert', ({senderID: session._id, receiverID: receiver._id}))
-      
+      }
     }
     async function fetchUserSession() {
       const userSession = await getUserSession();
@@ -62,6 +63,7 @@ export default function ChatComponent() {
 
         socket.on('receive-typing-alert', (data) => {
           if(data.isTyping) {
+            console.log('user typing to u')
             setIsTyping(true)
             setTimeout(() => {
               setIsTyping(false)

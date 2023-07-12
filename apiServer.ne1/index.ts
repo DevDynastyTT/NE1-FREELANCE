@@ -74,14 +74,25 @@ const setOnlineUser = (userID: string, socketID: string): void => {
   }else console.log('User is already online')
 }
 
+const sendTypingAlert = (senderID:string, receiverID:string):void => {
+  const onlineUserSocketID = onlineUsers.get(receiverID);
+  io.to(onlineUserSocketID).emit("receive-typing-alert", {senderID, receiverID, isTyping: true});
+}
+
 //Listen for connection event when client establishes a websocket connection
 // ...
 
 io.on("connection", (socket) => {
   console.log('Client Connected')
+
   socket.on("online-users", (data:any) => {
     setOnlineUser(data.userID, socket.id);
   });
+
+  socket.on("typing-alert", (data) => {
+    const {senderID, receiverID} = data
+    sendTypingAlert(senderID, receiverID)
+  })
 
   socket.on("send-message", (data:any) => {
     const {message, sender, receiver, receiverID, senderID,  } = data;

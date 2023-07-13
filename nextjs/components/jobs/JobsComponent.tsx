@@ -3,7 +3,7 @@
 
 import {SessionType, JobsType, JobCategory} from '@utils/types'
 import GlobalNavbar from '@components/GlobalNavbar'
-import { fetchJobs, fetchCategories, getUserSession } from '@utils/reuseableCode';
+import { fetchCategories, getUserSession } from '@utils/reuseableCode';
 import { getAllJobs, getCategories, searchJobs } from '@utils/APIRoutes'
 
 import axios from 'axios';
@@ -56,6 +56,31 @@ export default function JobsComponent() {
       
       }
 
+      async function fetchJobs(): Promise<void> {
+      
+          try{
+            const response = await axios.get(getAllJobs)
+            const data = response.data
+            if(response.status !== 200){
+              setMessage(data.error)
+              return
+            }
+            console.log(data.reversedJobList)
+            setJobs(data.reversedJobList)
+          }catch(error:any){
+            setMessage('NE1-Freelance is currently under maintenance.')
+
+            if(error.response.data?.error && error.response.data?.error === 404){
+              setMessage(error.response.data.error)
+              return
+            }
+
+
+          }
+         
+      
+      }
+
     async function fetchUserSession(){
       const userSession:SessionType | undefined = await getUserSession();
       setSession(userSession);
@@ -63,7 +88,7 @@ export default function JobsComponent() {
       useEffect(() => {
         fetchUserSession();
       
-        fetchJobs(getAllJobs, setJobs, setMessage); // Fetch jobs regardless of search state
+        fetchJobs(); // Fetch jobs regardless of search state
       
         fetchCategories(setJobCategories, getCategories);
       }, []);

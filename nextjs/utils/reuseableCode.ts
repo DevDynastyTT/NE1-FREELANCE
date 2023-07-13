@@ -17,8 +17,10 @@ async function getUserSession(): Promise<SessionType | undefined> {
         resolve(undefined);
       }
     } else {
+      if(window.location.pathname === '/auth/messages'){
       alert('Login to view this page')
       window.location.href = '/auth/login'
+      }
       resolve(undefined);
     }
   });

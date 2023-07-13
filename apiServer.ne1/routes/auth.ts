@@ -1,5 +1,5 @@
 import reportJob from "../controllers/reportController";
-import sendEmail from "../controllers/contactController";
+import {sendEmail, notifyUser} from "../controllers/contactController";
 import heartBeat from "../controllers/heartBeatController";
 import { updateAbout, getAboutInfo } from "../controllers/aboutController";
 import { sendMessage, receiveMessage } from '../controllers/messagesController';
@@ -59,6 +59,7 @@ router.get("/getUserProfile/:id", getUserProfile);
 router.get("/getAllUserInfo", getAllUserInfo);
 router.get("/countUsers", countUsers);
 router.post("/send", sendMessage);
+router.post("/send/notify/", notifyUser);
 router.get("/receive/:senderID/:receiverID", receiveMessage);
 
 router.get("/getAllJobs", getAllJobs);

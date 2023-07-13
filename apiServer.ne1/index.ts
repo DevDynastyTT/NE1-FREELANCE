@@ -1,11 +1,11 @@
 import cors from "cors";
+import axios from 'axios'
 import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
-import Messages from "./models/messagesModel"
 import session from "express-session";
 import { authRoutes } from "./routes/auth";
-import User from "./models/userModel";
+import { notifyUserRoute } from '../nextjs/utils/APIRoutes';
 const socket = require("socket.io");
 
 dotenv.config();
@@ -97,11 +97,15 @@ io.on("connection", (socket) => {
   socket.on("send-message", (data:any) => {
     const {message, sender, receiver, receiverID, senderID,  } = data;
 
-    if (!onlineUsers.has(receiverID)) return console.log(receiver, "is not online");
-    
-
     const onlineUserSocketID = onlineUsers.get(receiverID);
-    if (onlineUserSocketID) {
+    if (!onlineUserSocketID) {
+      console.log(`${receiver} is offline`)
+      axios.post(notifyUserRoute, 
+        {
+          message, receiverID, senderID
+        })
+    }
+
       console.log(`${receiver} is online`)
       io.to(onlineUserSocketID).emit("receive-message", {
         senderID,
@@ -109,7 +113,6 @@ io.on("connection", (socket) => {
       });
       console.log(sender, "sent", message, 'to', receiver);
 
-    }
 
    
   });

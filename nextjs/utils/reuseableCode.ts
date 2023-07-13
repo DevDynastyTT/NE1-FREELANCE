@@ -2,26 +2,7 @@ import axios from "axios"
 import { Dispatch, SetStateAction } from "react"
 import { JobsType, SessionType } from './types';
 
-async function fetchJobs(
-  getAllJobs: string, 
-  setJobs: Dispatch<SetStateAction<JobsType[]>>, 
-  setMessage: Dispatch<SetStateAction<string>>): Promise<void> {
 
-      axios.get(getAllJobs).then(response => {
-        const data = response.data
-        if(response.status !== 200){
-          setMessage(data.error)
-          return
-        }
-        console.log(data.reversedJobList)
-        setJobs(data.reversedJobList)
-      })
-      .catch(error => {
-        console.log('Error Fetching Jobs: ' + error)
-      })
-      // setJobs(data.reversedJobList)
-
-}
 
 async function getUserSession(): Promise<SessionType | undefined> {
   return new Promise((resolve) => {
@@ -63,7 +44,6 @@ async function fetchCategories(setJobCategories:any, getCategories:any) {
 
 
 export {
-  fetchJobs,
   getUserSession,
   fetchCategories,
 };

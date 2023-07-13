@@ -34,30 +34,30 @@ export default function Signup(){
     };
   
     const handleValidation = () => {
-      console.log('validating')
       const { password, confirmPassword, username, email } = values;
-      
-      if (username == '') {
+      if(message){
+        setMessage('')
+      }
+      if (!username) {
         console.log("Enter your username")
         setMessage("Enter your username")
         return console.log("Enter your username")
       }
-      if (email == '') {
+      if (!email) {
         console.log("Enter your email")
         setMessage("Enter your email")
         return console.log("Enter your email")
       }
-      if (password == '') {
+      if (!password) {
         console.log("Enter your password")
         setMessage("Enter your password")
         return console.log("Enter your password")
       }
-      if (confirmPassword == '') {
+      if (!confirmPassword) {
         console.log("Please confirm your password")
         setMessage("Please confirm your password")
         return console.log("Please confirm your password")
       }
-      console.log(password)
       if (confirmPassword !== password) {
           setMessage(
             'Passwords must match'
@@ -83,7 +83,6 @@ export default function Signup(){
   
     const handleSubmit = async (event: FormEvent) => {
       event.preventDefault();
-
       if (handleValidation()) {
         try{
             const { email, username, password } = values;
@@ -94,7 +93,6 @@ export default function Signup(){
               setMessage(data.error)
               return
             }
-            console.log(data)
             sessionStorage.setItem('user', JSON.stringify(data.user))
             
             const userSessionStorage = sessionStorage.getItem('user')
@@ -106,13 +104,14 @@ export default function Signup(){
     
             }
         } catch(error:any){
-          if(error.response.data.error && error.response.status === 400){
+          if(error.response.data.error && (error.response.status === 400 || error.response.status === 409)){
             console.log(error.response.data.error)
             setMessage(error.response.data.error)
-            return
+          }else if(!error.response.data.error){
+            setMessage('NE1-Freelance is down for maintenance. Please try again later.')
           }
-          setMessage("Unfortunately our servers are down. Please try again later.")
-        } console.log('passed validation')
+
+        } 
        
       }
     };
@@ -122,7 +121,6 @@ export default function Signup(){
       if ((checkSession && checkSession !== undefined) && router) {
         setSession(JSON.parse(checkSession));
         router.push('/jobs')
-        console.log('Redirecting to jobs page...')
       }
     },[router])
 

@@ -4,7 +4,7 @@ const UserSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    match: [/^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/, "Username invalid, it should contain 8-20 alphanumeric letters!"]
+    // match: [/^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/, "Username invalid, it should contain 8-20 alphanumeric letters!"]
   },
   email: {
     type: String,
@@ -14,7 +14,7 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Password is required!'],
-    min: 8,
+    min: [8, 'Password must be at least 8 characters!'],
   },
   isStaff: {
     type: Boolean,

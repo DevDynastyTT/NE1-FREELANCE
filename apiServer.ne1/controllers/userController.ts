@@ -2,6 +2,7 @@ import User from '../models/userModel';
 import userProfile from "../models/userProfileModel";
 import { SessionType } from '../types';
 import bcrypt from "bcrypt";
+import fs from 'fs';
 const { ObjectId } = require('mongodb');
 const AWS = require('aws-sdk');
 
@@ -94,26 +95,57 @@ const login = async (request, response) => {
 //Signup User
 const signup = async (request, response) => {
 try {
-    console.log('Registering User')
     const { username, email, password } = request.body;
     if (!email) {
-    console.log("Enter your email")
     return response.status(400).json({error: "Enter your email"})
     }
     if (!username) {
-    console.log("Enter your username")
     return response.status(400).json({error: "Enter your username"})
     }
     if (!password) {
-    console.log("Enter your password")
     return response.status(400).json({error: "Enter your password"})
     }
 
     const emailCheck = await User.findOne({ email });
 
     if (emailCheck) return response.status(409).json({ error: "Email already used"});
+
+    const listOfLocalPasswords = [
+      "password", "password123", "12345678", "123456789", "1234567890", 
+      `${username}1`, `${username}2`, `${username}3`, `${username}4`, `${username}5`, `${username}6`, `${username}7`, `${username}8`, `${username}9`,
+      `${username}12`, `${username}13`, `${username}14`, `${username}15`, `${username}16`, `${username}17`, `${username}18`, `${username}19`, `${username}20`,
+      `${username}123`, `${username}1234`, `${username}12345`, `${username}123456`, `${username}1234567`, `${username}12345678`, `${username}123456789`, `${username}1234567890`,
+      `${email}1`, `${email}2`, `${email}3`, `${email}4`, `${email}5`, `${email}6`, `${email}7`, `${email}8`, `${email}9`,
+      `${email}12`, `${email}13`, `${email}14`, `${email}15`, `${email}16`, `${email}17`, `${email}18`, `${email}19`, `${email}20`,
+      `${email}123`, `${email}1234`, `${email}12345`, `${email}123456`, `${email}1234567`, `${email}12345678`, `${email}123456789`, `${email}1234567890`,
+    ]
+
+    fs.readFile('controllers/commonPasswords.txt', (err, data) => {
+      if (err) {
+        console.error(err)
+        return response.status(400).json({ error: "There was a problem validating your password" })
+      }
     
-    console.log('Creating User...')
+      const listOfPasswords = data.toString().split('\n');
+      for (let i = 0; i < listOfPasswords.length; i++) {
+        const passwordFromList = listOfPasswords[i].trim(); // Remove leading/trailing whitespace
+        console.log('Checking password[', password, '] for', passwordFromList);
+        console.log(typeof passwordFromList);
+        if (password === passwordFromList) {
+          console.log('Matches a weak password which is', passwordFromList);
+          return response.status(400).json({ error: "Password is too weak" });
+        }
+      }
+    });
+    
+
+     for (let i = 0; i < listOfLocalPasswords.length; i++) {
+      if (password === listOfLocalPasswords[i]) {
+        return response.status(400).json({error: "Password is too weak"})
+      }
+    }
+
+    
     const hashedPassword = await bcrypt.hash(password, 10);
 
     
@@ -137,7 +169,6 @@ try {
 
     // Remove the password field from the plain JavaScript object
     delete userObject?.password;
-    console.log('Created User', userObject.username);
 
     request.session.user = savedUser;
     return response.status(200).json({user: userObject });

@@ -333,7 +333,7 @@ const getUserProfile = async (request, response) => {
   }
 };
 
-
+//Wasabi image fetching
 const getProfilePictureURL = async (fileName:string): Promise<string> => {
   try {
     const bucketName = 'ne1-freelance'; // Replace with your Wasabi bucket name

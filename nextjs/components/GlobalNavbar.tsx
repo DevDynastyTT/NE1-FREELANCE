@@ -143,7 +143,7 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
                   </li>
 
                   <li className="nav-item">
-                    <Link className="nav-link" href={'#'}>About(Soon...)</Link>
+                    <Link className="nav-link" href={'/about'}>About</Link>
                   </li>
 
                   <li className="nav-item">

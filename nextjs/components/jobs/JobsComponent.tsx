@@ -8,9 +8,11 @@ import { getAllJobs, getCategories, searchJobs } from '@utils/APIRoutes'
 
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 import { FormEvent, useEffect, useState } from 'react'
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context';
+
 
 export default function JobsComponent() {
 
@@ -151,9 +153,9 @@ export default function JobsComponent() {
                     </div>
                 
                     {/* Render jobs if there are no jobs available */}
-                    {jobs && jobs?.length > 0 ? (
+                    {jobs && jobs.length > 0 ? (
                         <div className="job-list-flex">
-                            {jobs?.map(function (job) {
+                            {jobs.map(function (job) {
                                 return (
                                     <div
                                         className="job-card"
@@ -162,9 +164,11 @@ export default function JobsComponent() {
 
                                         {/* <!--Display the job's thumbnail--> */}
                                         <div className="thumbnail-container" style={{ overflow: "hidden" }}>
-                                            <img 
+                                            <Image 
                                                 src={job.thumbnail} 
                                                 alt="job thumbnail" 
+                                                width={100}
+                                                height={100}
                                             />
                                         </div>
 

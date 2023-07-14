@@ -8,7 +8,8 @@ const updateAbout = async (request, response) => {
         return response.status(400).json({ error: 'Missing required field' });
       }
 
-      const about = await AboutUs.findOneAndUpdate({ _id: "6470dc364a25a34351d72000" }, {information},{new: true});
+      //Update the about us information with update id field that contains 1 1
+      const about = await AboutUs.findOneAndUpdate({ update: 1 }, {information},{new: true});
       if(!about){
         console.log('Error updating about us content')
         return response.status(500).json({ error: 'Error updating about us content' });

@@ -59,9 +59,6 @@ function Reassurance(){
                         className="image" 
                         src={ReassuranceImage}
                         alt="man-image" 
-                        width={100}
-                        height={500}
-                        unoptimized={true}
                     />
 
                 </div>

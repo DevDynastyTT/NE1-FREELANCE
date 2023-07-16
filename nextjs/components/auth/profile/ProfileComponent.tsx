@@ -167,7 +167,6 @@ export default function ProfileComponent(){
     
     useEffect(()=>{
         if(session && session?._id) profile()
-        
     }, [session])
 
     async function fetchUserSession(){

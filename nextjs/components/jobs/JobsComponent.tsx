@@ -23,7 +23,6 @@ export default function JobsComponent() {
     const [jobs, setJobs] = useState<JobsType[]>([])
     const [jobCategories, setJobCategories] = useState<JobCategory[]>([])
     const [jobCategory, setJobCategory] = useState<string>()
-
     //Search State
     const [search, setSearch] = useState<string>()
     const [message, setMessage] = useState<string>('Finding available jobs')

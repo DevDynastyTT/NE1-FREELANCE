@@ -7,6 +7,7 @@ import Link from "next/link";
 import { FormEvent, useState, useEffect } from "react";
 import { sendEmailRoute } from "@utils/APIRoutes";
 import { SessionType } from "@utils/types";
+import { getUserSession } from "@utils/reuseableCode";
 export default function ContactComponent() {
     const [name, setName] = useState<string>();
     const [userEmail, setUserEmail] = useState<string>();
@@ -33,10 +34,8 @@ export default function ContactComponent() {
   };
   
   useEffect(() => {
-    const checkSession = sessionStorage.getItem('user');
-    if (checkSession) {
-      setSession(JSON.parse(checkSession));
-    }
+      const isAuthenticated = getUserSession()
+      if(isAuthenticated) setSession(isAuthenticated)
   }, []);
   return (
     <>
@@ -87,9 +86,12 @@ export default function ContactComponent() {
               onSubmit={handleContact}>
                   <input type="text" className="form-control" id="name" placeholder="Name:" name="name"  required 
                   onChange={(event) => setName(event.target.value)}/>
+                  <br/>
                   <input type="email" className="form-control" id="email" placeholder="Email:" name="email" required
                     onChange={(event) => setUserEmail(event.target.value)}
                   />
+                  <br/>
+
               <textarea
                 className="form-control" rows={5} placeholder="Message:" name="message" required
                 onChange={(event) => setMessage(event.target.value)}

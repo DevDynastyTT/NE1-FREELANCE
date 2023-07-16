@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { Profile, SessionType } from '@utils/types';
 import { getUserSession } from '@utils/reuseableCode';
@@ -9,183 +9,187 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, FormEvent } from 'react'
 import { usePathname } from 'next/navigation';
+import GlobalFooter from '@components/GlobalFooter';
 const server = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://ne1freelance.onrender.com";
 
-export default function ProfileComponent(){
-
-    const router = useRouter();
+export default function ProfileComponent() {
+  const router = useRouter();
   const pathname = usePathname();
   const [session, setSession] = useState<SessionType>();
   const [userProfile, setUserProfile] = useState<Profile>();
   const [profilePictureURL, setProfilePictureURL] = useState<string>();
   const [userBio, setBio] = useState<string>();
   const [message, setMessage] = useState<string>();
-  
-    const [values, setValues] = useState({
+  const [values, setValues] = useState({
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
-    });
-  
-    
-    const handleChange = (event:FormEvent<HTMLInputElement>) => { setValues({ ...values, [event.currentTarget.name]: event.currentTarget.value })};
-    
-    const handleValidation = () => {
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleChange = (event: FormEvent<HTMLInputElement>) => {
+    setValues({ ...values, [event.currentTarget.name]: event.currentTarget.value });
+  };
+
+  const handleValidation = () => {
     console.log('validating')
     const { password, confirmPassword, username, email } = values;
     console.log(password)
 
-    if(password || confirmPassword){
-        if (password !== confirmPassword) {
-            alert("Password and confirm password should be same.")
-            return false;
-        } else if (password.length < 8) {
-            alert("Password should be equal or greater than 8 characters.")
-            return false;
-        }
+    if (password || confirmPassword) {
+      if (password !== confirmPassword) {
+        alert("Password and confirm password should be same.")
+        return false;
+      } else if (password.length < 8) {
+        alert("Password should be equal or greater than 8 characters.")
+        return false;
+      }
     }
 
     return true;
-    };
+  };
 
-    async function handleLogOut() {
-        sessionStorage.removeItem('user')
+  async function handleLogOut() {
+    sessionStorage.removeItem('user')
 
-        if(pathname !== '/jobs'){
-          console.log('redirecting')
-           if(router) router.push("/jobs")
-        }
-        else
-            window.location.href = 'jobs'
+    if (pathname !== '/jobs') {
+      console.log('redirecting')
+      if (router) router.push("/jobs")
     }
-                
+    else
+      window.location.href = 'jobs'
+  }
 
-    async function profile() {
-        try {
-            const response = await axios.get(`${getUserProfile}/${(session?._id)}`);
-            const data = response.data;
-            if (response.status !== 200) {
-                console.log(data.error);
-                setMessage(data.error);
-                return
-            }
-
-            console.log(data.user_profile)
-            setUserProfile(data.user_profile);
-        } catch (error) {
-            console.error(error, ' this happened');
-            setMessage("Internal server error");
-        }
-    }
-
-    async function handleProfileUploadFormSubmit(event:FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-      
-        const formData = new FormData();
-        formData.append('userID', (session && session?._id) ? session._id : '');
-        formData.append('bio', (userBio && userBio.length > 0) ? userBio : '');
-        formData.append('profile_picture', event.currentTarget.profilepicture.files[0]);
-      
-        try {
-          if (!userBio) setBio('undefined');
-      
-          const response = await axios.put(`${updateProfile}`, formData, {
-            headers: { 'Content-Type': 'multipart/form-data' }, // Ensure the correct content type for FormData
-          });
-          const data = response.data
-          // Check the response status code
-          if (response.status !== 200) {
-            setMessage(data.error);
-            console.log(data.error);
-            return
-          } 
-
-          setMessage(data.message);
-          // Fetch the pre-signed URL from the response data
-            const signedUrl = response.data.signedUrl;
-
-            // Use the pre-signed URL to fetch the image
-            const imageResponse = await axios.get(signedUrl, {
-                responseType: 'blob', // Set the response type to blob
-            });
-
-            // Create a URL for the image blob
-            const imageUrl = URL.createObjectURL(imageResponse.data);
-
-            // Set the image URL to display the image
-            setUserProfile(prevUserProfile => ({
-                userID: prevUserProfile ? prevUserProfile.userID : '',
-                bio: userProfile?.bio,
-                profilePicture: imageUrl,
-                creditCard: userProfile?.creditCard
-              }));
-              
-              
-
-        } catch (error) {
-          console.log(error);
-        }
+  async function profile() {
+    try {
+      const response = await axios.get(`${getUserProfile}/${(session?._id)}`);
+      const data = response.data;
+      if (response.status !== 200) {
+        console.log(data.error);
+        setMessage(data.error);
+        return
       }
 
-    async function handleUpdateUserSubmit(event:FormEvent<HTMLFormElement>) {
-        event.preventDefault()
+      console.log(data.user_profile)
+      setUserProfile(data.user_profile);
+    } catch (error) {
+      console.error(error, ' this happened');
+      setMessage("Internal server error");
+    }
+  }
 
-        console.log(`Form Data Accepted\nUsername: ${values.username}, Email: ${values.email}\npassword: ${values.password}, confirmPassword: ${values.confirmPassword}`)
+  async function handleProfileUploadFormSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
 
-        if(handleValidation()){
-            try {
-                console.log('Running updateUser function...')
-                console.log('passed validation')
-                const { email, username, password } = values;
-                const response = await axios.post(updateUser, {
-                    userID: session?._id,
-                    username,
-                    email,
-                    password,
-                })
+    const formData = new FormData();
+    formData.append('userID', (session && session?._id) ? session._id : '');
+    formData.append('bio', (userBio && userBio.length > 0) ? userBio : '');
+    formData.append('profile_picture', event.currentTarget.profilepicture.files[0]);
 
-                    const data = response.data
+    try {
+      if (!userBio) setBio('undefined');
 
-                    if (response.status !== 200) {
-                        console.log(data.error)
-                        setMessage(data.error)
-                        return
-                    } 
+      const response = await axios.put(`${updateProfile}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }, // Ensure the correct content type for FormData
+      });
+      const data = response.data
+      // Check the response status code
+      if (response.status !== 200) {
+        setMessage(data.error);
+        console.log(data.error);
+        return
+      }
 
-                    alert('You are going to be logged out in 2 seconds for changes to apply...')
-                    setTimeout(() => {
-                        handleLogOut().then(()=> router.push('/auth/login'))
-                    }, 1000)
-                
-            } catch (error) {
-                console.log(error)
-            }
+      setMessage(data.message);
+      // Fetch the pre-signed URL from the response data
+      const signedUrl = response.data.signedUrl;
+
+      // Use the pre-signed URL to fetch the image
+      const imageResponse = await axios.get(signedUrl, {
+        responseType: 'blob', // Set the response type to blob
+      });
+
+      // Create a URL for the image blob
+      const imageUrl = URL.createObjectURL(imageResponse.data);
+
+      // Set the image URL to display the image
+      setUserProfile(prevUserProfile => ({
+        userID: prevUserProfile ? prevUserProfile.userID : '',
+        bio: userProfile?.bio,
+        profilePicture: imageUrl,
+        creditCard: userProfile?.creditCard
+      }));
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function handleUpdateUserSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    console.log(`Form Data Accepted\nUsername: ${values.username}, Email: ${values.email}\npassword: ${values.password}, confirmPassword: ${values.confirmPassword}`)
+
+    if (handleValidation()) {
+      try {
+        console.log('Running updateUser function...')
+        console.log('passed validation')
+        const { email, username, password } = values;
+        const response = await axios.post(updateUser, {
+          userID: session?._id,
+          username,
+          email,
+          password,
+        })
+
+        const data = response.data
+
+        if (response.status !== 200) {
+          console.log(data.error)
+          setMessage(data.error)
+          return
         }
+
+        alert('You are going to be logged out in 2 seconds for changes to apply...')
+        setTimeout(() => {
+          handleLogOut().then(() => router.push('/auth/login'))
+        }, 1000)
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
+  useEffect(() => {
+    const isAuthenticated = getUserSession()
+    if (!isAuthenticated) {
+      alert('Login to view your profile')
+      router.push('/auth/login')
+      return
     }
 
+    setSession(isAuthenticated);
+  }, []);
+
+  useEffect(() => {
+    if(session && session?._id)
+        profile().then(() => setIsLoading(false));
     
-    useEffect(()=>{
-        if(session && session?._id) profile()
-        
-    }, [session])
+  }, [session])
 
-    async function fetchUserSession(){
-        const userSession =  await getUserSession()
-        setSession(userSession)
-    }
-    useEffect(() => {
-        fetchUserSession()
-    }, []);
-  
-    return (
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <>
+      {(session && session?._id) && (
         <>
+          <GlobalNavbar session={session} />
 
-        {(session && session?._id) ? (
-            <>
-                <GlobalNavbar session={session} />
-
-                <main className="profile-main-container">
+          <main className="profile-main-container">
                     <div className="profile-flex-container">
                         <div className="left">
         
@@ -358,10 +362,10 @@ export default function ProfileComponent(){
                     </div>
                         
                 </main>
-            </>
-        ): <h1 className="spinnerTitle">Loading Please Wait </h1>}
 
+          <GlobalFooter />
         </>
-            
-    )
+      )}
+    </>
+  )
 }

@@ -10,10 +10,10 @@ export const metadata:Metadata = {
 }
 
 export default function CreateJobPage() {
+  
   return (
     <>
         <CreateJobComponent />
-        <GlobalFooter/>
 
     </>
   )

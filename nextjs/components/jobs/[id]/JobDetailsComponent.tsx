@@ -388,7 +388,7 @@ export default function JobDetailsComponent(){
                           </div>
 
                           <button 
-                            type="button" 
+                            type="button"
                             className="form-control side-buttons"
                             onClick={()=> setReportForm(true)}>Report
                           </button>

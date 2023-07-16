@@ -24,6 +24,7 @@ export default function ChatComponent() {
     const [isTyping, setIsTyping] = useState<boolean>(false);
     const [receivedMessages, setReceivedMessages] = useState<MessagesType[]>([]);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     
    
@@ -34,13 +35,13 @@ export default function ChatComponent() {
         socket.emit('typing-alert', ({senderID: session._id, receiverID: receiver._id}))
       }
     }
-    async function fetchUserSession() {
-      const userSession = await getUserSession();
+    async function handleEmit() {
+      const isAuthenticated = getUserSession();
 
       //User authentication 
-      if (userSession && userSession?._id) {
-        setSession(userSession); //Assign user information to session
-        setOnlineUser(userSession); //Send an online-emit event to tell all users that the user is online
+      if (isAuthenticated && isAuthenticated?._id) {
+        setSession(isAuthenticated); //Assign user information to session
+        setOnlineUser(isAuthenticated); //Send an online-emit event to tell all users that the user is online
         await fetchAllUsers(); //Fetch all users to chat with
 
         //When user is sent a message, they will receive it
@@ -49,7 +50,7 @@ export default function ChatComponent() {
           const receivedMessage = {
             content: newMessage,
             sender: sender,
-            receiver: userSession?.username || '',
+            receiver: isAuthenticated?.username || '',
             isSender: false,
             sentAt: new Date().toISOString(),
           };
@@ -70,9 +71,10 @@ export default function ChatComponent() {
             }, 3000)
           }
         })
-      } else {
-        alert('Login to message');
-      }
+      } 
+
+      setIsLoading(false);
+
     }
     async function handleOpenChat(currentUser: SessionType) {
 
@@ -139,11 +141,11 @@ export default function ChatComponent() {
     
     }
 
-    async function fetchAllMessages(userSession: SessionType, currentReceiver: SessionType) {
+    async function fetchAllMessages(isAuthenticated: SessionType, currentReceiver: SessionType) {
       try {
         if (currentReceiver) { // Check if the receiver state is defined
           const response = await axios.get(
-            `${receiveMessageRoute}/${userSession?._id}/${currentReceiver._id}`
+            `${receiveMessageRoute}/${isAuthenticated?._id}/${currentReceiver._id}`
           );
     
           const data = response.data;
@@ -156,7 +158,7 @@ export default function ChatComponent() {
             content: message.content,
             sender: message.sender,
             receiver: message.receiver,
-            isSender: message.senderID === userSession?._id,
+            isSender: message.senderID === isAuthenticated?._id,
             sentAt: message.sentAt
           }));
     
@@ -185,7 +187,7 @@ export default function ChatComponent() {
     }
 
     useEffect(() => {
-      fetchUserSession()
+      handleEmit()
     
       return () => {
         socket.disconnect()
@@ -195,20 +197,27 @@ export default function ChatComponent() {
     
 
     useEffect(() => {
-      if (session && receiver) fetchAllMessages(session, receiver);
-    }, [session, receiver])
-    
-    useEffect(() => {
-      if (messagesEndRef.current) messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }, [receivedMessages])
+      if (session && receiver) {
+        fetchAllMessages(session, receiver);
+      }
+    }, [session, receiver]);
   
+    useEffect(() => {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, [receivedMessages]);
     return (
       <>
-        {session && session?._id && (
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : (
           <>
-            <GlobalNavbar session={session} />
-
-            <div>
+            {session && session?._id && (
+              <>
+                <GlobalNavbar session={session} />
+  
+                <div>
               <div>
                 <div style={{ marginLeft: "8%", height: "50px"}}>
                   <span style={{fontSize: '2rem'}}>{chatName}</span>
@@ -283,10 +292,12 @@ export default function ChatComponent() {
                   </ul>
                 </div>
               )}
-            </div>
-
+                </div> 
+              </>
+            )}
           </>
         )}
       </>
     );
   }
+  

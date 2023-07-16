@@ -7,6 +7,7 @@ import Link from "next/link";
 import { FormEvent, useState, useEffect } from "react";
 import axios from "axios";
 import {useRouter} from 'next/navigation';
+import { getUserSession } from "@utils/reuseableCode";
 
 export default function LoginComponent(){
 
@@ -71,10 +72,11 @@ export default function LoginComponent(){
       };
 
       useEffect(() => {
-        const checkSession = sessionStorage.getItem('user');
-        if (checkSession && checkSession !== undefined) {
-            router.push('/jobs')
-            setSession(JSON.parse(checkSession));
+        const isAuthenticated = getUserSession()
+
+        if(isAuthenticated){
+          setSession(isAuthenticated)
+          router.push('/jobs')
         }
       },[router])
     return (

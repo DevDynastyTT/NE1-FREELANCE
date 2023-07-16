@@ -5,12 +5,12 @@ import Logo from '@public/images/logo2.png'
 import Image from 'next/image'
 import { getCategories, searchJobs } from '@utils/APIRoutes'
 import { fetchCategories } from '@utils/reuseableCode';
-import { useState, useEffect } from 'react'
+import { useState, useEffect, FormEvent } from 'react'
 import { useRouter } from 'next/navigation';
-import {JobCategory} from '@utils/types'
+import {JobCategory, SessionType} from '@utils/types'
 import axios from 'axios'
 
-export default function Header(){
+export default function Header() {
     const router = useRouter()
 
     const [jobCategories, setJobCategories] = useState<JobCategory[]>([]) // Add type annotation    const [jobCategory, setJobCategory] = useState([])
@@ -18,8 +18,7 @@ export default function Header(){
     const [isSearching, setIsSearching] = useState<boolean>(false)
     const [search, setSearch] = useState<string>();
 
-
-    async function handleSearchSubmit(event: React.FormEvent){
+    async function handleSearchSubmit(event: FormEvent<HTMLFormElement>){
         setIsSearching(true)
         console.log(`Searching for ${search}`)
         event.preventDefault();

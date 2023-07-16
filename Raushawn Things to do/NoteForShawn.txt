@@ -28,3 +28,4 @@ component folder, most times u will have to type
 'use client' above the file if u are using useState, useEffect and any other Hooks.
 
 If anything is confusing u let me know
+

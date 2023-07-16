@@ -29,12 +29,7 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
       function handleLogOut() {
           sessionStorage.removeItem('user')
 
-          if(pathname !== '/jobs'){
-            console.log('redirecting')
-             router.push("/jobs")
-          }
-          else
-              window.location.href = 'jobs'
+          window.location.href = 'jobs'
       }
       // Load bootstrap js functionality when the DOM has fully rednered
       useEffect(() => {

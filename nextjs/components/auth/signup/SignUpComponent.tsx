@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import GlobalNavbar from '@components/GlobalNavbar'
 import { useState, useEffect, FormEvent } from 'react';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context';
+import { getUserSession } from '@utils/reuseableCode';
 
 type valuesType = {
     username: string,
@@ -117,12 +118,12 @@ export default function Signup(){
     };
   
     useEffect(() => {
-      const checkSession = sessionStorage.getItem('user');
-      if ((checkSession && checkSession !== undefined) && router) {
-        setSession(JSON.parse(checkSession));
+      const isAuthenticated = getUserSession()
+      if(isAuthenticated) {
+        setSession(isAuthenticated) 
         router.push('/jobs')
       }
-    },[router])
+      },[router])
 
   return (
     <>

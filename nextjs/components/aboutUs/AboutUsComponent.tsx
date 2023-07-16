@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { getAboutInfo } from "@utils/APIRoutes"
 import Image from 'next/image';
+import { getUserSession } from '@utils/reuseableCode';
 
 export default function AboutUsComponent(){
   
@@ -30,8 +31,11 @@ export default function AboutUsComponent(){
     }
   }
 
+
     useEffect(()=>{
-     about()
+      const isAuthenticated = getUserSession()
+      if(isAuthenticated) setSession(isAuthenticated) 
+      about()
     }, [])
     
     

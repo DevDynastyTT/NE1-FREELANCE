@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import User from '../models/userModel';
 import userProfile from "../models/userProfileModel";
 import { SessionType } from '../types';
@@ -94,90 +95,88 @@ const login = async (request, response) => {
   
 //Signup User
 const signup = async (request, response) => {
-try {
+  try {
     const { username, email, password } = request.body;
     if (!email) {
-    return response.status(400).json({error: "Enter your email"})
+      return response.status(400).json({ error: "Enter your email" });
     }
     if (!username) {
-    return response.status(400).json({error: "Enter your username"})
+      return response.status(400).json({ error: "Enter your username" });
     }
     if (!password) {
-    return response.status(400).json({error: "Enter your password"})
+      return response.status(400).json({ error: "Enter your password" });
     }
 
     const emailCheck = await User.findOne({ email });
 
-    if (emailCheck) return response.status(409).json({ error: "Email already used"});
+    if (emailCheck) {
+      return response.status(409).json({ error: "Email already used" });
+    }
 
     const listOfLocalPasswords = [
-      "password", "password123", "12345678", "123456789", "1234567890", 
+      "password", "password123", "Password123", "12345678", "123456789", "1234567890",
       `${username}1`, `${username}2`, `${username}3`, `${username}4`, `${username}5`, `${username}6`, `${username}7`, `${username}8`, `${username}9`,
       `${username}12`, `${username}13`, `${username}14`, `${username}15`, `${username}16`, `${username}17`, `${username}18`, `${username}19`, `${username}20`,
-      `${username}123`, `${username}1234`, `${username}12345`, `${username}123456`, `${username}1234567`, `${username}12345678`, `${username}123456789`, `${username}1234567890`,
-      `${email}1`, `${email}2`, `${email}3`, `${email}4`, `${email}5`, `${email}6`, `${email}7`, `${email}8`, `${email}9`,
+      `${username}123`,`${username}1234`,`${username}12345`,`${username}123456`,`${username}1234567`,`${username}12345678`,`${username}123456789`,`${username}1234567890`,
+      `${email}1`, `${email}2`, `${email}3`, `${email}4`, `${email}5`, `${email}6`, `${email}7`, `${email}8`, `${email}9`, 
       `${email}12`, `${email}13`, `${email}14`, `${email}15`, `${email}16`, `${email}17`, `${email}18`, `${email}19`, `${email}20`,
       `${email}123`, `${email}1234`, `${email}12345`, `${email}123456`, `${email}1234567`, `${email}12345678`, `${email}123456789`, `${email}1234567890`,
-    ]
+    ];
 
-    fs.readFile('controllers/commonPasswords.txt', (err, data) => {
-      if (err) {
-        console.error(err)
-        return response.status(400).json({ error: "There was a problem validating your password" })
-      }
-    
-      const listOfPasswords = data.toString().split('\n');
-      for (let i = 0; i < listOfPasswords.length; i++) {
-        const passwordFromList = listOfPasswords[i].trim(); // Remove leading/trailing whitespace
-        console.log('Checking password[', password, '] for', passwordFromList);
-        console.log(typeof passwordFromList);
-        if (password === passwordFromList) {
-          console.log('Matches a weak password which is', passwordFromList);
-          return response.status(400).json({ error: "Password is too weak" });
-        }
-      }
-    });
-    
-
-     for (let i = 0; i < listOfLocalPasswords.length; i++) {
-      if (password === listOfLocalPasswords[i]) {
-        return response.status(400).json({error: "Password is too weak"})
+    const data = fs.readFileSync('controllers/commonPasswords.txt', 'utf8');
+    const listOfPasswords = data.split('\n');
+    for (let i = 0; i < listOfPasswords.length; i++) {
+      const passwordFromList = listOfPasswords[i].trim();
+      console.log('Checking password[', password, '] for', passwordFromList);
+      console.log(typeof passwordFromList);
+      if (password === passwordFromList) {
+        console.log('Matches a weak password which is', passwordFromList);
+        return response.status(400).json({ error: "Password is too weak" });
       }
     }
 
-    
+    for (let i = 0; i < listOfLocalPasswords.length; i++) {
+      if (password === listOfLocalPasswords[i]) {
+        return response.status(400).json({ error: "Password is too weak" });
+      }
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    
-    const user = new User({
+    const user = await User.create({
       email,
       username,
       password: hashedPassword,
     });
 
-    const savedUser = await user.save();
-        // Convert the Mongoose document to a plain JavaScript object
-    const userObject:SessionType = savedUser.toObject();
+    if (!user) {
+      console.log("User not created")
+      return response.status(500).json({ error: "Internal Server Error" });
+    }
 
-    const userprofile = new userProfile({
+    delete user.password;
+
+    const profile = await userProfile.create({
       userID: user?._id,
       profilePicture: 'default.png',
-      bio: 'undefined'
-    })
+      bio: 'undefined',
+    });
 
-    await userprofile.save();
+    if(!profile){
+      console.log("Profile not created")
+      return response.status(500).json({error: "Internal Server Error"})
+    }
 
-    // Remove the password field from the plain JavaScript object
-    delete userObject?.password;
 
-    request.session.user = savedUser;
-    return response.status(200).json({user: userObject });
-    
-} catch (error) {
+    // request.session.user = user;
+    return response.status(200).json({ user });
+
+  } catch (error) {
     console.log(error.message);
-    return response.status(500).json({error:error.message})
-}
+    return response.status(500).json({ error: error.message });
+  }
 };
+
 
 //Profile page
 const updateUser = async (request, response) => {
@@ -204,8 +203,8 @@ const updateUser = async (request, response) => {
     // Return the updated user object
     console.log('User account updated')
     return response.json({ error: 'Profile updated', user });
-  } catch (ex) {
-    console.log(ex);
+  } catch (error:any) {
+    console.log(error.message);
     return response.status(500).json({ error: 'Internal Server Error' });
   }
 };
@@ -285,9 +284,15 @@ const updateProfile = async (request, response) => {
 const getUserProfile = async (request, response) => {
   try {
     const { id } = request.params;
+
+    if (!id) {
+      console.log('No user ID provided');
+      return response.status(400).json({ error: 'No user ID provided' });
+    }
+
     // Find the profile and user data for the specified user ID.
     const profile = await userProfile.aggregate([
-      { $match: { userID: id } },
+      { $match: { userID: new mongoose.Types.ObjectId(id) } },
       {
         $lookup: {
           from: 'users',
@@ -309,7 +314,7 @@ const getUserProfile = async (request, response) => {
       return response.status(404).json({ error: 'Profile not found' });
     }
 
-    const matchedUserProfile = await User.findById({_id: id});
+    const matchedUserProfile = await User.findById({_id: new mongoose.Types.ObjectId(id)});
 
     const profilePictureURL = await getProfilePictureURL(profile[0]?.profilePicture);
 

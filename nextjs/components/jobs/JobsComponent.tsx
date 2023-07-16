@@ -82,13 +82,10 @@ export default function JobsComponent() {
       
       }
 
-    async function fetchUserSession(){
-      const userSession:SessionType | undefined = await getUserSession();
-      setSession(userSession);
-    }
+  
       useEffect(() => {
-        fetchUserSession();
-      
+        const isAuthenticated = getUserSession()
+        if(isAuthenticated) setSession(isAuthenticated) 
         fetchJobs(); // Fetch jobs regardless of search state
       
         fetchCategories(setJobCategories, getCategories);

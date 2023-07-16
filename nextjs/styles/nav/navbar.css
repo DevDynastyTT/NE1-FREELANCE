@@ -26,7 +26,7 @@
 }
 
 .logged_in-navbar, .logged_out-navbar {
-  background-color: rgb(33, 37, 41);
+  background: linear-gradient(51deg, rgb(214, 27, 98) 0%, rgb(214, 27, 98) 10%, rgb(133, 186, 56) 100%, rgb(133, 186, 56) 100%);
   padding-bottom: 0;
   font-size: 1rem;
   display: flex;
@@ -289,7 +289,7 @@
 }
 @media (min-width: 768px) {
   .logged_in-navbar, .logged_out-navbar {
-    background-color: rgb(33, 37, 41);
+    background: linear-gradient(51deg, rgb(214, 27, 98) 0%, rgb(214, 27, 98) 10%, rgb(133, 186, 56) 100%, rgb(133, 186, 56) 100%);
   }
   .logged_in-navbar .logo-wrapper, .logged_out-navbar .logo-wrapper {
     width: 50%;

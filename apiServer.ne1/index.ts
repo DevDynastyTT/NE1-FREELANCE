@@ -144,4 +144,4 @@ let check = 0
 setInterval(() => {
   check++
   console.log(`Keep alive check: ${check}`)
-}, 10000)
+}, 600000) //Execute every 10 mins

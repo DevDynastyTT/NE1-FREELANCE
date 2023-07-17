@@ -140,3 +140,8 @@ io.on("connection", (socket) => {
   from the client to the server or vice versa. It allows communication 
   between the client and the server by sending messages or notifications.
 */
+let check = 0
+setInterval(() => {
+  check++
+  console.log(`Keep alive check: ${check}`)
+}, 10000)

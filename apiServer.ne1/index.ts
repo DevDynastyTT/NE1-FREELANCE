@@ -66,6 +66,8 @@ export const io = socket(server, {
 
 //Track onlineUsers by { "userID": "sockedID }
 const onlineUsers = new Map();
+// Track typing status by { "senderID": "isTyping" }
+const typingStatus = new Map();
 
 const setOnlineUser = (userID: string, socketID: string): void => {
   if(!onlineUsers.has(userID)){
@@ -74,10 +76,17 @@ const setOnlineUser = (userID: string, socketID: string): void => {
   }else console.log('User is already online')
 }
 
-const sendTypingAlert = (senderID:string, receiverID:string):void => {
+const sendTypingAlert = (senderID, receiverID) => {
   const onlineUserSocketID = onlineUsers.get(receiverID);
-  io.to(onlineUserSocketID).emit("receive-typing-alert", {senderID, receiverID, isTyping: true});
-}
+  typingStatus.set(senderID, true);
+
+  io.to(onlineUserSocketID).emit('receive-typing-alert', { senderID, receiverID, isTyping: true});
+
+  setTimeout(() => {
+    typingStatus.delete(senderID);
+    io.to(onlineUserSocketID).emit('receive-typing-alert', { senderID, receiverID, isTyping: false});
+  }, 5000);
+};
 
 //Listen for connection event when client establishes a websocket connection
 // ...
@@ -91,8 +100,9 @@ io.on("connection", (socket) => {
 
   socket.on("typing-alert", (data) => {
     const {senderID, receiverID} = data
-    sendTypingAlert(senderID, receiverID)
-  })
+    if (!typingStatus.has(senderID)) {
+      sendTypingAlert(senderID, receiverID);
+    }  })
 
   socket.on("send-message", (data:any) => {
     const {message, sender, receiver, receiverID, senderID,  } = data;

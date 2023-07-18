@@ -30,10 +30,11 @@ export default function ChatComponent() {
    
     function setOnlineUser(userSession:SessionType){ socket.emit('online-users', {userID: userSession?._id}) }
     function sendTypingAlert(){
-      if(session && session?._id && receiver && receiver?._id){
-        console.log('ur typing')
-        socket.emit('typing-alert', ({senderID: session._id, receiverID: receiver._id}))
-      }
+      if(session?._id && receiver?._id)
+        socket.emit('typing-alert', ({
+          senderID: session._id, receiverID: receiver._id
+        }))
+      
     }
     async function handleEmit() {
       const isAuthenticated = getUserSession();
@@ -46,6 +47,7 @@ export default function ChatComponent() {
 
         //When user is sent a message, they will receive it
         socket.on("receive-message", (data) => {
+          setIsTyping(false)
           const { newMessage, sender } = data;
           const receivedMessage = {
             content: newMessage,
@@ -63,14 +65,13 @@ export default function ChatComponent() {
         });
 
         socket.on('receive-typing-alert', (data) => {
-          if(data.isTyping) {
-            console.log('user typing to u')
-            setIsTyping(true)
-            setTimeout(() => {
-              setIsTyping(false)
-            }, 3000)
+          if (data.isTyping) {
+            setIsTyping(true);
+          } else if(!data.isTyping){
+            setIsTyping(false);
           }
-        })
+        });
+        
       } 
 
       setIsLoading(false);
@@ -89,7 +90,6 @@ export default function ChatComponent() {
 
     async function sendMessage (event: FormEvent<HTMLFormElement>) {
       event.preventDefault()
-
       //If user if logged in and selected a person to chat with, send the message
       if(session && session?._id && receiver && receiver?._id){
           try{
@@ -204,7 +204,7 @@ export default function ChatComponent() {
   
     useEffect(() => {
       if (messagesEndRef.current) {
-        messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end'  });
       }
     }, [receivedMessages]);
     return (
@@ -221,7 +221,8 @@ export default function ChatComponent() {
               <div>
                 <div style={{ marginLeft: "8%", height: "50px"}}>
                   <span style={{fontSize: '2rem'}}>{chatName}</span>
-                  <span style={{color: 'grey'}}>{isTyping === false ? '' : '  typing...'}</span>
+                  
+                  {isTyping && <span style={{color: 'grey'}}>typing...</span>}
                 </div>
 
                 <div

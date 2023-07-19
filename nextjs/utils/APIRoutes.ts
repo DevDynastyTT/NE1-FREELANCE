@@ -4,6 +4,7 @@ export const heartBeat = `${host}/api/heartbeat`
 
 /***************USER ROUTES***************/
 export const loginRoute = `${host}/api/auth/login`
+export const logoutRoute = `${host}/api/auth/logout`
 export const signupRoute = `${host}/api/auth/signup`
 export const allUsersRoute = `${host}/api/auth/allusers`
 export const getAllUserInfo = `${host}/api/auth/getAllUserInfo`

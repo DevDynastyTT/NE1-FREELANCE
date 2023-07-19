@@ -5,6 +5,7 @@ import { updateAbout, getAboutInfo } from "../controllers/aboutController";
 import { sendMessage, receiveMessage, searchUsers } from '../controllers/messagesController';
 import { 
   login, 
+  logout,
   signup, 
   updateUser, 
   updateProfile, 
@@ -49,6 +50,7 @@ const upload = multer({
 });
 
 router.post("/login", login);
+router.put("/logout/:id", logout);
 router.post("/signup", signup);
 router.post("/updateUser", updateUser);
 router.put("/updateProfile", upload.single('profile_picture'), updateProfile);

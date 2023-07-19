@@ -6,6 +6,8 @@ import { getUserSession } from "@utils/reuseableCode";
 import { MessagesType, SessionType } from "@utils/types";
 import axios from "axios";
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircle } from '@fortawesome/free-regular-svg-icons'
 import io from "socket.io-client";
 
 const server = process.env.NODE_ENV === "development" ? "http://localhost:3002" : "https://ne1freelance.onrender.com";
@@ -22,6 +24,7 @@ export default function ChatComponent() {
     const [chatName, setChatName] = useState<string>();
     
     const [isTyping, setIsTyping] = useState<boolean>(false);
+    const [keyword, setKeyword] = useState<string>("")
     const [receivedMessages, setReceivedMessages] = useState<MessagesType[]>([]);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -137,8 +140,7 @@ export default function ChatComponent() {
     }
 
     async function handleSearchUsers(event: FormEvent<HTMLInputElement>) {
-      let keyword = event.currentTarget.value
-      console.log(keyword, ' is keyword')
+      setKeyword(event.currentTarget.value)
       try {
         const response = await axios.get(`${searchUsers}/${keyword}`);
         const data = response.data;
@@ -146,6 +148,7 @@ export default function ChatComponent() {
           console.error(data.error);
           return;
         }
+        console.log(data.userInfo)
         setUsers(data.userInfo);
       } catch (error) {
         console.error(error);
@@ -211,7 +214,19 @@ export default function ChatComponent() {
                 <div>
                   <div>
                     <div style={{ marginLeft: "8%", height: "50px"}}>
-                      <span style={{fontSize: '2rem'}}>{chatName}</span>
+                      <span style={{fontSize: '2rem'}}>
+                        {chatName}
+                        {receiver?.isActive && <FontAwesomeIcon 
+                                  style={{ 
+                                    color: "rgb(0, 255, 0)", 
+                                    backgroundColor: "rgb(0, 255, 0)", 
+                                    borderRadius: "50%",
+                                    fontSize: ".7rem",
+                                    margin: "0 0 0 5px",
+                                  }}
+                                  icon={faCircle} />
+                        }
+                        </span>
                       
                       {isTyping && <span style={{color: 'grey'}}>typing...</span>}
                     </div>
@@ -274,7 +289,7 @@ export default function ChatComponent() {
                         />
                     </form>
 
-                    {users && users?.length > 0 && (
+                    {users?.length > 0 && keyword?.length > 0 && (
                       <div>
                         <ul>
                           {users?.map((currentUser, currentIndex) =>
@@ -284,7 +299,17 @@ export default function ChatComponent() {
                                 style={{ cursor: "pointer" }}
                                 onClick={() => handleOpenChat(currentUser)}
                               >
-                                {currentUser.username}
+                                {currentUser.username} 
+                                {currentUser.isActive && <FontAwesomeIcon 
+                                  style={{ 
+                                    color: "rgb(0, 255, 0)", 
+                                    backgroundColor: "rgb(0, 255, 0)", 
+                                    borderRadius: "50%",
+                                    fontSize: ".7rem",
+                                    margin: "0 0 0 5px",
+                                  }}
+                                  icon={faCircle} 
+                                /> }
                               </li>
                             ) : null
                           )}

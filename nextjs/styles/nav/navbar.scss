@@ -358,9 +358,8 @@
         .sandwich-button{display: none;}
         .nav-tabs{
             display: flex;
-            padding-left: 5%;
+            padding: 0;
             margin-left: -5% !important;
-            padding-top: 3%;
             width: 100%;
         }
     }
@@ -370,20 +369,34 @@
 //Tablet
 @media (min-width: 768px) and (max-width: 1024px) {
     .logged_in-navbar, .logged_out-navbar {
+
+        .logo-wrapper{
+            width: 50%;
+        }
         .nav-tabs{
-            padding-left: 10%;
+            padding: 0;
+            margin-left: 0% !important;
+
+            .nav-item{
+                font-size: .9rem;
+                margin-top: -1%;
+            }
         }
     }
 }
 //Small Laptop
 @media (min-width: 1024px) and (max-width: 1080px) {
     .logged_in-navbar, .logged_out-navbar {
+
+        .logo-wrapper{
+            width: 35%;
+            padding-left: 2%;
+        }
         .nav-tabs{
-            padding-left: 5%;
-            padding-top: 2%;
+            margin-left: 15% !important;
 
             .nav-item{
-                font-size: 1.5rem;
+                font-size: 1.1rem;
             }
         }
     }
@@ -391,12 +404,17 @@
 
 @media (min-width: 1080px) and (max-width: 1440px) {
     .logged_in-navbar, .logged_out-navbar {
+
+        .logo-wrapper{
+            width: 50%;
+        }
         .nav-tabs{
-            padding-left: 18%;
-            padding-top: 1%;
+            width: 100%;
+            margin-left: 5% !important;
 
             .nav-item{
-                font-size: 1.5rem;
+                font-size: 1.2rem;
+                margin-top: -1%;
             }
         }
     }
@@ -404,11 +422,34 @@
 
 @media (min-width: 1440px) and (max-width: 1536px) {
     .logged_in-navbar, .logged_out-navbar {
-        .nav-tabs{
-            padding-left: 22%;
-            padding-top: 1.2%;
 
-            .nav-item{font-size: 1.2rem;}
+        .logo-wrapper{
+            width: 50%;
+        }
+        .nav-tabs{
+            width: 100%;
+            margin-left: 20% !important;
+
+            .nav-item{
+                font-size: 1.4rem;
+            }
+        }
+    }
+}
+
+@media (min-width: 1536px) {
+    .logged_in-navbar, .logged_out-navbar {
+
+        .logo-wrapper{
+            width: 50%;
+        }
+        .nav-tabs{
+            margin-left: 20% !important;
+
+            .nav-item{
+                font-size: 1.4rem;
+                margin-top: -2%;
+            }
         }
     }
 }

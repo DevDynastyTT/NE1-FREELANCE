@@ -112,7 +112,25 @@ const receiveMessage = async (request, response)=> {
 
 }
 
+const searchUsers = async (request, response) => {
+  const { keyword } = request.params;
+  console.log(keyword)
+  try {
+    const userInfo = await User.find({ username: { $regex: keyword, $options: 'i' } });
+
+    if(!userInfo){
+      console.log('Users not found');
+      return response.status(404).json({ error: 'Users not found' });
+    }
+    return response.status(200).json({userInfo});
+  } catch (error) {
+    console.error(error.message);
+    return response.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
 export {
     sendMessage,
-    receiveMessage
+    receiveMessage,
+    searchUsers
 }

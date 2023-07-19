@@ -2,7 +2,7 @@ import reportJob from "../controllers/reportController";
 import {sendEmail, notifyUser} from "../controllers/contactController";
 import heartBeat from "../controllers/heartBeatController";
 import { updateAbout, getAboutInfo } from "../controllers/aboutController";
-import { sendMessage, receiveMessage } from '../controllers/messagesController';
+import { sendMessage, receiveMessage, searchUsers } from '../controllers/messagesController';
 import { 
   login, 
   signup, 
@@ -61,6 +61,7 @@ router.get("/countUsers", countUsers);
 router.post("/send", sendMessage);
 router.post("/send/notify/", notifyUser);
 router.get("/receive/:senderID/:receiverID", receiveMessage);
+router.get("/searchUsers/:keyword", searchUsers);
 
 router.get("/getAllJobs", getAllJobs);
 router.post("/createJob", upload.single('thumbnail'), createJob);

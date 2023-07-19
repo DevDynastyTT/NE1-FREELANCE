@@ -391,6 +391,8 @@ const getAllUserInfo = async (request, response) => {
     return response.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+
 //Admin user info page
 const countUsers = async(request, response) => {
   try{

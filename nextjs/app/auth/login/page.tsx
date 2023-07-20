@@ -1,4 +1,4 @@
-import '@styles/members/members.css'
+import '@styles/auth/login_signup/members.css'
 import LoginComponent from '@components/auth/login/LoginComponent';
 import { Metadata } from 'next'
 

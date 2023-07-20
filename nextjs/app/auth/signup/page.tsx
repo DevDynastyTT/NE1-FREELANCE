@@ -1,4 +1,4 @@
-import '@styles/members/members.css'
+import '@styles/auth/login_signup/members.css'
 import SignUpComponent from '@components/auth/signup/SignUpComponent'
 import { Metadata } from 'next'
 import GlobalFooter from '../../../components/GlobalFooter';

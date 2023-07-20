@@ -1,16 +1,9 @@
-import ChatComponent from "@components/auth/messages/ChatComponent";
-import GlobalFooter from '@components/GlobalFooter'
-import { Metadata } from 'next'
+import React from 'react'
 
-export const metadata:Metadata = {
-  title: 'Messages - NE1-FREELANCE'
-}
-export default function MessagesPage() {
+export default function page() {
   return (
-    <>
-        <ChatComponent />
-        {/* <GlobalFooter/> */}
-
-    </>
+    <div>
+      Under Maintenance, Coming Back Soon...
+    </div>
   )
 }

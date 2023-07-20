@@ -1,4 +1,4 @@
-import '@styles/members/profile.css'
+import '@styles/auth/profile/profile.css'
 import '@styles/nav/navbar.css'
 import { Metadata } from 'next'
 import ProfileComponent from '@components/auth/profile/ProfileComponent'

@@ -114,7 +114,6 @@ const receiveMessage = async (request, response)=> {
 
 const searchUsers = async (request, response) => {
   const { keyword } = request.params;
-  console.log(keyword)
   try {
     const userInfo = await User.find({ username: { $regex: keyword, $options: 'i' } });
 
@@ -122,7 +121,6 @@ const searchUsers = async (request, response) => {
       console.log('Users not found');
       return response.status(404).json({ error: 'Users not found' });
     }
-    console.log(userInfo)
     return response.status(200).json({userInfo});
   } catch (error) {
     console.error(error.message);

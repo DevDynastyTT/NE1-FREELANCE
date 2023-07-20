@@ -1,5 +1,6 @@
 'use client'
 
+import '@styles/auth/inbox/inbox.css'
 import GlobalNavbar from "@components/GlobalNavbar";
 import { getAllUserInfo, receiveMessageRoute, sendMessageRoute, searchUsers } from "@utils/APIRoutes";
 import { getUserSession } from "@utils/reuseableCode";
@@ -8,13 +9,14 @@ import axios from "axios";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-regular-svg-icons'
+import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
 import io from "socket.io-client";
 
 const server = process.env.NODE_ENV === "development" ? "http://localhost:3002" : "https://ne1freelance.onrender.com";
 const socket = io(server);
 
 
-export default function ChatComponent() {
+export default function InboxComponent() {
 
     const [session, setSession] = useState<SessionType>()
     const [receiver, setReceiver] = useState<SessionType>()
@@ -28,6 +30,7 @@ export default function ChatComponent() {
     const [receivedMessages, setReceivedMessages] = useState<MessagesType[]>([]);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [isMenuOpen, setIsMenuOpen] = useState(true);
    
     function setOnlineUser(userSession:SessionType){ socket.emit('online-users', {userID: userSession?._id}) }
     function sendTypingAlert(){
@@ -210,8 +213,78 @@ export default function ChatComponent() {
             {session && session?._id && (
               <>
                 <GlobalNavbar session={session} />
-  
-                <div>
+
+                <div className="inbox-container">
+                  <form className='search-form'>
+                    <input
+                        className='search-input'
+                        type="text"
+                        placeholder="Search for users"
+                        onChange={handleSearchUsers}
+                      />
+
+                      
+                  </form>
+
+                  
+
+                  <main className='inbox-main-container'>
+                        
+                    {users?.length > 0 && keyword?.length > 0 && (
+                        <ul className={`user-dropdown ${isMenuOpen ? '' : 'closed'}`}>
+                          <li className='close-button-list'>
+                            <FontAwesomeIcon 
+                              className='close-button'
+                              onClick={() => setIsMenuOpen(false)}
+                              icon={faCircleXmark} 
+                              />
+                          </li>
+                          {users?.map((currentUser, currentIndex) =>
+                            currentUser._id !== session?._id ? (
+                              <li
+                                key={currentIndex}
+                                style={{ cursor: "pointer" }}
+                                onClick={() => handleOpenChat(currentUser)}
+                              >
+                                {currentUser.username} 
+                                {currentUser.isActive && <FontAwesomeIcon 
+                                  style={{ 
+                                    color: "rgb(0, 255, 0)", 
+                                    backgroundColor: "rgb(0, 255, 0)", 
+                                    borderRadius: "50%",
+                                    fontSize: ".7rem",
+                                    margin: "0 0 0 5px",
+                                  }}
+                                  icon={faCircle} 
+                                /> }
+                              </li>
+                            ) : null
+                          )}
+                        </ul>
+                      )}
+
+                      <ul className='contacts'>
+                        <li>User Chat 1</li>
+                        <li>User Chat 2</li>
+                        <li>User Chat 3</li>
+                        <li>User Chat 4</li>
+                        <li>User Chat 5</li>
+                      </ul>
+                  </main>
+                </div>
+                
+
+
+              </>
+            )}
+          </>
+        )}
+      </>
+    );
+  }
+
+  /*
+<div>
                   <div>
                     <div style={{ marginLeft: "8%", height: "50px"}}>
                       <span style={{fontSize: '2rem'}}>
@@ -317,11 +390,5 @@ export default function ChatComponent() {
                       </div>
                     )}
                 </div> 
-              </>
-            )}
-          </>
-        )}
-      </>
-    );
-  }
+  */
   

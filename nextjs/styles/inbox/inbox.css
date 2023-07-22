@@ -1,3 +1,7 @@
+:export {
+  primaryGrey: #62646a;
+}
+
 .inbox-container .search-form {
   width: 100%;
   position: relative;

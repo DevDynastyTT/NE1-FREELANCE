@@ -70,10 +70,7 @@ const onlineUsers = new Map();
 const typingStatus = new Map();
 
 const setOnlineUser = (userID: string, socketID: string): void => {
-  if(!onlineUsers.has(userID)){
-    onlineUsers.set(userID, socketID)
-    console.log(onlineUsers.get(userID), 'is now online')
-  }else console.log('User is already online')
+  if(!onlineUsers.has(userID)) onlineUsers.set(userID, socketID)
 }
 
 const sendTypingAlert = (senderID, receiverID) => {
@@ -92,7 +89,6 @@ const sendTypingAlert = (senderID, receiverID) => {
 // ...
 
 io.on("connection", (socket) => {
-  console.log('Client Connected')
 
   socket.on("online-users", (data:any) => {
     setOnlineUser(data.userID, socket.id);

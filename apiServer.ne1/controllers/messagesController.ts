@@ -43,7 +43,6 @@ const sendMessage = async (request, response)=> {
     }
    
 }
-
 const receiveMessage = async (request, response)=> {
     //Sender wud be the opener of the chat, receiver wud be the person to message
     const { senderID, receiverID } = request.params;
@@ -111,7 +110,6 @@ const receiveMessage = async (request, response)=> {
     }
 
 }
-
 const searchUsers = async (request, response) => {
   const { keyword } = request.params;
   try {
@@ -128,8 +126,25 @@ const searchUsers = async (request, response) => {
   }
 };
 
+const getReceiver = async (request, response) => {
+  const { id } = request.params;
+  try {
+    const user = await User.findById({ _id: new mongoose.Types.ObjectId(id) });
+    if(!user){
+      console.log('Receiver not found');
+      return response.status(404).json({ error: 'Receiver not found' });
+    }
+
+    return response.status(200).json({receiver:user});
+  }catch(error){
+    console.error(error.message);
+    return response.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
 export {
     sendMessage,
     receiveMessage,
-    searchUsers
+    searchUsers,
+    getReceiver
 }

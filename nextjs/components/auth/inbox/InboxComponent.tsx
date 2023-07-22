@@ -1,6 +1,6 @@
 'use client'
 
-import '@styles/auth/inbox/inbox.css'
+import '@styles/inbox/inbox.css'
 import GlobalNavbar from "@components/GlobalNavbar";
 import { getAllUserInfo, receiveMessageRoute, sendMessageRoute, searchUsers } from "@utils/APIRoutes";
 import { getUserSession } from "@utils/reuseableCode";
@@ -11,12 +11,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-regular-svg-icons'
 import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
 import io from "socket.io-client";
+import {useRouter} from 'next/navigation';
 
 const server = process.env.NODE_ENV === "development" ? "http://localhost:3002" : "https://ne1freelance.onrender.com";
 const socket = io(server);
 
 
 export default function InboxComponent() {
+    
+    const router = useRouter()
 
     const [session, setSession] = useState<SessionType>()
     const [receiver, setReceiver] = useState<SessionType>()
@@ -44,12 +47,13 @@ export default function InboxComponent() {
         setReceivedMessages([]); 
         setReceiver(currentUser);
         setChatName(`${currentUser?.username}`);
+        router.push(`/inbox/${currentUser?._id}`);
     }
     function handleEmit() {
       const isAuthenticated = getUserSession();
 
       //User authentication 
-      if (isAuthenticated && isAuthenticated?._id) {
+      if (isAuthenticated?._id) {
         setSession(isAuthenticated); //Assign user information to session
         setOnlineUser(isAuthenticated); //Send an online-emit event to tell all users that the user is online
       } 
@@ -151,7 +155,6 @@ export default function InboxComponent() {
           console.error(data.error);
           return;
         }
-        console.log(data.userInfo)
         setUsers(data.userInfo);
       } catch (error) {
         console.error(error);
@@ -190,10 +193,10 @@ export default function InboxComponent() {
         });
 
 
-          socket.on('receive-typing-alert', (data) => {
-            if (data.isTyping && receiver?._id) setIsTyping(true);
-            else if(!data.isTyping && receiver?._id) setIsTyping(false);
-          });
+        socket.on('receive-typing-alert', (data) => {
+          if (data.isTyping && receiver?._id) setIsTyping(true);
+          else if(!data.isTyping && receiver?._id) setIsTyping(false);
+        });
       }
     }, [session, receiver]);
   

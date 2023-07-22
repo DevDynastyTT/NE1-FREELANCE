@@ -1,5 +1,5 @@
 import InboxComponent from "@components/auth/inbox/InboxComponent";
-import '@styles/auth/inbox/inbox.css'
+import '@styles/inbox/inbox.css'
 import { Metadata } from 'next'
 
 export const metadata:Metadata = {
@@ -7,9 +7,6 @@ export const metadata:Metadata = {
 }
 export default function InboxPage() {
   return (
-    <>
         <InboxComponent />
-
-    </>
   )
 }

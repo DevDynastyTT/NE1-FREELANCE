@@ -54,8 +54,8 @@ const sendMessage = async (request, response)=> {
             Key: Date.now() + '-' + request.file.originalname,
             Body: request.file.buffer,
           };
-          await s3.upload(params).promise();
-          newMessageData.file = file.originalname;
+          const uploadResult = await s3.upload(params).promise();
+          newMessageData.file = uploadResult.Key;
         }
     
         const newMessage = await Messages.create(newMessageData);
@@ -66,8 +66,13 @@ const sendMessage = async (request, response)=> {
             return response.status(500).json({error: 'Internal Server Error'});
         }
     
-        console.log('msg sent')
-        return response.status(200).json({message : 'Message sent successfully'});
+        const messageWithFileUrl = await Messages.findOne({_id: newMessage._id});
+        console.log(messageWithFileUrl)
+        newMessage.file = await getFileUrl(newMessageData.file);
+
+        console.log(newMessage.file, 'is url')
+        console.log(newMessageData.file, 'is name')
+        return response.status(200).json({ fileName: newMessageData.file, fileUrl: newMessage.file });
 
     }catch(error){
         console.log(error.message);

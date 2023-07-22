@@ -42,9 +42,9 @@ export default function ChatBox(props:any) {
                         }}> {msg.content}
 
                         {msg.file && 
-                            <div>
-                              <a href={msg.file.name} download>
-                                Download File: {msg.file.name}
+                            <div className={msg.isSender ? "file-sender" : "file-user"}>
+                                <a href={msg.file.url} target="_blank" download>
+                                {msg.file.name}
                               </a>
                             </div>
                         }

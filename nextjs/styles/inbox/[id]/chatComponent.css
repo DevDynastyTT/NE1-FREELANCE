@@ -117,6 +117,10 @@
     white-space: pre-wrap;
     overflow-wrap: break-word;
   }
+  .chat-main-container .message-container .message .file-sender a {
+    color: white;
+    background-color: black;
+  }
   .chat-main-container .message-form {
     display: flex;
     padding-left: 3%;

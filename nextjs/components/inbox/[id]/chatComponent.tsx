@@ -74,7 +74,6 @@ export default function ChatComponent() {
               return
           }
 
-          console.log(data.receiver)
           setReceiver(data.receiver)
       }catch(error){
         console.log(error)

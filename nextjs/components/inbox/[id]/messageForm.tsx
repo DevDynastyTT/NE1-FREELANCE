@@ -9,7 +9,8 @@ const server = process.env.NODE_ENV === "development" ? "http://localhost:3002" 
 const socket = io(server);
 export default function MessageForm(props:any) {
     const fileInputRef = useRef<any>(null);
-  async function sendMessage(event:FormEvent){
+
+    async function sendMessage(event:FormEvent){
     event.preventDefault()
    
     const formData = new FormData()
@@ -26,11 +27,6 @@ export default function MessageForm(props:any) {
             })
             const data = response.data
             
-            if(response.status !== 200){
-              console.error(data.error);
-              return
-            }
-
             const messageData:any = {
               message: props.message, 
               sender: props.session._id,
@@ -41,15 +37,15 @@ export default function MessageForm(props:any) {
 
             if(fileInputRef.current?.files[0]) {
               messageData.file = {
-                name: fileInputRef.current?.files[0].name,
-                type: fileInputRef.current?.files[0].type,
-                size: fileInputRef.current?.files[0].size,
-              };
+                name: data.fileName,
+                url: data.fileUrl
+              }
             }
             socket.emit('send-message', messageData)
 
             const receivedMessage = {
               content: props.message,
+              file: messageData.file,
               sender: props.session.username,
               receiver: props.receiver.username,
               isSender: true,

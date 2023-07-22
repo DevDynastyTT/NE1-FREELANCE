@@ -63,6 +63,13 @@
                 word-break: break-all;
                 white-space: pre-wrap;
                 overflow-wrap: break-word;
+
+                .file-sender{
+                    a{
+                        color: white;
+                        background-color: black;
+                    }
+                }
             }
         }
     

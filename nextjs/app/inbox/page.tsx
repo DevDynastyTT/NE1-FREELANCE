@@ -1,4 +1,4 @@
-import InboxComponent from "@components/auth/inbox/InboxComponent";
+import InboxComponent from "@components/inbox/InboxComponent";
 import '@styles/inbox/inbox.css'
 import { Metadata } from 'next'
 

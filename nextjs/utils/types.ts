@@ -63,6 +63,7 @@ export type Profile = {
 
 export type MessagesType = {
   content: string,
+  file?: string,
   sender: string,
   receiver: string,
   isSender: boolean,

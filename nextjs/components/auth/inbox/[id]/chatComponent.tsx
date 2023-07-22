@@ -1,18 +1,15 @@
 'use client'
 
 import GlobalNavbar from "@components/GlobalNavbar"
-import { faArrowLeftLong, faPaperclip } from "@fortawesome/free-solid-svg-icons"
-import { faCircle, faPaperPlane } from '@fortawesome/free-regular-svg-icons'
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { getUserSession } from "@utils/reuseableCode"
 import { MessagesType, SessionType } from "@utils/types"
 import { useParams, useRouter } from "next/navigation"
-import { FormEvent, useEffect, useRef, useState } from "react"
-import io from "socket.io-client"
-import { getReceiver, receiveMessageRoute, searchUsers, sendMessageRoute } from '@utils/APIRoutes'
+import { useEffect, useRef, useState } from "react"
+import { getReceiver, receiveMessageRoute } from '@utils/APIRoutes'
 import axios from 'axios'
 import ChatNavigationComponent from "./chatNavigationComponent"
 import ChatBox from "./chatBox"
+import io from "socket.io-client"
 
 const server = process.env.NODE_ENV === "development" ? "http://localhost:3002" : "https://ne1freelance.onrender.com";
 const socket = io(server);
@@ -33,14 +30,7 @@ export default function ChatComponent() {
     const [isMenuOpen, setIsMenuOpen] = useState(true);
     const [isLoading, setIsLoading] = useState(true)
 
-    function setOnlineUser(userSession:SessionType){ socket.emit('online-users', {userreceiverID: userSession?._id}) }
-
-    function handleOpenChat(currentUser: SessionType) {
-        setReceivedMessages([]); 
-        setReceiver(currentUser);
-        setChatName(`${currentUser?.username}`);
-        router.push(`/auth/inbox/${receiverID}`);
-    }
+    function setOnlineUser(userSession:SessionType){ socket.emit('online-users', {userID: userSession?._id}) }
 
     async function fetchAllMessages() {
       try {
@@ -70,23 +60,8 @@ export default function ChatComponent() {
           setIsLoading(false);
 
         }
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    async function handleSearchUsers(event: FormEvent<HTMLInputElement>) {
-      setKeyword(event.currentTarget.value)
-      try {
-        const response = await axios.get(`${searchUsers}/${keyword}`);
-        const data = response.data;
-        if (response.status !== 200) {
-          console.error(data.error);
-          return;
-        }
-        setUsers(data.userInfo);
-      } catch (error) {
-        console.error(error);
+      } catch (error:any) {
+        console.error(error.message);
       }
     }
 
@@ -106,37 +81,15 @@ export default function ChatComponent() {
       }
     }
 
-    async function authenticateMessages(){
+    async function authenticateMessages(userSession:SessionType){
+        setOnlineUser(userSession)
         await fetchReceiver()  
         await fetchAllMessages();
 
-        socket.on("receive-message", (data) => {
-            setIsTyping(false)
-              const { newMessage, sender } = data;
-              const receivedMessage = {
-                content: newMessage,
-                sender: sender,
-                receiver: session?.username || '',
-                isSender: false,
-                sentAt: new Date().toISOString(),
-              };
-              
-              //Append the new messages to the current messages array
-              setReceivedMessages((prevMessages) => [
-                ...prevMessages,
-                receivedMessage,
-              ]);
-        });
-
-        socket.on('receive-typing-alert', (data) => {
-          if (data.isTyping && receiverID) setIsTyping(true);
-          else if(!data.isTyping && receiverID) setIsTyping(false);
-        });
     }
 
     useEffect(() => {
-      if (session && receiverID) authenticateMessages()
-      return () => { socket.disconnect() }
+      if (session && receiverID) authenticateMessages(session)
     }, [session, receiverID]);
   
     
@@ -149,11 +102,38 @@ export default function ChatComponent() {
         //User authentication 
         if (isAuthenticated?._id) {
           setSession(isAuthenticated); //Assign user information to session
+         
+      
         }else{
           router.push('/auth/login')
-        }    
+        }  
+        
+        return () => { socket.disconnect() }
+        
     }, [])
 
+    useEffect(() => {
+      socket.on('receive-message', (data: any) => {
+        const { senderID, newMessage, file } = data;
+        // Append the new message to the current messages array
+        setReceivedMessages((prevMessages: any) => [
+          ...prevMessages,
+          {
+            content: newMessage,
+            sender: receiver?.username, // The sender is the receiver in this case
+            receiver: session?.username,
+            isSender: false,
+            sentAt: new Date().toISOString(),
+            file: file, // Pass the file data to the received message object
+          },
+        ]);
+      });
+  
+      return () => {
+        socket.off('receive-message'); // Cleanup the event listener
+      };
+    }, [receiver?.username, session?.username]);
+  
     if(isLoading) return <div>Loading...</div>
     
     if (isLoading === false && session?.isStaff === false) return <p>Under Maintenance, Coming Back Soon...</p>;
@@ -167,7 +147,7 @@ export default function ChatComponent() {
             <ChatNavigationComponent router={router} receiverUsername={receiver?.username}/>
 
             <ChatBox 
-              socket={socket} session={session} receiver={receiver}
+              session={session} receiver={receiver}
               setReceivedMessages={setReceivedMessages}
               receivedMessages={receivedMessages} messagesEndRef={messagesEndRef}
             />

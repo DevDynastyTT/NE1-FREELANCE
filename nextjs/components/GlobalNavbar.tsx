@@ -107,26 +107,15 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
                               Profile
                           </Link>
                         </li>
-                        
-                        {session.isStaff && (
-                          <li>
-                            <Link 
-                              className="dropdown-item" 
-                              href={'#'}>
-                              {/* href={'/auth/admin'}> */}
-                                Admin(Soon...)
-                            </Link>
-                            </li>
-                          )}
 
-                          <li>
+                          {session?.isStaff && <li>
                             <Link 
                               className="dropdown-item" 
                               href={'#'}>
                               {/* href={'/auth/admin'}> */}
                                 Admin(Soon...)
                             </Link>
-                          </li>
+                          </li>}
                         
                         <li>
                           <Link 

@@ -3,7 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { sendMessageRoute } from '@utils/APIRoutes';
 import axios from 'axios';
 import { FormEvent, useEffect, useRef } from 'react';
+import io from "socket.io-client"
 
+const server = process.env.NODE_ENV === "development" ? "http://localhost:3002" : "https://ne1freelance.onrender.com";
+const socket = io(server);
 export default function MessageForm(props:any) {
     const fileInputRef = useRef<any>(null);
   async function sendMessage(event:FormEvent){
@@ -27,18 +30,28 @@ export default function MessageForm(props:any) {
               console.error(data.error);
               return
             }
-            props.socket.emit('send-message', {
+
+            const messageData:any = {
               message: props.message, 
-              sender: props.session?._id,
-              receiver: props.receiverID,
-              senderID: props.session?._id,
-              receiverID: props.receiverID,
-            })
+              sender: props.session._id,
+              receiver: props.receiver._id,
+              senderID: props.session._id,
+              receiverID: props.receiver._id,
+            }
+
+            if(fileInputRef.current?.files[0]) {
+              messageData.file = {
+                name: fileInputRef.current?.files[0].name,
+                type: fileInputRef.current?.files[0].type,
+                size: fileInputRef.current?.files[0].size,
+              };
+            }
+            socket.emit('send-message', messageData)
 
             const receivedMessage = {
               content: props.message,
-              sender: props.session?.username,
-              receiver: props.receiver?.username,
+              sender: props.session.username,
+              receiver: props.receiver.username,
               isSender: true,
               sentAt: new Date().toISOString(),
             };
@@ -55,6 +68,8 @@ export default function MessageForm(props:any) {
         }finally{
           // Clear the input field
           props.setMessage("");
+          fileInputRef.current.value = '';
+
         }
 }
   
@@ -75,12 +90,7 @@ export default function MessageForm(props:any) {
         />
 
         <button className="file-upload-btn btn" type="button">
-          <input type="file" name="document" id="document" 
-            ref={fileInputRef}
-            onChange={()=> {
-              setTimeout(()=>{alert('File Processed')}, 3000)
-            }}
-          />
+          <input type="file" name="document" id="document" ref={fileInputRef} />
           <label htmlFor="document">
             <FontAwesomeIcon className="icon" icon={faPaperclip} />
           </label>

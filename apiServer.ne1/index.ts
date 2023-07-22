@@ -70,6 +70,7 @@ const onlineUsers = new Map();
 const typingStatus = new Map();
 
 const setOnlineUser = (userID: string, socketID: string): void => {
+  console.log(userID, ' is userID')
   if(!onlineUsers.has(userID)) onlineUsers.set(userID, socketID)
 }
 
@@ -87,9 +88,9 @@ const sendTypingAlert = (senderID, receiverID) => {
 
 //Listen for connection event when client establishes a websocket connection
 // ...
-
+let clientCount = 0
 io.on("connection", (socket) => {
-
+  console.log(`Client ${clientCount++} Connected`)
   socket.on("online-users", (data:any) => {
     setOnlineUser(data.userID, socket.id);
   });
@@ -101,22 +102,27 @@ io.on("connection", (socket) => {
     }  })
 
   socket.on("send-message", (data:any) => {
-    const {message, sender, receiver, receiverID, senderID,  } = data;
-
+    const {message, file, sender, receiver, receiverID, senderID,  } = data;
     const onlineUserSocketID = onlineUsers.get(receiverID);
     if (!onlineUserSocketID) {
-      console.log(`${receiver} is offline`)
       axios.post(notifyUserRoute, 
         {
           message, receiverID, senderID
         })
     }
 
-      console.log(`${receiver} is online`)
-      io.to(onlineUserSocketID).emit("receive-message", {
+      const messageData:any =  {
         senderID,
         newMessage: message,
-      });
+      }
+
+      if(file){
+        messageData.file = file
+      }
+
+      console.log(messageData)
+
+      io.to(onlineUserSocketID).emit("receive-message", messageData);
       console.log(sender, "sent", message, 'to', receiver);
 
 

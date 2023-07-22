@@ -206,12 +206,12 @@ export default function InboxComponent() {
       }
     }, [receivedMessages]);
 
+    if(isLoading) return <div>Loading...</div>
+    
+    if (isLoading === false && session?.isStaff === false) return <p>Under Maintenance, Coming Back Soon...</p>;
+   
    
     return (
-      <>
-        {isLoading ? (
-          <div>Loading...</div>
-        ) : (
           <>
             {session && session?._id && (
               <>
@@ -281,8 +281,6 @@ export default function InboxComponent() {
               </>
             )}
           </>
-        )}
-      </>
     );
   }
 

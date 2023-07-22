@@ -1,9 +1,23 @@
 import mongoose from 'mongoose';
 import Messages from '../models/messagesModel'
 import User from '../models/userModel'
+const AWS = require('aws-sdk');
+const bucketName = 'ne1-freelance'; // Replace with your Wasabi bucket name
 
+// Configure Wasabi credentials
+AWS.config.update({
+  accessKeyId: process.env.WASABI_ACCESS_KEY_ID,
+  secretAccessKey: process.env.WASABI_SECRET_ACCESS_KEY_ID,
+});
+
+// Create a new instance of the S3 client
+const s3 = new AWS.S3({
+  endpoint: process.env.SECRET_ENDPOINT,
+});
 const sendMessage = async (request, response)=> {
     const { sender, senderID, receiver, receiverID, content } = request.body;
+    const file = request.file;
+
     try{
         const user = await User.findById({ _id: senderID });
 
@@ -22,19 +36,37 @@ const sendMessage = async (request, response)=> {
         })
 
         let chatID = existingChat ? existingChat.chatID : new mongoose.Types.ObjectId()
-        
-        const newMessage = await Messages.create({
-            chatID,
-            sender, senderID,
-            receiver, receiverID,
-            content, 
-        });
+         
+        let newMessageData:any = {
+          chatID,
+          sender,
+          senderID,
+          receiver,
+          receiverID,
+          content,
+        };
+    
+        // If there is a file, add it to the newMessageData and upload to wasabi
+        if (file) {
+           // Upload the file to Wasabi
+           const params = {
+            Bucket: bucketName,
+            Key: Date.now() + '-' + request.file.originalname,
+            Body: request.file.buffer,
+          };
+          await s3.upload(params).promise();
+          newMessageData.file = file.originalname;
+        }
+    
+        const newMessage = await Messages.create(newMessageData);
+    
 
         if(!newMessage){
             console.log("Message not sent")
             return response.status(500).json({error: 'Internal Server Error'});
         }
     
+        console.log('msg sent')
         return response.status(200).json({message : 'Message sent successfully'});
 
     }catch(error){
@@ -88,19 +120,12 @@ const receiveMessage = async (request, response)=> {
                 "receiverID": 1,
                 "receiver": "$receiver.username",
                 "content": 1,
+                "file": 1,
                 "sentAt": 1,
               },
             },
             { $sort: { sentAt: 1 } },
         ]);
-
-        /*If no messages were found, we're assuming that the current chat is new and the user 
-        is going to send a message */
-        if (!chatMessages || chatMessages.length === 0) {
-            console.log('No messages found. New chat created');
-            return response.status(404).json({ message: 'Say Hello' });
-          }
-
 
         return response.status(200).json({messages: chatMessages});
         
@@ -109,6 +134,26 @@ const receiveMessage = async (request, response)=> {
         return response.status(500).json({error: "Internal Server Error"});
     }
 
+}
+
+const getFileUrl = async (fileName:string): Promise<string> => {
+  try {
+    const bucketName = 'ne1-freelance'; // Replace with your Wasabi bucket name
+
+    // Generate a pre-signed URL for the profile picture
+    const params = {
+      Bucket: bucketName,
+      Key: fileName,
+      Expires: 3600, // URL expiration time in seconds (e.g., 1 hour)
+    };
+
+    const signedUrl = await s3.getSignedUrlPromise('getObject', params);
+    // Return the pre-signed URL in the response
+    return signedUrl
+  } catch (error) {
+    console.error(error);
+    return 'undefined'
+  }
 }
 const searchUsers = async (request, response) => {
   const { keyword } = request.params;

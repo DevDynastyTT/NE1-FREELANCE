@@ -11,19 +11,19 @@ import { FormEvent, useEffect, useRef, useState } from "react"
 import io from "socket.io-client"
 import { getReceiver, receiveMessageRoute, searchUsers, sendMessageRoute } from '@utils/APIRoutes'
 import axios from 'axios'
+import ChatNavigationComponent from "./chatNavigationComponent"
+import ChatBox from "./chatBox"
 
 const server = process.env.NODE_ENV === "development" ? "http://localhost:3002" : "https://ne1freelance.onrender.com";
 const socket = io(server);
 export default function ChatComponent() {
     const {id: receiverID} = useParams()
-    const chatContainerRef = useRef<HTMLDivElement>(null);
 
     const router = useRouter()
     const [session, setSession] = useState<SessionType>()
     const [receiver, setReceiver] = useState<SessionType>()
     const [users, setUsers] = useState<SessionType[]>([])
 
-    const [message, setMessage] = useState<string>("");
     const [chatName, setChatName] = useState<string>();
     
     const [isTyping, setIsTyping] = useState<boolean>(false);
@@ -34,12 +34,6 @@ export default function ChatComponent() {
     const [isLoading, setIsLoading] = useState(true)
 
     function setOnlineUser(userSession:SessionType){ socket.emit('online-users', {userreceiverID: userSession?._id}) }
-    function sendTypingAlert(){
-      if(session?._id && receiverID)
-        socket.emit('typing-alert', ({
-          senderID: session._id, receiverID: receiverID
-        }))
-    }
 
     function handleOpenChat(currentUser: SessionType) {
         setReceivedMessages([]); 
@@ -47,56 +41,6 @@ export default function ChatComponent() {
         setChatName(`${currentUser?.username}`);
         router.push(`/auth/inbox/${receiverID}`);
     }
-
-    async function sendMessage(event: FormEvent<HTMLFormElement>){
-      event.preventDefault()
-      const body = {
-        sender: session?.username, 
-        receiver: receiver?.username, 
-        senderID: session?._id,
-        receiverID: receiverID,
-        content: message
-      }
-      //If user if logged in and selected a person to chat with, send the message
-          try{
-              const response = await axios.post(sendMessageRoute, body)
-              const data = response.data
-              
-              if(response.status !== 200){
-                console.error(data.error);
-                return
-              }
-              socket.emit('send-message', {
-                message, 
-                sender: session?._id,
-                receiver: receiverID,
-                senderID: session?._id,
-                receiverID: receiverID,
-              })
-
-              const receivedMessage = {
-                content: message,
-                sender: session?.username,
-                receiver: receiver?.username,
-                isSender: true,
-                sentAt: new Date().toISOString(),
-              };
-              
-              //Append the new messages to the current messages array
-              setReceivedMessages((prevMessages:any) => [
-                ...prevMessages,
-                receivedMessage,
-              ]);
-
-          }catch(error){
-            alert('Server down')
-            console.error(error)
-          }finally{
-            // Clear the input field
-            setMessage("");
-          }
-    }
-    
 
     async function fetchAllMessages() {
       try {
@@ -110,7 +54,6 @@ export default function ChatComponent() {
             console.error(data.error);
             return;
           }
-          console.log(data.messages)
           const messages = data.messages.map((message: any) => ({
             content: message.content,
             sender: message.sender,
@@ -196,11 +139,7 @@ export default function ChatComponent() {
       return () => { socket.disconnect() }
     }, [session, receiverID]);
   
-    useEffect(() => {
-      if (chatContainerRef.current) 
-        chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-      
-    }, [receivedMessages]);
+    
     
 
 
@@ -217,72 +156,22 @@ export default function ChatComponent() {
 
     if(isLoading) return <div>Loading...</div>
     
+    if (isLoading === false && session?.isStaff === false) return <p>Under Maintenance, Coming Back Soon...</p>;
+   
+
 
     return (
         <>
             <GlobalNavbar session={session}/>
 
-            <nav className="chat-navigation">
-                <div className='back-arrow-container'>
-                    <FontAwesomeIcon 
-                        className='back-arrow'
-                        icon={faArrowLeftLong} 
-                        onClick={() => router.back()} 
-                    />
-                </div>
-                
+            <ChatNavigationComponent router={router} receiverUsername={receiver?.username}/>
 
-                <div className="userInfoContainer">
-                    <FontAwesomeIcon className='active-status'icon={faCircle} />
-                    <span className="username">{receiver?.username}</span>
-                </div>
-            </nav>
-
-            <main className="chat-main-container">
-                <div className="chat-box" ref={chatContainerRef}>
-                    {receivedMessages?.map((msg: any, index: any) => (
-                    <div 
-                      className="message-container" 
-                      key={index}
-                      style={{justifyContent: msg.isSender ? "flex-end" : "flex-start",}}>
-                      
-                      <div
-                        className="message"
-                        style={{
-                            background: msg.isSender ? "#00bfff" : "#f5f5f5",
-                            color: msg.isSender ? "#fff" : "#000",
-                        }}> {msg.content}
-                      </div>
-                    </div>
-                    ))}
-
-                    <div ref={messagesEndRef} />
-                </div>
-
-                <br/>
-
-                <form className="message-form" onSubmit={sendMessage} >
-                  <input
-                    className="message-input"
-                    type="text"
-                    value={message}
-                    placeholder="Enter a message"
-                    required
-                    onChange={(e) => {
-                      setMessage(e.target.value)
-                      sendTypingAlert()
-                    }}
-                  />
-
-                  <button className="file-upload-btn btn" type="submit">
-                    <FontAwesomeIcon className="icon" icon={faPaperclip} />                  
-                  </button>
-
-                  <button className="send-btn btn" type="submit">
-                    <FontAwesomeIcon className="icon" icon={faPaperPlane} />
-                  </button>
-                </form>
-            </main>
+            <ChatBox 
+              socket={socket} session={session} receiver={receiver}
+              setReceivedMessages={setReceivedMessages}
+              receivedMessages={receivedMessages} messagesEndRef={messagesEndRef}
+            />
+            
         </>
     )
 }

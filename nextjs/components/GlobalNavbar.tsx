@@ -152,7 +152,7 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
                   </li>
 
                   <li className="nav-item">
-                    <Link className="nav-link" href={'/auth/messages'}>Messages(beta)</Link>
+                    <Link className="nav-link" href={'/inbox'}>Messages(beta)</Link>
                   </li>
 
             </ul>

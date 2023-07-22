@@ -61,7 +61,7 @@ router.get("/getUserProfile/:id", getUserProfile);
 router.get("/getAllUserInfo", getAllUserInfo);
 router.get('/getReceiver/:id', getReceiver)
 router.get("/countUsers", countUsers);
-router.post("/send", sendMessage);
+router.post("/send", upload.single('file'), sendMessage);
 router.post("/send/notify/", notifyUser);
 router.get("/receive/:senderID/:receiverID", receiveMessage);
 router.get("/searchUsers/:keyword", searchUsers);

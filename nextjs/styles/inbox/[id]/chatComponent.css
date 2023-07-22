@@ -100,7 +100,7 @@
   overflow-x: hidden;
   padding: 3%;
   width: 95%;
-  height: 70vh;
+  height: 72vh;
   margin: 0 auto;
   width: 100%;
 }
@@ -137,4 +137,7 @@
 .chat-main-container .message-form .btn .icon {
   font-size: 1.2rem;
   color: #62646a;
+}
+.chat-main-container .message-form .file-upload-btn #document {
+  display: none;
 }/*# sourceMappingURL=chatComponent.css.map */

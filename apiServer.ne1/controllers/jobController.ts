@@ -17,6 +17,7 @@ import bcrypt from 'bcrypt';
 import mongoose from "mongoose";
 
 const AWS = require('aws-sdk');
+const bucketName = 'ne1-freelance'; // Replace with your Wasabi bucket name
 
 // Configure Wasabi credentials
 AWS.config.update({
@@ -273,7 +274,6 @@ const createJob = async (request, response) => {
   try {
     const {freeLancerID, title, description, price, category} = request.body
     let thumbnail = '';
-    const bucketName = 'ne1-freelance'; // Replace with your Wasabi bucket name
 
     if (request.file) {
       const fileContent = request.file.buffer;

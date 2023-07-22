@@ -27,6 +27,9 @@ const messageSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Cannot send a blank message']
     },
+    file: {
+        type: String,
+    },
     sentAt: {
         type: Date,
         default: Date.now

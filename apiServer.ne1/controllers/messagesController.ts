@@ -67,11 +67,8 @@ const sendMessage = async (request, response)=> {
         }
     
         const messageWithFileUrl = await Messages.findOne({_id: newMessage._id})
-        console.log(messageWithFileUrl)
         newMessage.file = await getFileUrl(newMessageData.file)
 
-        console.log(newMessage.file, 'is url')
-        console.log(newMessageData.file, 'is name')
         return response.status(200).json({ fileName: newMessageData.file, fileUrl: newMessage.file })
 
     }catch(error){
@@ -144,7 +141,6 @@ const receiveMessage = async (request, response)=> {
           return message
         }))
 
-        console.log(newMessages)
         return response.status(200).json({messages: newMessages})
         
     }catch(error){

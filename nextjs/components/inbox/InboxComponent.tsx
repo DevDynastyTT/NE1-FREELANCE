@@ -231,6 +231,7 @@ export default function InboxComponent() {
                             currentUser._id !== session?._id ? (
                               <li
                                 key={currentIndex}
+                                onClick={()=> router.push(`/inbox/${currentUser._id}`)}
                                 style={{ cursor: "pointer" }}
                               >
                                 {currentUser.username} 

@@ -116,21 +116,13 @@ io.on("connection", (socket) => {
         newMessage: message,
       }
 
-      if(file){
-        messageData.file = file
-      }
-
-      console.log(messageData)
+      if(file) messageData.file = file
 
       io.to(onlineUserSocketID).emit("receive-message", messageData);
-      console.log(sender, "sent", message, 'to', receiver);
 
-
-   
   });
 
   socket.on('disconnect', () => {
-    console.log('Client disconnected');
     // Remove the disconnected socket from the onlineUsers map
     for (const [userID, socketID] of onlineUsers.entries()) {
       if (socketID === socket.id) {

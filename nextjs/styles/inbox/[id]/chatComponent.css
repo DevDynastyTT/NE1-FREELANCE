@@ -62,7 +62,7 @@
   border: 1px solid #62646a;
 }
 
-@media (min-width: 300px) and (max-width: 426px) {
+@media (min-width: 300px) {
   .chat-navigation {
     display: flex;
     flex-direction: row;
@@ -146,7 +146,7 @@
     display: none;
   }
 }
-@media (min-width: 412px) and (max-width: 426px) {
+@media (min-width: 412px) {
   .chat-main-container .chat-box {
     height: 65vh;
   }

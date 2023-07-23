@@ -1,0 +1,121 @@
+@import '../inbox.scss';
+
+@media(min-width: 300px){
+    .chat-navigation{
+        display: flex;
+        flex-direction: row;
+        border-bottom: 1px solid $primaryGrey;
+      
+        .back-arrow-container{
+            padding: 3%;
+            .back-arrow{
+                font-size: 1.5rem;
+                cursor: pointer;
+            }            
+        }
+    
+        .userInfoContainer{
+            display: flex;
+            padding-top: 2%;
+            flex-direction: column;
+            height: 4rem;
+    
+            .active-status{
+                color: rgb(0, 255, 0);
+                background-color: rgb(0, 255, 0);
+                border-radius: 50%;
+                font-size: .6rem;
+                display: inline;
+                margin-right: 3%; 
+            }
+            .username-container{
+                display:flex;
+                justify-content: left;
+                align-items: center;
+                width: 100%;
+                padding-left: 3%;
+
+               .username{font-size: 1.5rem;}
+
+            }
+
+            .typing-alert{
+                color: $primaryGrey;
+                font-size: 1rem;
+                margin-left: 12%;
+                margin-top: -6%;
+            }
+
+        }
+    }
+    
+    .chat-main-container{
+        margin-top: 2%;
+
+        
+        .chat-box{
+            overflow-y: scroll;
+            overflow-x: hidden;
+            padding: 3%;
+            width: 95%;
+            height: 72vh;
+            margin: 0 auto;
+            width: 100%;
+        }
+    
+        .message-container{
+            display: flex;
+            margin-bottom:10px;
+      
+            .message{
+                border-radius: 5px;
+                padding: 5px 10px;
+                max-width: 100%;
+                word-wrap: break-word;
+                word-break: break-all;
+                white-space: pre-wrap;
+                overflow-wrap: break-word;
+
+                .file-sender{
+                    a{
+                        color: white;
+                        background-color: black;
+                    }
+                }
+            }
+        }
+    
+        .message-form{
+            display: flex;
+            padding-left: 3%;
+            padding-right: 3%;
+            height: 2.5rem;
+    
+            .message-input{
+                width: 100%;
+                border: 1px solid $primaryGrey;
+                padding-left: 3%;
+                border-radius: 2rem;
+            }
+    
+            .btn{
+                width: 15%;
+                border: none;
+                background-color: transparent !important;
+                .icon{
+                    font-size: 1.2rem;
+                    color: $primaryGrey;
+                }
+            }
+    
+            .file-upload-btn #document {
+                display: none;
+              }
+              
+        }   
+    }
+}
+
+@media(min-width: 412px){ 
+    .chat-main-container .chat-box{ height: 65vh; }
+}

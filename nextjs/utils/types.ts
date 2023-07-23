@@ -52,6 +52,19 @@ export type SessionType = {
   dateJoined: string;
 }
 
+export type RecentChatsType = {
+  userID: string;
+  sender?: string;
+  newMessage?:string;
+  username: string;
+  email: string;
+  password?: string;
+  isStaff: boolean;
+  isActive: boolean;
+  dateJoined: string;
+}
+
+
 
 
 export type Profile = {
@@ -63,6 +76,7 @@ export type Profile = {
 
 export type MessagesType = {
   content: string,
+  file?: string,
   sender: string,
   receiver: string,
   isSender: boolean,

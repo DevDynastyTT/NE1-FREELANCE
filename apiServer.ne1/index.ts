@@ -66,59 +66,62 @@ export const io = socket(server, {
 
 //Track onlineUsers by { "userID": "sockedID }
 const onlineUsers = new Map();
+// Track typing status by { "senderID": "isTyping" }
+const typingStatus = new Map();
 
 const setOnlineUser = (userID: string, socketID: string): void => {
-  if(!onlineUsers.has(userID)){
+  if(!onlineUsers.has(userID)) {
+    console.log('New Client Online')
     onlineUsers.set(userID, socketID)
-    console.log(onlineUsers.get(userID), 'is now online')
-  }else console.log('User is already online')
+  }
 }
 
-const sendTypingAlert = (senderID:string, receiverID:string):void => {
+const sendTypingAlert = (senderID, receiverID) => {
   const onlineUserSocketID = onlineUsers.get(receiverID);
-  io.to(onlineUserSocketID).emit("receive-typing-alert", {senderID, receiverID, isTyping: true});
-}
+  typingStatus.set(senderID, true);
+  io.to(onlineUserSocketID).emit('receive-typing-alert', { senderID, receiverID, isTyping: true});
+
+  setTimeout(() => {
+    typingStatus.delete(senderID);
+    io.to(onlineUserSocketID).emit('receive-typing-alert', { senderID, receiverID, isTyping: false});
+  }, 5000);
+};
 
 //Listen for connection event when client establishes a websocket connection
 // ...
-
+let clientCount = 0
 io.on("connection", (socket) => {
-  console.log('Client Connected')
-
   socket.on("online-users", (data:any) => {
     setOnlineUser(data.userID, socket.id);
   });
 
   socket.on("typing-alert", (data) => {
     const {senderID, receiverID} = data
-    sendTypingAlert(senderID, receiverID)
+    if (!typingStatus.has(senderID)) sendTypingAlert(senderID, receiverID);
   })
 
   socket.on("send-message", (data:any) => {
-    const {message, sender, receiver, receiverID, senderID,  } = data;
-
+    const {message, file, sender, receiver, receiverID, senderID,  } = data;
     const onlineUserSocketID = onlineUsers.get(receiverID);
-    if (!onlineUserSocketID) {
-      console.log(`${receiver} is offline`)
-      axios.post(notifyUserRoute, 
-        {
-          message, receiverID, senderID
-        })
-    }
+    // if (!onlineUserSocketID) {
+    //   axios.post(notifyUserRoute, 
+    //     {
+    //       message, receiverID, senderID
+    //     })
+    // }
 
-      console.log(`${receiver} is online`)
-      io.to(onlineUserSocketID).emit("receive-message", {
+      const messageData:any =  {
         senderID,
         newMessage: message,
-      });
-      console.log(sender, "sent", message, 'to', receiver);
+        sender
+      }
 
+      if(file) messageData.file = file
+      io.to(onlineUserSocketID).emit("receive-message", messageData);
 
-   
   });
 
   socket.on('disconnect', () => {
-    console.log('Client disconnected');
     // Remove the disconnected socket from the onlineUsers map
     for (const [userID, socketID] of onlineUsers.entries()) {
       if (socketID === socket.id) {
@@ -129,14 +132,3 @@ io.on("connection", (socket) => {
     }
   });   
 });
-
-/* io.emit()
-  In the context of websockets and event-driven programming, 
-  "emit" refers to sending or publishing an event from one part 
-  of the application to another. It allows you to trigger an 
-  event and provide data associated with that event.
-
-  In the case of websockets, emitting an event means sending data 
-  from the client to the server or vice versa. It allows communication 
-  between the client and the server by sending messages or notifications.
-*/

@@ -27,16 +27,22 @@ process.on('SIGTERM', gracefulShutdown);
  * Terminates the process afterwards.
  */
 function gracefulShutdown() {
-    User.updateMany({}, { is_active: false })
+  console.log('Graceful shutdown initiated');
+  try {
+    User.updateMany({}, { isActive: false })
       .then(() => {
-        console.log('Server terminated gracefully. is_active set to false for all users.');
+        console.log('Users updated');
         process.exit(0);
       })
       .catch((error) => {
         console.error('Error updating users:', error);
         process.exit(1);
       });
+  } catch (error) {
+    console.error('Error updating users:', error);
+    process.exit(1);
   }
+}
   
 // Login User
 const login = async (request, response) => {
@@ -92,6 +98,18 @@ const login = async (request, response) => {
       return response.status(500).json({ error: "An error occurred" });
     }
   };
+
+const logout = async (request, response) => {
+    const { id } = request.params
+  try {
+    await User.updateOne({ _id: id }, { isActive: false });
+    // request.session.destroy();
+    return response.json({ success: true });
+  } catch (error) {
+    console.error(error.message);
+    return response.status(500).json({ error: "An error occurred" });
+  }
+}
   
 //Signup User
 const signup = async (request, response) => {
@@ -391,6 +409,8 @@ const getAllUserInfo = async (request, response) => {
     return response.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+
 //Admin user info page
 const countUsers = async(request, response) => {
   try{
@@ -405,6 +425,7 @@ const countUsers = async(request, response) => {
 
 export {
   login,
+  logout,
   signup,
   updateUser,
   updateProfile,

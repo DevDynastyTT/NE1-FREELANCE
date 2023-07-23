@@ -11,6 +11,7 @@ export type JobsType = {
   category: string;
 }
 
+
 //Extend Jobs and create more variables
 export type JobDetails = JobsType & {
   profilePicture?: string;

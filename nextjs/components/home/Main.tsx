@@ -29,12 +29,8 @@ export default function MainHomeComponent() {
       router.push('/jobs');
     } else {
       fetchCategories(setJobCategories, getCategories)
-        .then(() => {
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.error('Failed to fetch categories:', error);
-        });
+      setIsLoading(false);
+
     }
   }, [router]);
 

@@ -22,7 +22,7 @@
 .logged_in-navbar .dropdown-menu {
   width: 10%;
   border-radius: 0.4rem;
-  z-index: 2;
+  z-index: 3;
 }
 
 .logged_in-navbar, .logged_out-navbar {
@@ -178,7 +178,7 @@
 @media (min-width: 320px) and (max-width: 375px) {
   .logged_in-navbar .open, .logged_out-navbar .open {
     position: absolute;
-    z-index: 1;
+    z-index: 3;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -199,7 +199,7 @@
 @media (min-width: 412px) and (max-width: 425px) {
   .logged_in-navbar .open, .logged_out-navbar .open {
     position: absolute;
-    z-index: 1;
+    z-index: 3;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -305,41 +305,70 @@
   }
   .logged_in-navbar .nav-tabs, .logged_out-navbar .nav-tabs {
     display: flex;
-    padding-left: 5%;
+    padding: 0;
     margin-left: -5% !important;
-    padding-top: 3%;
     width: 100%;
   }
 }
 @media (min-width: 768px) and (max-width: 1024px) {
+  .logged_in-navbar .logo-wrapper, .logged_out-navbar .logo-wrapper {
+    width: 50%;
+  }
   .logged_in-navbar .nav-tabs, .logged_out-navbar .nav-tabs {
-    padding-left: 10%;
+    padding: 0;
+    margin-left: 0% !important;
+  }
+  .logged_in-navbar .nav-tabs .nav-item, .logged_out-navbar .nav-tabs .nav-item {
+    font-size: 0.9rem;
+    margin-top: -1%;
   }
 }
 @media (min-width: 1024px) and (max-width: 1080px) {
+  .logged_in-navbar .logo-wrapper, .logged_out-navbar .logo-wrapper {
+    width: 35%;
+    padding-left: 2%;
+  }
   .logged_in-navbar .nav-tabs, .logged_out-navbar .nav-tabs {
-    padding-left: 5%;
-    padding-top: 2%;
+    margin-left: 15% !important;
   }
   .logged_in-navbar .nav-tabs .nav-item, .logged_out-navbar .nav-tabs .nav-item {
-    font-size: 1.5rem;
+    font-size: 1.1rem;
   }
 }
 @media (min-width: 1080px) and (max-width: 1440px) {
-  .logged_in-navbar .nav-tabs, .logged_out-navbar .nav-tabs {
-    padding-left: 18%;
-    padding-top: 1%;
+  .logged_in-navbar .logo-wrapper, .logged_out-navbar .logo-wrapper {
+    width: 50%;
   }
-  .logged_in-navbar .nav-tabs .nav-item, .logged_out-navbar .nav-tabs .nav-item {
-    font-size: 1.5rem;
-  }
-}
-@media (min-width: 1440px) and (max-width: 1536px) {
   .logged_in-navbar .nav-tabs, .logged_out-navbar .nav-tabs {
-    padding-left: 22%;
-    padding-top: 1.2%;
+    width: 100%;
+    margin-left: 5% !important;
   }
   .logged_in-navbar .nav-tabs .nav-item, .logged_out-navbar .nav-tabs .nav-item {
     font-size: 1.2rem;
+    margin-top: -1%;
+  }
+}
+@media (min-width: 1440px) and (max-width: 1536px) {
+  .logged_in-navbar .logo-wrapper, .logged_out-navbar .logo-wrapper {
+    width: 50%;
+  }
+  .logged_in-navbar .nav-tabs, .logged_out-navbar .nav-tabs {
+    width: 100%;
+    margin-left: 20% !important;
+  }
+  .logged_in-navbar .nav-tabs .nav-item, .logged_out-navbar .nav-tabs .nav-item {
+    font-size: 1.4rem;
+  }
+}
+@media (min-width: 1536px) {
+  .logged_in-navbar .logo-wrapper, .logged_out-navbar .logo-wrapper {
+    width: 50%;
+  }
+  .logged_in-navbar .nav-tabs, .logged_out-navbar .nav-tabs {
+    margin-left: 20% !important;
+  }
+  .logged_in-navbar .nav-tabs .nav-item, .logged_out-navbar .nav-tabs .nav-item {
+    font-size: 1.4rem;
+    margin-top: -2%;
   }
 }/*# sourceMappingURL=navbar.css.map */

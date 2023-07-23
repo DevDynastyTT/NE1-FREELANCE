@@ -7,7 +7,7 @@ import MobileLogo from '@public/images/N.png'
 
 import {SessionType} from '@utils/types'
 import { fetchCategories } from '@utils/reuseableCode'
-import { getCategories} from '@utils/APIRoutes'
+import { getCategories, logoutRoute} from '@utils/APIRoutes'
 
 import Link from 'next/link'
 import { useState, useEffect} from 'react'
@@ -16,6 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle } from '@fortawesome/free-regular-svg-icons'
 
 import { usePathname, useRouter } from 'next/navigation';
+import axios from 'axios'
 //TO DO log the type for session and setsession, double check the job_id variable names in mongo as well
 export default function GlobalNavbar({session}:{session:SessionType | undefined}) { 
   const router = useRouter()
@@ -26,15 +27,15 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
   };
-      function handleLogOut() {
-          sessionStorage.removeItem('user')
-
-          if(pathname !== '/jobs'){
-            console.log('redirecting')
-             router.push("/jobs")
+      async function handleLogOut() {
+          try{
+            await axios.put(`${logoutRoute}/${session?._id}`, {}, {withCredentials: true});
+            sessionStorage.removeItem('user')
+            window.location.href = '/jobs'
+          }catch(error){
+            console.log('Error logging out')
           }
-          else
-              window.location.href = 'jobs'
+          
       }
       // Load bootstrap js functionality when the DOM has fully rednered
       useEffect(() => {
@@ -106,26 +107,15 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
                               Profile
                           </Link>
                         </li>
-                        
-                        {session.isStaff && (
-                          <li>
-                            <Link 
-                              className="dropdown-item" 
-                              href={'#'}>
-                              {/* href={'/auth/admin'}> */}
-                                Admin(Soon...)
-                            </Link>
-                            </li>
-                          )}
 
-                          <li>
+                          {session?.isStaff && <li>
                             <Link 
                               className="dropdown-item" 
                               href={'#'}>
                               {/* href={'/auth/admin'}> */}
                                 Admin(Soon...)
                             </Link>
-                          </li>
+                          </li>}
                         
                         <li>
                           <Link 
@@ -151,7 +141,7 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
                   </li>
 
                   <li className="nav-item">
-                    <Link className="nav-link" href={'/auth/messages'}>Messages(beta)</Link>
+                    <Link className="nav-link" href={'/inbox'}>Messages(beta)</Link>
                   </li>
 
             </ul>

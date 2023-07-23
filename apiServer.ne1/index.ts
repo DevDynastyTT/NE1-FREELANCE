@@ -70,18 +70,19 @@ const onlineUsers = new Map();
 const typingStatus = new Map();
 
 const setOnlineUser = (userID: string, socketID: string): void => {
-  if(!onlineUsers.has(userID)) onlineUsers.set(userID, socketID)
+  if(!onlineUsers.has(userID)) {
+    console.log('New Client Online')
+    onlineUsers.set(userID, socketID)
+  }
 }
 
 const sendTypingAlert = (senderID, receiverID) => {
   const onlineUserSocketID = onlineUsers.get(receiverID);
   typingStatus.set(senderID, true);
-  console.log('typing')
   io.to(onlineUserSocketID).emit('receive-typing-alert', { senderID, receiverID, isTyping: true});
 
   setTimeout(() => {
     typingStatus.delete(senderID);
-    console.log('not typing')
     io.to(onlineUserSocketID).emit('receive-typing-alert', { senderID, receiverID, isTyping: false});
   }, 5000);
 };
@@ -90,7 +91,6 @@ const sendTypingAlert = (senderID, receiverID) => {
 // ...
 let clientCount = 0
 io.on("connection", (socket) => {
-  console.log(`Client ${clientCount++} Connected`)
   socket.on("online-users", (data:any) => {
     setOnlineUser(data.userID, socket.id);
   });
@@ -103,20 +103,20 @@ io.on("connection", (socket) => {
   socket.on("send-message", (data:any) => {
     const {message, file, sender, receiver, receiverID, senderID,  } = data;
     const onlineUserSocketID = onlineUsers.get(receiverID);
-    if (!onlineUserSocketID) {
-      axios.post(notifyUserRoute, 
-        {
-          message, receiverID, senderID
-        })
-    }
+    // if (!onlineUserSocketID) {
+    //   axios.post(notifyUserRoute, 
+    //     {
+    //       message, receiverID, senderID
+    //     })
+    // }
 
       const messageData:any =  {
         senderID,
         newMessage: message,
+        sender
       }
 
       if(file) messageData.file = file
-      console.log('Sent message', messageData)
       io.to(onlineUserSocketID).emit("receive-message", messageData);
 
   });

@@ -29,16 +29,16 @@ export default function MessageForm(props:any) {
             
             const messageData:any = {
               message: props.message, 
-              sender: props.session._id,
-              receiver: props.receiver._id,
+              sender: props.session.username,
+              receiver: props.receiver.username,
               senderID: props.session._id,
               receiverID: props.receiver._id,
             }
 
-            if(fileInputRef.current?.files[0]) {
+            if(data.newMessage.file) {
               messageData.file = {
-                name: data.fileName,
-                url: data.fileUrl
+                name: data.newMessage.file,
+                url: data.newMessage.fileUrl
               }
             }
             socket.emit('send-message', messageData)

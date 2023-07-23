@@ -135,7 +135,7 @@ export default function ChatComponent() {
   
     if(isLoading) return <div>Loading...</div>
     
-    if (isLoading === false && session?.isStaff === false) return <p>Under Maintenance, Coming Back Soon...</p>
+    // if (isLoading === false && session?.isStaff === false) return <p>Under Maintenance, Coming Back Soon...</p>
    
 
 

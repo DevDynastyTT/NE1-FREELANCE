@@ -2,9 +2,9 @@
 
 import '@styles/inbox/inbox.css'
 import GlobalNavbar from "@components/GlobalNavbar";
-import { getAllUserInfo, receiveMessageRoute, sendMessageRoute, searchUsers } from "@utils/APIRoutes";
+import { getRecentChats, searchUsers } from "@utils/APIRoutes";
 import { getUserSession } from "@utils/reuseableCode";
-import { MessagesType, SessionType } from "@utils/types";
+import { MessagesType, RecentChatsType, SessionType } from "@utils/types";
 import axios from "axios";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -22,132 +22,72 @@ export default function InboxComponent() {
     const router = useRouter()
 
     const [session, setSession] = useState<SessionType>()
-    const [receiver, setReceiver] = useState<SessionType>()
     const [users, setUsers] = useState<SessionType[]>([])
 
-    const [message, setMessage] = useState<string>("");
-    const [chatName, setChatName] = useState<string>();
-    
-    const [isTyping, setIsTyping] = useState<boolean>(false);
+    const [recentChats, setRecentChats] = useState<RecentChatsType[]>([]);
+    const [newMessage, setNewMessage] = useState<string>('')
     const [keyword, setKeyword] = useState<string>("")
-    const [receivedMessages, setReceivedMessages] = useState<MessagesType[]>([]);
-    const messagesEndRef = useRef<HTMLDivElement>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isMenuOpen, setIsMenuOpen] = useState(true);
    
     function setOnlineUser(userSession:SessionType){ socket.emit('online-users', {userID: userSession?._id}) }
  
-    function handleEmit() {
+    async function handleEmit() {
       const isAuthenticated = getUserSession();
 
       //User authentication 
       if (isAuthenticated?._id) {
         setSession(isAuthenticated); //Assign user information to session
         setOnlineUser(isAuthenticated); //Send an online-emit event to tell all users that the user is online
+        await fetchRecentChats(isAuthenticated?._id)
+
+        socket.on('receive-message', async (data)=> {
+          setNewMessage(data.newMessage)
+          await fetchRecentChats(isAuthenticated?._id)
+        })
       } 
 
       setIsLoading(false);
 
     }
-   
-    async function sendMessage (event: FormEvent<HTMLFormElement>) {
-      event.preventDefault()
-      //If user if logged in and selected a person to chat with, send the message
-      if(session && session?._id && receiver && receiver?._id){
-          try{
-              const response = await axios.post(sendMessageRoute, {
-                sender: session?.username, 
-                receiver: receiver?.username, 
-                senderID: session?._id,
-                receiverID: receiver?._id,
-                content: message
-              })
-              const data = response.data
-              
-              if(response.status !== 200){
-                console.error(data.error);
-                return
-              }
-              socket.emit('send-message', {
-                message, 
-                sender: session._id,
-                receiver: receiver._id,
-                senderID: session._id,
-                receiverID: receiver._id,
-              })
-
-
-              const receivedMessage = {
-                content: message,
-                sender: session?.username,
-                receiver: receiver?.username,
-                isSender: true,
-                sentAt: new Date().toISOString(),
-              };
-              
-              //Append the new messages to the current messages array
-              setReceivedMessages((prevMessages) => [
-                ...prevMessages,
-                receivedMessage,
-              ]);
-
-          }catch(error){
-            alert('Server down')
-            console.error(error)
-          }
-          // Clear the input field
-          setMessage("");
-          
-      }
-      else alert('Login to send-messages or select user')
-    
-    }
-
-    async function fetchAllMessages(isAuthenticated: SessionType, currentReceiver: SessionType) {
-      try {
-        if (currentReceiver) { // Check if the receiver state is defined
-          const response = await axios.get(
-            `${receiveMessageRoute}/${isAuthenticated?._id}/${currentReceiver._id}`
-          );
-    
-          const data = response.data;
-          if (response.status !== 200) {
-            console.error(data.error);
-            return;
-          }
-    
-          const messages = data.messages.map((message: any) => ({
-            content: message.content,
-            sender: message.sender,
-            receiver: message.receiver,
-            isSender: message.senderID === isAuthenticated?._id,
-            sentAt: message.sentAt
-          }));
-    
-          setReceivedMessages((prevMessages: any) => [
-            ...prevMessages,
-            ...messages
-          ]);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    }
 
     async function handleSearchUsers(event: FormEvent<HTMLInputElement>) {
       setKeyword(event.currentTarget.value)
       try {
-        const response = await axios.get(`${searchUsers}/${keyword}`);
+        const response = await axios.get(`${searchUsers}/${event.currentTarget.value}`);
         const data = response.data;
-        if (response.status !== 200) {
-          console.error(data.error);
-          return;
-        }
         setUsers(data.userInfo);
-      } catch (error) {
-        console.error(error);
+      } catch (error:any) {
+        console.error(error.message);
       }
     }
+
+    async function fetchRecentChats(userID: string) {
+      try {
+        const response = await axios.get(`${getRecentChats}/${userID}`);
+        const data = response.data;
+        console.log(data)
+        // For each recent chat, find the most recent message and store its timestamp
+        const chatsWithTimestamp = await Promise.all(
+          data.recentChats.map(async (chat:any) => {
+            try {
+              const chatResponse = await axios.get(`${getRecentChats}/${chat.userID}`);
+              const chatData = chatResponse.data;
+              const mostRecentMessage = chatData.receivedMessages[0]; // Assuming receivedMessages is sorted by sentAt timestamp
+              return { ...chat, sentAt: mostRecentMessage?.sentAt };
+            } catch (error) {
+              console.error(error);
+              return chat;
+            }
+          })
+        );
+    
+        setRecentChats(chatsWithTimestamp);
+      } catch (error) {
+        console.error(error, "Failed to fetch recent chats");
+      }
+    }
+    
 
     useEffect(() => {
       handleEmit()
@@ -157,43 +97,9 @@ export default function InboxComponent() {
       }
     }, [])
     
-    useEffect(() => {
-      if (session && receiver) {
-        fetchAllMessages(session, receiver);
-
-        
-        socket.on("receive-message", (data) => {
-            setIsTyping(false)
-              const { newMessage, sender } = data;
-              const receivedMessage = {
-                content: newMessage,
-                sender: sender,
-                receiver: session?.username || '',
-                isSender: false,
-                sentAt: new Date().toISOString(),
-              };
-              
-              //Append the new messages to the current messages array
-              setReceivedMessages((prevMessages) => [
-                ...prevMessages,
-                receivedMessage,
-              ]);
-        });
-
-
-       
-      }
-    }, [session, receiver]);
-  
-    useEffect(() => {
-      if (messagesEndRef.current) {
-        messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end'  });
-      }
-    }, [receivedMessages]);
-
     if(isLoading) return <div>Loading...</div>
     
-    if (isLoading === false && session?.isStaff === false) return <p>Under Maintenance, Coming Back Soon...</p>;
+    // if (isLoading === false && session?.isStaff === false) return <p>Under Maintenance, Coming Back Soon...</p>;
    
    
     return (
@@ -213,12 +119,11 @@ export default function InboxComponent() {
 
                       
                   </form>
-
-                  
-
+                 
                   <main className='inbox-main-container'>
-                        
-                    {users?.length > 0 && keyword?.length > 0 && (
+
+                        {/* Display the users on search  */}
+                    {users?.length > 0  && (
                         <ul className={`user-dropdown ${isMenuOpen ? '' : 'closed'}`}>
                           <li className='close-button-list'>
                             <FontAwesomeIcon 
@@ -249,15 +154,37 @@ export default function InboxComponent() {
                             ) : null
                           )}
                         </ul>
-                      )}
+                    )}
 
-                      <ul className='contacts'>
-                        <li>User Chat 1</li>
-                        <li>User Chat 2</li>
-                        <li>User Chat 3</li>
-                        <li>User Chat 4</li>
-                        <li>User Chat 5</li>
+                     {/* Display the recent chats */}
+                     {recentChats.length > 0 ? (
+                      <>
+                        <ul className='contacts'>
+                        {recentChats.map((chat, index) => (
+                          // Check if the username is different from the session's username
+                          chat.username !== session?.username && (
+                            <li
+                              key={index} 
+                              className="recent-chat"
+                              onClick={() => router.push(`/inbox/${chat?.userID}`)}
+                            >
+                              <span>{chat?.username}</span> 
+                              <span className="message">{chat.newMessage}</span>
+                            </li>
+                          )
+                        ))}
                       </ul>
+
+                        <br/>
+                        <p style={{textAlign: "center"}}>Recent Chats</p>
+                      </>
+                    ) : (
+                      <div style={{ margin: '25% auto', textAlign: "center" }}>
+                        You have no recent chats...
+                      </div>
+                    )}
+
+
                   </main>
                 </div>
                 
@@ -269,112 +196,3 @@ export default function InboxComponent() {
     );
   }
 
-  /*
-<div>
-                  <div>
-                    <div style={{ marginLeft: "8%", height: "50px"}}>
-                      <span style={{fontSize: '2rem'}}>
-                        {chatName}
-                        {receiver?.isActive && <FontAwesomeIcon 
-                                  style={{ 
-                                    color: "rgb(0, 255, 0)", 
-                                    backgroundColor: "rgb(0, 255, 0)", 
-                                    borderRadius: "50%",
-                                    fontSize: ".7rem",
-                                    margin: "0 0 0 5px",
-                                  }}
-                                  icon={faCircle} />
-                        }
-                        </span>
-                      
-                      {isTyping && <span style={{color: 'grey'}}>typing...</span>}
-                    </div>
-
-                    <div
-                      style={{
-                        border: "1px solid black",
-                        height: "40vh",
-                        overflowY: "scroll",
-                        padding: "3%",
-                        margin: "0 auto",
-                        width: "80%",
-                      }}
-                    >
-                      {receivedMessages?.map((msg: any, index: any) => (
-                        <div
-                          key={index}
-                          style={{
-                            display: "flex",
-                            justifyContent: msg.isSender ? "flex-end" : "flex-start",
-                            marginBottom: "10px",
-                          }}
-                        >
-                          <div
-                            style={{
-                              background: msg.isSender ? "#00bfff" : "#f5f5f5",
-                              color: msg.isSender ? "#fff" : "#000",
-                              borderRadius: "5px",
-                              padding: "5px 10px",
-                            }}
-                          >
-                            {msg.content}
-                          </div>
-                        </div>
-                      ))}
-                      <div ref={messagesEndRef} />
-                    </div>
-                    <form onSubmit={sendMessage} style={{ marginLeft: "10%" }}>
-                      <input
-                        type="text"
-                        value={message}
-                        placeholder="Enter a message"
-                        required
-                        onChange={(e) => {
-                          setMessage(e.target.value)
-                          sendTypingAlert()
-                        }}
-                      />
-                      <button type="submit">Send Message</button>
-                    </form>
-                  </div>
-
-                  <form style={{ marginLeft: "3%", marginTop: "5%" }}>
-                      <input
-                        type="text"
-                        name="keyword"
-                        placeholder="Search for user"
-                        required
-                        onChange={handleSearchUsers} // Add onChange event listener
-                        />
-                    </form>
-
-                    {users?.length > 0 && keyword?.length > 0 && (
-                      <div>
-                        <ul>
-                          {users?.map((currentUser, currentIndex) =>
-                            currentUser._id !== session?._id ? (
-                              <li
-                                key={currentIndex}
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleOpenChat(currentUser)}
-                              >
-                                {currentUser.username} 
-                                {currentUser.isActive && <FontAwesomeIcon 
-                                  style={{ 
-                                    color: "rgb(0, 255, 0)", 
-                                    backgroundColor: "rgb(0, 255, 0)", 
-                                    borderRadius: "50%",
-                                    fontSize: ".7rem",
-                                    margin: "0 0 0 5px",
-                                  }}
-                                  icon={faCircle} 
-                                /> }
-                              </li>
-                            ) : null
-                          )}
-                        </ul>
-                      </div>
-                    )}
-                </div> 
-  */
-  

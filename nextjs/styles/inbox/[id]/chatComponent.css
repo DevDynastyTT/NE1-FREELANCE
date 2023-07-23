@@ -21,6 +21,9 @@
 .inbox-container .inbox-main-container {
   position: relative;
 }
+.inbox-container .inbox-main-container .contacts .recent-chat {
+  cursor: pointer;
+}
 .inbox-container .inbox-main-container .user-dropdown {
   position: absolute;
   top: 0;
@@ -73,6 +76,7 @@
   }
   .chat-navigation .back-arrow-container .back-arrow {
     font-size: 1.5rem;
+    cursor: pointer;
   }
   .chat-navigation .userInfoContainer {
     display: flex;

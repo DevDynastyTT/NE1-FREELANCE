@@ -114,6 +114,7 @@ export default function ChatComponent() {
     useEffect(() => {
       socket.on('receive-message', (data: any) => {
         const { senderID, newMessage, file } = data;
+        console.log(data)
         // Append the new message to the current messages array
         setReceivedMessages((prevMessages: any) => [
           ...prevMessages,

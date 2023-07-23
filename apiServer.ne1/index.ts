@@ -70,7 +70,6 @@ const onlineUsers = new Map();
 const typingStatus = new Map();
 
 const setOnlineUser = (userID: string, socketID: string): void => {
-  console.log(userID, ' is userID')
   if(!onlineUsers.has(userID)) onlineUsers.set(userID, socketID)
 }
 
@@ -97,9 +96,8 @@ io.on("connection", (socket) => {
 
   socket.on("typing-alert", (data) => {
     const {senderID, receiverID} = data
-    if (!typingStatus.has(senderID)) {
-      sendTypingAlert(senderID, receiverID);
-    }  })
+    if (!typingStatus.has(senderID)) sendTypingAlert(senderID, receiverID);
+  })
 
   socket.on("send-message", (data:any) => {
     const {message, file, sender, receiver, receiverID, senderID,  } = data;
@@ -117,7 +115,7 @@ io.on("connection", (socket) => {
       }
 
       if(file) messageData.file = file
-
+      console.log('Sent message', messageData)
       io.to(onlineUserSocketID).emit("receive-message", messageData);
 
   });
@@ -133,19 +131,3 @@ io.on("connection", (socket) => {
     }
   });   
 });
-
-/* io.emit()
-  In the context of websockets and event-driven programming, 
-  "emit" refers to sending or publishing an event from one part 
-  of the application to another. It allows you to trigger an 
-  event and provide data associated with that event.
-
-  In the case of websockets, emitting an event means sending data 
-  from the client to the server or vice versa. It allows communication 
-  between the client and the server by sending messages or notifications.
-*/
-let check = 0
-setInterval(() => {
-  check++
-  console.log(`Keep alive check: ${check}`)
-}, 600000) //Execute every 10 mins

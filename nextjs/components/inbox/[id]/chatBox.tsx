@@ -8,12 +8,7 @@ export default function ChatBox(props:any) {
     const [message, setMessage] = useState<string>("");
     const chatContainerRef = useRef<HTMLDivElement>(null);
 
-    function sendTypingAlert(){
-        if(props.session?._id && props.receiver._id)
-          socket.emit('typing-alert', ({
-            senderID: props.session._id, receiverID: props.receiver._id
-          }))
-      }
+    
 
       useEffect(() => {
         if (chatContainerRef.current) 
@@ -61,7 +56,6 @@ export default function ChatBox(props:any) {
                     setMessage={setMessage}
                     receivedMessage={props.receivedMessage}
                     setReceivedMessages={props.setReceivedMessages}
-                    sendTypingAlert={sendTypingAlert}
                     message={message}
                     chatContainerRef={props.chatContainerRef}
                     session={props.session}

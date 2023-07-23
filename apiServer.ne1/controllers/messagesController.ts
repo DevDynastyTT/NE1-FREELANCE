@@ -1,29 +1,29 @@
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 import Messages from '../models/messagesModel'
 import User from '../models/userModel'
-const AWS = require('aws-sdk');
-const bucketName = 'ne1-freelance'; // Replace with your Wasabi bucket name
+const AWS = require('aws-sdk')
+const bucketName = 'ne1-freelance' // Replace with your Wasabi bucket name
 
 // Configure Wasabi credentials
 AWS.config.update({
   accessKeyId: process.env.WASABI_ACCESS_KEY_ID,
   secretAccessKey: process.env.WASABI_SECRET_ACCESS_KEY_ID,
-});
+})
 
 // Create a new instance of the S3 client
 const s3 = new AWS.S3({
   endpoint: process.env.SECRET_ENDPOINT,
-});
+})
 const sendMessage = async (request, response)=> {
-    const { sender, senderID, receiver, receiverID, content } = request.body;
-    const file = request.file;
+    const { sender, senderID, receiver, receiverID, content } = request.body
+    const file = request.file
 
     try{
-        const user = await User.findById({ _id: senderID });
+        const user = await User.findById({ _id: senderID })
 
         if(!user){
             console.log("User not found")
-            return response.status(404).json({error: 'You aren\'t Authorized to send a message'});
+            return response.status(404).json({error: 'You aren\'t Authorized to send a message'})
         }
     
 
@@ -44,7 +44,7 @@ const sendMessage = async (request, response)=> {
           receiver,
           receiverID,
           content,
-        };
+        }
     
         // If there is a file, add it to the newMessageData and upload to wasabi
         if (file) {
@@ -53,44 +53,44 @@ const sendMessage = async (request, response)=> {
             Bucket: bucketName,
             Key: Date.now() + '-' + request.file.originalname,
             Body: request.file.buffer,
-          };
-          const uploadResult = await s3.upload(params).promise();
-          newMessageData.file = uploadResult.Key;
+          }
+          const uploadResult = await s3.upload(params).promise()
+          newMessageData.file = uploadResult.Key
         }
     
-        const newMessage = await Messages.create(newMessageData);
+        const newMessage = await Messages.create(newMessageData)
     
 
         if(!newMessage){
             console.log("Message not sent")
-            return response.status(500).json({error: 'Internal Server Error'});
+            return response.status(500).json({error: 'Internal Server Error'})
         }
     
-        const messageWithFileUrl = await Messages.findOne({_id: newMessage._id});
+        const messageWithFileUrl = await Messages.findOne({_id: newMessage._id})
         console.log(messageWithFileUrl)
-        newMessage.file = await getFileUrl(newMessageData.file);
+        newMessage.file = await getFileUrl(newMessageData.file)
 
         console.log(newMessage.file, 'is url')
         console.log(newMessageData.file, 'is name')
-        return response.status(200).json({ fileName: newMessageData.file, fileUrl: newMessage.file });
+        return response.status(200).json({ fileName: newMessageData.file, fileUrl: newMessage.file })
 
     }catch(error){
-        console.log(error.message);
-        return response.status(500).json({error: "Internal Server Error"});
+        console.log(error.message)
+        return response.status(500).json({error: "Internal Server Error"})
     }
    
 }
 const receiveMessage = async (request, response)=> {
     //Sender wud be the opener of the chat, receiver wud be the person to message
-    const { senderID, receiverID } = request.params;
+    const { senderID, receiverID } = request.params
     if(!senderID || senderID == 'undefined' || !receiverID || receiverID == 'undefined'){
-        console.error('Missing sender/receiver');
-        return response.status(400).json({error: 'Missing sender/receiver'});
+        console.error('Missing sender/receiver')
+        return response.status(400).json({error: 'Missing sender/receiver'})
     }
 
     try{
         //Fetch the messages that matches the sender and receiver IDs, and return them in order of date sent
-        const chatMessages = await Messages.aggregate([
+        const chatMessages:any = await Messages.aggregate([
             {
               $match: {
                 $or: [
@@ -130,65 +130,77 @@ const receiveMessage = async (request, response)=> {
               },
             },
             { $sort: { sentAt: 1 } },
-        ]);
+        ])
 
-        return response.status(200).json({messages: chatMessages});
+         
+        //  console.log(chatMessages)
+        const newMessages = await Promise.all (chatMessages.map(async (message: any) => {
+          if(message.file){
+            message.file = {
+              name: message.file,
+              url: await getFileUrl(message.file)
+            }
+          }
+          return message
+        }))
+
+        console.log(newMessages)
+        return response.status(200).json({messages: newMessages})
         
     }catch(error){
-        console.log(error.message);
-        return response.status(500).json({error: "Internal Server Error"});
+        console.log(error.message)
+        return response.status(500).json({error: "Internal Server Error"})
     }
 
 }
 
 const getFileUrl = async (fileName:string): Promise<string> => {
   try {
-    const bucketName = 'ne1-freelance'; // Replace with your Wasabi bucket name
-
+    const bucketName = 'ne1-freelance' // Replace with your Wasabi bucket name
     // Generate a pre-signed URL for the profile picture
     const params = {
       Bucket: bucketName,
       Key: fileName,
       Expires: 3600, // URL expiration time in seconds (e.g., 1 hour)
-    };
+    }
 
-    const signedUrl = await s3.getSignedUrlPromise('getObject', params);
+    const signedUrl = await s3.getSignedUrlPromise('getObject', params)
     // Return the pre-signed URL in the response
     return signedUrl
   } catch (error) {
-    console.error(error);
+    console.error(error)
     return 'undefined'
   }
 }
 const searchUsers = async (request, response) => {
-  const { keyword } = request.params;
+  const { keyword } = request.params
   try {
-    const userInfo = await User.find({ username: { $regex: keyword, $options: 'i' } });
+    const userInfo = await User.find({ username: { $regex: keyword, $options: 'i' } })
 
     if(!userInfo){
-      console.log('Users not found');
-      return response.status(404).json({ error: 'Users not found' });
+      console.log('Users not found')
+      return response.status(404).json({ error: 'Users not found' })
     }
-    return response.status(200).json({userInfo});
+    return response.status(200).json({userInfo})
   } catch (error) {
-    console.error(error.message);
-    return response.status(500).json({ error: 'Internal Server Error' });
+    console.error(error.message)
+    return response.status(500).json({ error: 'Internal Server Error' })
   }
-};
+}
 
 const getReceiver = async (request, response) => {
-  const { id } = request.params;
+  const { id } = request.params
   try {
-    const user = await User.findById({ _id: new mongoose.Types.ObjectId(id) });
+    const user = await User.findById({ _id: new mongoose.Types.ObjectId(id) })
     if(!user){
-      console.log('Receiver not found');
-      return response.status(404).json({ error: 'Receiver not found' });
+      console.log('Receiver not found')
+      return response.status(404).json({ error: 'Receiver not found' })
     }
 
-    return response.status(200).json({receiver:user});
+    return response.status(200).json({receiver:user})
   }catch(error){
-    console.error(error.message);
-    return response.status(500).json({ error: 'Internal Server Error' });
+    console.error(error.message)
+    return response.status(500).json({ error: 'Internal Server Error' })
   }
 }
 

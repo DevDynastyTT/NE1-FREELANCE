@@ -76,10 +76,9 @@
   }
   .chat-navigation .userInfoContainer {
     display: flex;
-    width: 100%;
-    justify-content: left;
-    align-items: center;
-    padding-left: 3%;
+    padding-top: 2%;
+    flex-direction: column;
+    height: 4rem;
   }
   .chat-navigation .userInfoContainer .active-status {
     color: rgb(0, 255, 0);
@@ -89,8 +88,21 @@
     display: inline;
     margin-right: 3%;
   }
-  .chat-navigation .userInfoContainer .username {
+  .chat-navigation .userInfoContainer .username-container {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    width: 100%;
+    padding-left: 3%;
+  }
+  .chat-navigation .userInfoContainer .username-container .username {
     font-size: 1.5rem;
+  }
+  .chat-navigation .userInfoContainer .typing-alert {
+    color: #62646a;
+    font-size: 1rem;
+    margin-left: 12%;
+    margin-top: -6%;
   }
   .chat-main-container {
     margin-top: 2%;

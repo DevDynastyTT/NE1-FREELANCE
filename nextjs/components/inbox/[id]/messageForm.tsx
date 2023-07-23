@@ -68,6 +68,15 @@ export default function MessageForm(props:any) {
 
         }
 }
+
+    function sendTypingAlert(){
+      if(props.session?._id && props.receiver._id)
+        socket.emit('typing-alert', ({
+          senderID: props.session._id, receiverID: props.receiver._id
+        }))
+    }
+
+    
   
   return (
     <form className="message-form" onSubmit={sendMessage} encType='multipart/form-data' >
@@ -80,8 +89,7 @@ export default function MessageForm(props:any) {
           // required
           onChange={(e) => {
             props.setMessage(e.target.value)
-            props.sendTypingAlert()
-
+            sendTypingAlert()
           }}
         />
 

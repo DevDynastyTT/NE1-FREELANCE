@@ -11,24 +11,20 @@ import ChatNavigationComponent from "./chatNavigationComponent"
 import ChatBox from "./chatBox"
 import io from "socket.io-client"
 
-const server = process.env.NODE_ENV === "development" ? "http://localhost:3002" : "https://ne1freelance.onrender.com";
-const socket = io(server);
+const server = process.env.NODE_ENV === "development" ? "http://localhost:3002" : "https://ne1freelance.onrender.com"
+const socket = io(server)
 export default function ChatComponent() {
     const {id: receiverID} = useParams()
 
     const router = useRouter()
     const [session, setSession] = useState<SessionType>()
     const [receiver, setReceiver] = useState<SessionType>()
-    const [users, setUsers] = useState<SessionType[]>([])
 
-    const [chatName, setChatName] = useState<string>();
-    
-    const [isTyping, setIsTyping] = useState<boolean>(false);
-    const [keyword, setKeyword] = useState<string>("")
-    const [receivedMessages, setReceivedMessages] = useState<MessagesType[]>([]);
-    const messagesEndRef = useRef<HTMLDivElement>(null);
-    const [isMenuOpen, setIsMenuOpen] = useState(true);
+    const [receivedMessages, setReceivedMessages] = useState<MessagesType[]>([])
+    const messagesEndRef = useRef<HTMLDivElement>(null)
+    const [isMenuOpen, setIsMenuOpen] = useState(true)
     const [isLoading, setIsLoading] = useState(true)
+    const [isTyping, setIsTyping] = useState<boolean>(false)
 
     function setOnlineUser(userSession:SessionType){ socket.emit('online-users', {userID: userSession?._id}) }
 
@@ -37,31 +33,32 @@ export default function ChatComponent() {
         if (receiverID) { // Check if the receiver state is defined
           const response = await axios.get(
             `${receiveMessageRoute}/${session?._id}/${receiverID}`
-          );
+          )
     
-          const data = response.data;
+          const data = response.data
           if (response.status !== 200) {
-            console.error(data.error);
-            return;
+            console.error(data.error)
+            return
           }
           const messages = data.messages.map((message: any) => ({
             content: message.content,
+            file: message.file,
             sender: message.sender,
             receiver: message.receiver,
             isSender: message.senderID === session?._id,
             sentAt: message.sentAt
-          }));
-    
+          }))
+
           setReceivedMessages((prevMessages: any) => [
             ...prevMessages,
             ...messages
-          ]);
+          ])
 
-          setIsLoading(false);
+          setIsLoading(false)
 
         }
       } catch (error:any) {
-        console.error(error.message);
+        console.error(error.message)
       }
     }
 
@@ -70,7 +67,7 @@ export default function ChatComponent() {
           const response = await axios.get(`${getReceiver}/${receiverID}`)
           const data = response.data
           if(response.status !== 200){
-              console.error(data.error);
+              console.error(data.error)
               return
           }
 
@@ -83,29 +80,24 @@ export default function ChatComponent() {
     async function authenticateMessages(userSession:SessionType){
         setOnlineUser(userSession)
         await fetchReceiver()  
-        await fetchAllMessages();
+        await fetchAllMessages()
 
     }
 
     useEffect(() => {
       if (session && receiverID) authenticateMessages(session)
-    }, [session, receiverID]);
+    }, [session, receiverID])
   
     
     
 
 
     useEffect(() => {
-        const isAuthenticated = getUserSession();
+        const isAuthenticated = getUserSession()
 
         //User authentication 
-        if (isAuthenticated?._id) {
-          setSession(isAuthenticated); //Assign user information to session
-         
-      
-        }else{
-          router.push('/auth/login')
-        }  
+        if (isAuthenticated?._id) setSession(isAuthenticated) //Assign user information to session
+        else router.push('/auth/login')
         
         return () => { socket.disconnect() }
         
@@ -113,7 +105,7 @@ export default function ChatComponent() {
 
     useEffect(() => {
       socket.on('receive-message', (data: any) => {
-        const { senderID, newMessage, file } = data;
+        const { senderID, newMessage, file } = data
         console.log(data)
         // Append the new message to the current messages array
         setReceivedMessages((prevMessages: any) => [
@@ -126,17 +118,24 @@ export default function ChatComponent() {
             sentAt: new Date().toISOString(),
             file: file, // Pass the file data to the received message object
           },
-        ]);
-      });
+        ])
+      })
+
+      socket.on('receive-typing-alert', (data:any) => {
+        if (data.isTyping && data.receiverID) setIsTyping(true)
+        else if(!data.isTyping && data.receiverID) setIsTyping(false)
+      })
+
   
       return () => {
-        socket.off('receive-message'); // Cleanup the event listener
-      };
-    }, [receiver?.username, session?.username]);
+        socket.off('receive-message') // Cleanup the event listener
+        socket.off('receive-typing-alert')
+      }
+    }, [receiver?.username, session?.username])
   
     if(isLoading) return <div>Loading...</div>
     
-    if (isLoading === false && session?.isStaff === false) return <p>Under Maintenance, Coming Back Soon...</p>;
+    if (isLoading === false && session?.isStaff === false) return <p>Under Maintenance, Coming Back Soon...</p>
    
 
 
@@ -144,7 +143,10 @@ export default function ChatComponent() {
         <>
             <GlobalNavbar session={session}/>
 
-            <ChatNavigationComponent router={router} receiverUsername={receiver?.username}/>
+            <ChatNavigationComponent 
+              isTyping={isTyping}
+              router={router} 
+              receiverUsername={receiver?.username}/>
 
             <ChatBox 
               session={session} receiver={receiver}

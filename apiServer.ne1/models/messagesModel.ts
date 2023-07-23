@@ -30,6 +30,14 @@ const messageSchema = new mongoose.Schema({
     file: {
         type: String,
     },
+    /*file: {
+        name: {
+            type: String,
+    },
+        url: {
+            type: String,
+    }
+    },*/
     sentAt: {
         type: Date,
         default: Date.now

@@ -36,19 +36,7 @@ export default function InboxComponent() {
     const [isMenuOpen, setIsMenuOpen] = useState(true);
    
     function setOnlineUser(userSession:SessionType){ socket.emit('online-users', {userID: userSession?._id}) }
-    function sendTypingAlert(){
-      if(session?._id && receiver?._id)
-        socket.emit('typing-alert', ({
-          senderID: session._id, receiverID: receiver._id
-        }))
-    }
-
-    function handleOpenChat(currentUser: SessionType) {
-        setReceivedMessages([]); 
-        setReceiver(currentUser);
-        setChatName(`${currentUser?.username}`);
-        router.push(`/inbox/${currentUser?._id}`);
-    }
+ 
     function handleEmit() {
       const isAuthenticated = getUserSession();
 
@@ -193,10 +181,7 @@ export default function InboxComponent() {
         });
 
 
-        socket.on('receive-typing-alert', (data) => {
-          if (data.isTyping && receiver?._id) setIsTyping(true);
-          else if(!data.isTyping && receiver?._id) setIsTyping(false);
-        });
+       
       }
     }, [session, receiver]);
   
@@ -247,7 +232,6 @@ export default function InboxComponent() {
                               <li
                                 key={currentIndex}
                                 style={{ cursor: "pointer" }}
-                                onClick={() => handleOpenChat(currentUser)}
                               >
                                 {currentUser.username} 
                                 {currentUser.isActive && <FontAwesomeIcon 

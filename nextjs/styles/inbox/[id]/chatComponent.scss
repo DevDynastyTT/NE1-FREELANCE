@@ -5,9 +5,7 @@
         display: flex;
         flex-direction: row;
         border-bottom: 1px solid $primaryGrey;
-        // border: 1px solid black;
-    
-        
+      
         .back-arrow-container{
             padding: 3%;
             .back-arrow{
@@ -17,12 +15,9 @@
     
         .userInfoContainer{
             display: flex;
-            width: 100%;
-            justify-content: left;
-            align-items: center;
-            padding-left: 3%;
-            // border: 1px solid;
-    
+            padding-top: 2%;
+            flex-direction: column;
+            height: 4rem;
     
             .active-status{
                 color: rgb(0, 255, 0);
@@ -32,10 +27,24 @@
                 display: inline;
                 margin-right: 3%; 
             }
-            .username{
-               font-size: 1.5rem;
-            //    margin-top: 1%;
+            .username-container{
+                display:flex;
+                justify-content: left;
+                align-items: center;
+                width: 100%;
+                padding-left: 3%;
+
+               .username{font-size: 1.5rem;}
+
             }
+
+            .typing-alert{
+                color: $primaryGrey;
+                font-size: 1rem;
+                margin-left: 12%;
+                margin-top: -6%;
+            }
+
         }
     }
     

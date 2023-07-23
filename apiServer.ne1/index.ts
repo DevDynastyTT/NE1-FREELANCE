@@ -76,11 +76,12 @@ const setOnlineUser = (userID: string, socketID: string): void => {
 const sendTypingAlert = (senderID, receiverID) => {
   const onlineUserSocketID = onlineUsers.get(receiverID);
   typingStatus.set(senderID, true);
-
+  console.log('typing')
   io.to(onlineUserSocketID).emit('receive-typing-alert', { senderID, receiverID, isTyping: true});
 
   setTimeout(() => {
     typingStatus.delete(senderID);
+    console.log('not typing')
     io.to(onlineUserSocketID).emit('receive-typing-alert', { senderID, receiverID, isTyping: false});
   }, 5000);
 };

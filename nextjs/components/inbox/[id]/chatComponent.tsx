@@ -22,7 +22,6 @@ export default function ChatComponent() {
 
     const [receivedMessages, setReceivedMessages] = useState<MessagesType[]>([])
     const messagesEndRef = useRef<HTMLDivElement>(null)
-    const [isMenuOpen, setIsMenuOpen] = useState(true)
     const [isLoading, setIsLoading] = useState(true)
     const [isTyping, setIsTyping] = useState<boolean>(false)
 

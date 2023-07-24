@@ -1,14 +1,15 @@
 import { FormEvent, useEffect, useRef, useState } from 'react'
 import MessageForm from './messageForm';
 import io from "socket.io-client"
+import Image from 'next/image'
+import { faDownload } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const server = process.env.NODE_ENV === "development" ? "http://localhost:3002" : "https://ne1freelance.onrender.com";
 const socket = io(server);
 export default function ChatBox(props:any) {
     const [message, setMessage] = useState<string>("");
     const chatContainerRef = useRef<HTMLDivElement>(null);
-
-    
 
       useEffect(() => {
         if (chatContainerRef.current) 
@@ -36,13 +37,51 @@ export default function ChatBox(props:any) {
                             color: msg.isSender ? "#fff" : "#000",
                         }}> {msg.content}
 
-                        {msg.file && 
-                            <div className={msg.isSender ? "file-sender" : "file-user"}>
-                                <a href={msg.file.url} target="_blank" download>
-                                {msg.file.name}
-                              </a>
-                            </div>
-                        }
+                        {msg.file && (
+                          <div className={msg.isSender ? "file-sender" : "file-user"}>
+                            {(() => {
+                              const fileExtension = msg.file.name.split(".").pop().toLowerCase();
+
+                              if (fileExtension === "jpg" || fileExtension === "png") {
+                                return (
+                                  <>
+                                  <Image
+                                    src={msg.file.url}
+                                    alt={msg.file.name}
+                                    width={200}
+                                    height={200}
+                                    unoptimized
+                                  />
+                                  <br/>
+                                  <a style={{color: "#fff", backgroundColor: "transparent"}} href={msg.file.url} download={msg.file.name}>
+                                    <FontAwesomeIcon icon={faDownload} />
+                                  </a>
+                                </>
+                                );
+                              } else if (fileExtension === "mp4") {
+                                return (
+                                  <video controls width={200} height={200}>
+                                    <source src={msg.file.url} type="video/mp4" />
+                                  </video>
+                                );
+                              } else if (fileExtension === "mp3") {
+                                return (
+                                  <audio controls>
+                                    <source src={msg.file.url} type="audio/mp3" />
+                                  </audio>
+                                );
+                              } else {
+                                // handle other file types or display a default fallback
+                                return (
+                                  <div>
+                                    Unsupported file type: {fileExtension}
+                                  </div>
+                                );
+                              }
+                            })()}
+                          </div>
+                        )}
+
                       </div>
                     </div>
                     ))}

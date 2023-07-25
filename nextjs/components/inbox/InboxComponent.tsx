@@ -58,7 +58,7 @@ export default function InboxComponent() {
         const data = response.data;
         setUsers(data.userInfo);
       } catch (error:any) {
-        console.error(error.message);
+        console.error(error);
       }
     }
 
@@ -91,11 +91,11 @@ export default function InboxComponent() {
 
     useEffect(() => {
       handleEmit()
-
+    
       return () => {
         socket.disconnect()
       }
-    }, [handleEmit, socket])
+    }, [])
     
     if(isLoading) return <div>Loading...</div>
     

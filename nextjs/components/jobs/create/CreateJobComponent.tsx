@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import { SessionType, JobCategory } from '@utils/types';
 import GlobalNavbar from '../../GlobalNavbar';
@@ -9,7 +9,6 @@ import axios from 'axios';
 import { useState, useEffect, FormEvent } from 'react'
 import { useRouter } from 'next/navigation';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context';
-import GlobalFooter from '@components/GlobalFooter';
 
 
 export default function CreateJobComponent(){
@@ -27,11 +26,10 @@ export default function CreateJobComponent(){
     //Form message
     const [message, setMessage] = useState('')
 
-    const [isLoading, setIsLoading] = useState(true);
-
     async function handleCreateJobSubmit(event:FormEvent<HTMLFormElement>) {
         event.preventDefault();
     
+      
         const formData = new FormData()
         formData.append('freeLancerID', session?._id || '')
         formData.append('title', title || '')
@@ -58,33 +56,25 @@ export default function CreateJobComponent(){
         }
     }
       
+    async function fetchUserSession(){
+        const userSession = await getUserSession()
+        setSession(userSession)
+    }
     useEffect(()=> {
-        const isAuthenticated = getUserSession()
-        if(!isAuthenticated) {
-            alert('Login to create a job')
-            router.push('/auth/login')
-            return
-        }
-        setSession(isAuthenticated)         
-        
+        //Check user authentication
+        fetchUserSession()
+        //Categories fetch for selection field
         fetchCategories(setJobCategories, getCategories)
-          .then(() => {
-            setIsLoading(false);
-          })
-          .catch((error) => {
-            console.error('Failed to fetch categories:', error);
-          });
     }, []);
 
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
+  
 
     return(
         <>
             <GlobalNavbar session={session}/>
-                                
+            
             <main className="createJob-main-container">
+
                 {/* CREATE JOB FORM */}
                 <form 
                     id="job_form" 
@@ -107,33 +97,123 @@ export default function CreateJobComponent(){
                         </div> 
                     )}
 
-                    <div className='input-wrapper'>
-                        <div className="info">
-                            <label htmlFor="title" className='form-label label'>Title</label>
-                            <p className="form-label descriptive">
+                        <div className='input-wrapper'>
+                            <div className="info">
+                                <label htmlFor="title" className='form-label label'>Title</label>
+                                <p className="form-label descriptive">
                                 Your Gig title is like the storefront for your services, 
                                 and it is crucial to use relevant keywords that potential buyers 
                                 may search for when looking for a service similar to yours.
-                            </p>
+                                </p>
+                            </div>
+                        
+                            <input 
+                                id="title" 
+                                className='form-control' 
+                                type="text" 
+                                name="title" 
+                                onChange={(event) => setTitle(event.target.value)}
+                                required
+                            />
+
                         </div>
                     
-                        <input 
-                            id="title" 
-                            className='form-control' 
-                            type="text" 
-                            name="title" 
-                            onChange={(event) => setTitle(event.target.value)}
-                            required
-                        />
-                    </div>
+                        <div className='input-wrapper'>
+                            <div className="info">
+                                <label htmlFor="description" className='form-label label'>Description</label>
+                                <p className='form-label descriptive'>
+                                    Describe the service you will be offering. 
+                                    Be clear and concise, and highlight any unique skills or qualifications 
+                                    you bring to the table. This will help buyers understand what you can offer 
+                                    and how you can help them.
+                                </p>
 
-                    {/* Rest of the form fields go here */}
+                            </div>
+
+                            <textarea 
+                                id="description" 
+                                className='form-control' 
+                                name="description" 
+                                maxLength={80}
+                                onChange={(event)=> setDescription(event.target.value)} 
+                                required
+                            />
+                        </div>
+
+                        <div className='input-wrapper'>
+                            <div className="info">
+                                <label htmlFor="category" className='form-label label '>Category</label>
+                                <p className="form-label descriptive">
+                                    Choose the category most 
+                                    <br/>
+                                    suitable for your Gig.
+                                </p>
+                            </div>
+                        {/* //Select category */}
+                            <select 
+                                className="form-select select-input-field" 
+                                name="category" 
+                                defaultValue="Select" 
+                                onChange={(e) => setCategory(e.target.value)} 
+                                required>
+
+                                <option value="">All categories</option>
+                                {/* <option value="Administration">Administration</option> */}
+                                {jobCategories?.map(category => {
+                                    return <option 
+                                            value={category.name} 
+                                            key={category.name}>
+                                                    {category.name}
+                                            </option>
+                                })}
+                            </select>
+                        </div>
+
+                        <div className='input-wrapper'>
+                            <div className="info">
+                                <label htmlFor="price" className='form-label label'>Price</label>
+                                <p className="form-label descriptive">
+                                    Set your price starting from
+                                    <br/> 
+                                    $100TTD
+                                </p>
+                            </div>
+                        
+                            <input 
+                                id="price" 
+                                className='form-control' 
+                                type="number" 
+                                name="price" 
+                                style={{backgroundColor: "transparent", color: "black"}}
+                                onChange={(event)=> setPrice(parseFloat(event.target.value))} //Convert string value to integer
+                                step="0.01" min="0" 
+                                required
+                            />
+                        </div>
+
+                        <div className='input-wrapper'>
+                            <div className="info">
+                                <label 
+                                    htmlFor="thumbnail-input" 
+                                    className="form-label label thumbnail-label">
+                                        Thumbnail:
+                                </label>
+                                <input 
+                                    id="thumbnail-input" 
+                                    type="file" 
+                                    name="thumbnail" 
+                                    accept="image/*"
+                                    className="btn btn-secondary image-btn" 
+                                    required
+                                />
+                            </div>
+                        </div>
 
                     <button className="btn btn-primary submit-btn" type="submit">Create Job</button>
                 </form>
+
             </main>
 
-            <GlobalFooter/>
         </>
     )
 }

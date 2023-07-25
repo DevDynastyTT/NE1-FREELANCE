@@ -149,7 +149,7 @@ export default function CreateJobComponent(){
                                     suitable for your Gig.
                                 </p>
                             </div>
-                        
+                        {/* //Select category */}
                             <select 
                                 className="form-select select-input-field" 
                                 name="category" 

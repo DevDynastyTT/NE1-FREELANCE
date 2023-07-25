@@ -58,7 +58,7 @@ export default function InboxComponent() {
         const data = response.data;
         setUsers(data.userInfo);
       } catch (error:any) {
-        console.error(error.message);
+        console.error(error);
       }
     }
 

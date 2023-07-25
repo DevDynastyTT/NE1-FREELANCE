@@ -1,8 +1,9 @@
 import { faPaperPlane, faPaperclip } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { sendMessageRoute } from '@utils/APIRoutes';
+import { MessagesType } from '@utils/types';
 import axios from 'axios';
-import { FormEvent, useRef } from 'react';
+import { FormEvent, MutableRefObject, useRef } from 'react';
 import io from "socket.io-client"
 
 const server = process.env.NODE_ENV === "development" ? "http://localhost:3002" : "https://ne1freelance.onrender.com";
@@ -10,64 +11,85 @@ const socket = io(server);
 export default function MessageForm(props:any) {
     const fileInputRef = useRef<any>(null);
 
+    function createFormData(fileInputRef:MutableRefObject<any>, props:any): FormData {
+        const formData = new FormData()
+        if (fileInputRef.current?.files[0]) formData.append('file', fileInputRef.current?.files[0]);
+        formData.append('content', props.message)
+        formData.append('sender', props.session.username)
+        formData.append('receiver', props.receiver.username)
+        formData.append('senderID', props.session._id)
+        formData.append('receiverID', props.receiver._id)
+
+        return formData
+    }
+
+    function createMessageData(data:any, props:any): MessagesType {
+      const messageData:MessagesType = {
+        content: props.message, 
+        sender: props.session.username,
+        receiver: props.receiver.username,
+        senderID: props.session._id,
+        receiverID: props.receiver._id,
+        isSender: true,
+        sentAt: new Date().toISOString()
+      }
+
+      if(data.newMessage.file) {
+        messageData.file = {
+          name: data.newMessage.file,
+          url: data.newMessage.fileUrl
+        }
+      }
+
+      return messageData
+    }
+
     async function sendMessage(event:FormEvent){
-    event.preventDefault()
-   
-    const formData = new FormData()
-    formData.append('file', fileInputRef.current?.files[0])
-    formData.append('content', props.message)
-    formData.append('sender', props.session.username)
-    formData.append('receiver', props.receiver.username)
-    formData.append('senderID', props.session._id)
-    formData.append('receiverID', props.receiver._id)
-    // If user if logged in and selected a person to chat with, send the message
-        try{
-            const response = await axios.post(sendMessageRoute, formData, {
-              headers: { 'Content-Type': 'multipart/form-data' }, // Ensure the correct content type for FormData
-            })
-            const data = response.data
-            
-            const messageData:any = {
-              message: props.message, 
-              sender: props.session.username,
-              receiver: props.receiver.username,
-              senderID: props.session._id,
-              receiverID: props.receiver._id,
-            }
-
-            if(data.newMessage.file) {
-              messageData.file = {
-                name: data.newMessage.file,
-                url: data.newMessage.fileUrl
-              }
-            }
-            socket.emit('send-message', messageData)
-
-            const receivedMessage = {
-              content: props.message,
-              file: messageData.file,
-              sender: props.session.username,
-              receiver: props.receiver.username,
-              isSender: true,
-              sentAt: new Date().toISOString(),
-            };
-            
-            //Append the new messages to the current messages array
-            props.setReceivedMessages((prevMessages:any) => [
-              ...prevMessages,
-              receivedMessage,
-            ]);
-
-        }catch(error){
-          alert('Server down')
-          console.error(error)
+      event.preventDefault()
+      try{
+        const formData = createFormData(fileInputRef, props)
+        const response = await sendFormData(formData)
+        const data = response.data
+        const messageData = createMessageData(data, props)
+        socket.emit('send-message', messageData)
+        const receivedMessage = createReceivedMessage(messageData, props)
+        props.setReceivedMessages((prevMessages:any) => [
+          ...prevMessages,
+          receivedMessage,
+        ]);
+        clearInputField(fileInputRef, props)
+      }catch(error){
+          console.error(error);
+          alert('Failed to send message. Please try again later.');
         }finally{
           // Clear the input field
           props.setMessage("");
           fileInputRef.current.value = '';
-
         }
-}
+     
+    }
+
+    async function sendFormData(formData: FormData) {
+      return await axios.post(sendMessageRoute, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }, // Ensure the correct content type for FormData
+      })
+    }
+
+    function createReceivedMessage(messageData: MessagesType, props: any): MessagesType {
+      return {
+        content: props.message,
+        file: messageData.file,
+        sender: props.session.username,
+        receiver: props.receiver.username,
+        isSender: true,
+        sentAt: new Date().toISOString(),
+      }
+    }
+
+    function clearInputField(fileInputRef: MutableRefObject<any>, props: any) {
+      props.setMessage("");
+      fileInputRef.current.value = '';
+    }
 
     function sendTypingAlert(){
       if(props.session?._id && props.receiver._id)

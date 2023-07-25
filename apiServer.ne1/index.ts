@@ -101,18 +101,18 @@ io.on("connection", (socket) => {
   })
 
   socket.on("send-message", (data:any) => {
-    const {message, file, sender, receiver, receiverID, senderID,  } = data;
+    const {content, file, sender, receiverID, senderID,  } = data;
     const onlineUserSocketID = onlineUsers.get(receiverID);
     // if (!onlineUserSocketID) {
     //   axios.post(notifyUserRoute, 
     //     {
-    //       message, receiverID, senderID
+    //       content, receiverID, senderID
     //     })
     // }
 
       const messageData:any =  {
         senderID,
-        newMessage: message,
+        newMessage: content,
         sender
       }
 

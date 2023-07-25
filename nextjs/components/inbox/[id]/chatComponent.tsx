@@ -29,13 +29,17 @@ export default function ChatComponent() {
 
     async function fetchAllMessages() {
       try {
+        if (receiverID) { // Check if the receiver state is defined
           const response = await axios.get(
             `${receiveMessageRoute}/${session?._id}/${receiverID}`
           )
     
           const data = response.data
-    
-          const messages:MessagesType[] = data.messages.map((message: any) => ({
+          if (response.status !== 200) {
+            console.error(data.error)
+            return
+          }
+          const messages = data.messages.map((message: any) => ({
             content: message.content,
             file: message.file,
             sender: message.sender,
@@ -51,7 +55,7 @@ export default function ChatComponent() {
 
           setIsLoading(false)
 
-        
+        }
       } catch (error:any) {
         console.error(error.message)
       }

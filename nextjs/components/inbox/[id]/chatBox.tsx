@@ -42,7 +42,7 @@ export default function ChatBox(props:any) {
                             {(() => {
                               const fileExtension = msg.file.name.split(".").pop().toLowerCase();
 
-                              if (fileExtension === "jpg" || fileExtension === "png") {
+                              if (fileExtension === "jpg" || fileExtension === "png" || fileExtension === "jpeg" || fileExtension === "gif" || fileExtension === "webp") {
                                 return (
                                   <>
                                   <Image

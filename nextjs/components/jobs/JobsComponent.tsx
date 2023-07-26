@@ -62,11 +62,10 @@ export default function JobsComponent() {
           try{
             const response = await axios.get(getAllJobs)
             const data = response.data
-            if(response.status !== 200){
-              setMessage(data.error)
+            if(response.status == 201){
+              setMessage(data.message)
               return
             }
-            console.log(data.reversedJobList)
             setJobs(data.reversedJobList)
           }catch(error:any){
             setMessage('NE1-Freelance is currently under maintenance.')
@@ -147,9 +146,9 @@ export default function JobsComponent() {
                             </form>
 
                     </div>
-                
+                <br/>
                     {/* Render jobs if there are no jobs available */}
-                    {jobs && jobs.length > 0 ? (
+                    {jobs.length > 0 ? (
                         <div className="job-list-flex">
                             {jobs.map(function (job) {
                                 return (
@@ -159,12 +158,15 @@ export default function JobsComponent() {
                                         onClick={() => router.push(`/jobs/${job._id}`)}>
 
                                         {/* <!--Display the job's thumbnail--> */}
-                                        <div className="thumbnail-container" style={{ overflow: "hidden" }}>
+                                        <div className="thumbnail-container">
                                             <Image 
                                                 src={job.thumbnail} 
                                                 alt="job thumbnail" 
                                                 width={100}
                                                 height={100}
+                                                unoptimized
+                                                placeholder="blur"
+                                                blurDataURL={job.thumbnail}
                                             />
                                         </div>
 

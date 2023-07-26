@@ -54,6 +54,7 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
                   src={PcLogo} 
                   alt = "logo" 
                   onClick={()=> window.location.href = "/"}
+                  priority
                 />
 
                 <Image 
@@ -61,6 +62,8 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
                   src={MobileLogo} 
                   alt = "logo" 
                   onClick={()=> window.location.href = "/"}
+                  priority
+
                 />
               </div>          
           

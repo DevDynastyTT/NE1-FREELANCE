@@ -25,11 +25,18 @@
   width: 100%;
   font-size: 1rem;
 }
-.profile-main-container .profile-flex-container .left .top .img-form .profile-picture {
-  -o-object-fit: fill;
-     object-fit: fill;
+.profile-main-container .profile-flex-container .left .top .img-form .profile-pic {
+  border: 1px solid;
+  width: 100%;
+  height: 15rem;
+  border-radius: 50rem;
+}
+.profile-main-container .profile-flex-container .left .top .img-form .profile-pic .profile-picture {
+  -o-object-fit: cover;
+     object-fit: cover;
   width: 100% !important;
   height: 100% !important;
+  border-radius: 50%;
 }
 .profile-main-container .profile-flex-container .left .top .img-form .tip, .profile-main-container .profile-flex-container .left .top .img-form .image-label {
   font-size: 1rem;

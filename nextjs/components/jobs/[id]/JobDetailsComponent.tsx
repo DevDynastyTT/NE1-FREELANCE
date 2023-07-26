@@ -260,7 +260,9 @@ export default function JobDetailsComponent(){
                           alt="thumbnail" 
                           width={100}
                           height={100}
-                          layout='responsive'
+                          unoptimized
+                          placeholder={'blur'}
+                          blurDataURL={`${server}/images/default.jpeg`}
                         /> : 
                         <Image
                           id="title-profile-picture" 
@@ -268,7 +270,9 @@ export default function JobDetailsComponent(){
                           alt="thumbnail" 
                           width={100}
                           height={100}
-                          layout='responsive'
+                          unoptimized
+                          placeholder={'blur'}
+                          blurDataURL={job.profilePicture}
                         />
                       )}
                     </div>

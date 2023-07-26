@@ -198,38 +198,25 @@ export default function ProfileComponent() {
     
                             {/* Profile picture upload form */}
                             <form 
-                                className="Image-form" 
+                                className="img-form" 
                                 onSubmit={handleProfileUploadFormSubmit} 
                                 encType="multipart/form-data"
                             >
     
-                                {/* {% csrf_token %} */}
                                 <div className="profile-pic">
                                     {/* USER PROFILE PICTURE */}
-                                    
-                                    {userProfile && userProfile?.profilePicture != "undefined" || userProfile?.profilePicture != undefined? (
                                         <Image
                                             className="profile-picture"
-                                            src={userProfile.profilePicture || `${server}/images/default.png`}
+                                            src={userProfile?.profilePicture ?? `${server}/images/default.png`}
                                             alt='profile picture'
                                             width={100}
                                             height={100}
-                                            layout='responsive'
+                                            unoptimized
+                                            placeholder="blur"
+                                            blurDataURL={`${server}/images/default.png`}
+                                            priority
                                         />
-                                    ) : (
-                                        <Image 
-                                            className="profile-picture"
-                                            src={`${server}/images/default.png`}
-                                            alt="default image" 
-                                            width={100}
-                                            height={100}
-                                            layout='responsive'
-                                        />
-
-                                    )}
-                                    {/* <div className="spinner"></div> */}
-    
-    
+                                   
                                 </div>
                                 
                                 <div className="bottom" style={{marginTop: "10%"}}>

@@ -85,8 +85,6 @@
   .chat-navigation {
     display: flex;
     flex-direction: row;
-    position: sticky;
-    top: 0;
     border-bottom: 1px solid #62646a;
   }
   .chat-navigation .back-arrow-container {

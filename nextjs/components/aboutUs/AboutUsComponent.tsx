@@ -1,10 +1,9 @@
 'use client'
 
-// import '../../static/css/about/about.css'
+import GlobalFooter from '@components/GlobalFooter' 
 import GlobalNavbar from '@components/GlobalNavbar'
 import { SessionType } from "@utils/types";
 import Person_Img from '@public/images/brandon.jpeg'
-import GlobalFooter from '@components/GlobalFooter' 
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { getAboutInfo } from "@utils/APIRoutes"
@@ -37,8 +36,9 @@ export default function AboutUsComponent(){
       if(isAuthenticated) setSession(isAuthenticated) 
       about()
     }, [])
-    
-    
+
+
+    if(!information) return null
 
   return(
     <>
@@ -54,11 +54,7 @@ export default function AboutUsComponent(){
             </div>
 
             <div className ="info-item">
-              {information && information.length >= 1 ? (
-                <p>{information}</p>)
-                :(
-                  <p>No Information Available</p>
-              )}
+              {information && information.length >= 1 && <p>{information}</p> }
             </div>
 
           </div>

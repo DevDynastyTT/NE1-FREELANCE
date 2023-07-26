@@ -74,7 +74,7 @@ const getAllJobs = async (request, response) => {
       }
     ]);
 
-    if (jobs.length == 0)  return response.status(404).json({ error: "There are currently no jobs available :(" });
+    if (jobs.length == 0)  return response.status(201).json({ message: "There are currently no jobs available :(" });
 
     const job_list = await Promise.all(jobs.map(async (job) => ({
       ...job,

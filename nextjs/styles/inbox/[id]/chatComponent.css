@@ -23,6 +23,22 @@
 }
 .inbox-container .inbox-main-container .contacts .recent-chat {
   cursor: pointer;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+}
+.inbox-container .inbox-main-container .contacts .recent-chat .message {
+  color: grey;
+  font-size: 0.9rem;
+  margin-left: 3%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 40%; /* Adjust the width as needed */
+  display: block;
+  margin-top: 1%;
 }
 .inbox-container .inbox-main-container .user-dropdown {
   position: absolute;

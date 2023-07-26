@@ -28,12 +28,22 @@
                         width: 100%;
                         font-size: 1rem;
                     }
-    
-                    .profile-picture{
-                        object-fit: fill;
-                        width: 100% !important;
-                        height: 100% !important;
+
+                    .profile-pic{
+                        border: 1px solid;
+                        width: 100%;
+                        height: 15rem;
+                        border-radius: 50rem;
+                        .profile-picture{
+                            object-fit: cover;
+                            width: 100% !important;
+                            height: 100% !important;
+                            border-radius: 50%;
+
+                        }
                     }
+    
+                   
                     .tip, .image-label{
                         font-size: 1rem;
                     }

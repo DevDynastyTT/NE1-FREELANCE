@@ -402,7 +402,7 @@
     }
 }
 
-@media (min-width: 1080px) and (max-width: 1440px) {
+@media (min-width: 1080px) and (max-width: 1366px) {
     .logged_in-navbar, .logged_out-navbar {
 
         .logo-wrapper{
@@ -418,6 +418,13 @@
             }
         }
     }
+    
+}
+
+@media (min-width: 1366px) and (max-width: 1440px) {
+    .logged_out-navbar .nav-tabs{ padding: 1.5% 0 0 25% }
+
+    .logged_in-navbar .nav-tabs{ padding-left: 25% }
 }
 
 @media (min-width: 1440px) and (max-width: 1536px) {
@@ -438,18 +445,7 @@
 }
 
 @media (min-width: 1536px) {
-    .logged_in-navbar, .logged_out-navbar {
+    .logged_out-navbar .nav-tabs{ padding: 1.5% 0 0 15% }
 
-        .logo-wrapper{
-            width: 50%;
-        }
-        .nav-tabs{
-            margin-left: 20% !important;
-
-            .nav-item{
-                font-size: 1.4rem;
-                margin-top: -2%;
-            }
-        }
-    }
+    .logged_in-navbar .nav-tabs{ padding-left: 10% }
 }

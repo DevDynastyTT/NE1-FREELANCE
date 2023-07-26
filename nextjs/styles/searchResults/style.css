@@ -32,7 +32,7 @@
   flex-direction: row;
   gap: 5%;
   width: 100%;
-  margin-top: 5%;
+  margin-top: 0%;
   justify-content: left;
 }
 .jobs-main-container .job-list-flex .job-card {
@@ -45,12 +45,13 @@
   justify-content: center;
 }
 .jobs-main-container .job-list-flex .job-card .thumbnail-container {
-  height: 50%;
+  height: 14rem;
   width: 100%;
-  padding: 2%;
+  padding: 1%;
   border: 2px solid #b3b3b3;
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
+  overflow: hidden;
 }
 .jobs-main-container .job-list-flex .job-card .thumbnail-container img {
   height: 100%;

@@ -1,6 +1,5 @@
 import axios from "axios"
-import { Dispatch, SetStateAction } from "react"
-import { JobsType, SessionType } from './types';
+import { SessionType } from './types';
 
 
 

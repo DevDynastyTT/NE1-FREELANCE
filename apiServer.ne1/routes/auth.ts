@@ -40,8 +40,7 @@ import {
   getFreelancerRatingsProgress, 
   getAllRatings, 
   updateRatings } from "../controllers/ratingsController";
-
-
+const authUser = require('../utils/authUser')
 import multer from 'multer';
 const router = require("express").Router();
 // Multer storage configuration
@@ -50,11 +49,11 @@ const upload = multer({
 });
 // Authentication Routes
 router.post("/login", login);
-router.put("/logout/:id", logout);
+router.put("/logout/:id", authUser, logout);
 router.post("/signup", signup);
 router.post("/updateUser", updateUser);
 router.put("/updateProfile", upload.single('profile_picture'), updateProfile);
-router.get("/getUserProfile/:id", getUserProfile);
+router.get("/getUserProfile/:id", authUser, getUserProfile);
 router.get("/getAllUserInfo", getAllUserInfo);
 router.get('/getReceiver/:id', getReceiver)
 router.get("/countUsers", countUsers);

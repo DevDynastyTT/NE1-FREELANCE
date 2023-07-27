@@ -83,6 +83,13 @@ export default function ChatComponent() {
 
     }
 
+    async function getSession():Promise<SessionType>{
+        const response = await axios.get('api/auth/session')
+        const data = response.data
+
+        return data
+    }
+
     useEffect(() => {
       if (session && receiverID) authenticateMessages(session)
     }, [session, receiverID])
@@ -93,6 +100,7 @@ export default function ChatComponent() {
 
     useEffect(() => {
         const isAuthenticated = getUserSession()
+        // const isAuthenticated = getSession()
 
         //User authentication 
         if (isAuthenticated?._id) setSession(isAuthenticated) //Assign user information to session

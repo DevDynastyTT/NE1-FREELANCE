@@ -75,17 +75,22 @@ const login = async (request, response) => {
       }
   
       // Set user in session
-      request.session.user = user;
-  
-      // Check if session user is set
-      if (!request.session.user) {
-        return response.status(500).json({ error: "An error occurred creating a session" });
-      }
-  
-      // Remove password from user object
-      const userObj:SessionType = user.toObject();
-      delete userObj?.password;
-  
+    const userObj = user.toObject();
+    delete userObj.password;
+
+    // Ensure request.session object is defined
+    if (!request.session) {
+      return response.status(500).json({ error: "Session not available" });
+    }
+
+    request.session.user = userObj;
+    request.session.authenticated = true;
+
+    // Check if session user is set
+    if (!request.session.user || !request.session.authenticated) {
+      return response.status(500).json({ error: "An error occurred creating a session" });
+    }
+
       // Set user as active
       await User.updateOne({ email }, { $set: { isActive: true } });
   
@@ -97,13 +102,13 @@ const login = async (request, response) => {
       console.error(error.message);
       return response.status(500).json({ error: "An error occurred" });
     }
-  };
+};
 
 const logout = async (request, response) => {
     const { id } = request.params
   try {
     await User.updateOne({ _id: id }, { isActive: false });
-    // request.session.destroy();
+    request.session.destroy();
     return response.json({ success: true });
   } catch (error) {
     console.error(error.message);
@@ -307,6 +312,7 @@ const getUserProfile = async (request, response) => {
       console.log('No user ID provided');
       return response.status(400).json({ error: 'No user ID provided' });
     }
+
 
     // Find the profile and user data for the specified user ID.
     const profile = await userProfile.aggregate([

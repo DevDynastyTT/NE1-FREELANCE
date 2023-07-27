@@ -88,7 +88,7 @@
   transform-origin: 0px 10.2px;
   animation: loading 2s infinite ease;
 }
-@media (min-width: 384px) and (max-width: 499px) {
+@media (min-width: 280px) and (max-width: 499px) {
   .contact-main-container .contact-section {
     margin: 5% auto;
     flex-direction: column;

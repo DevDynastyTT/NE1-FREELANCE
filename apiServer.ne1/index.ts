@@ -41,6 +41,10 @@ app.use(session({
   secret: process.env.EXPRESS_SESSION_KEY,
   resave: false,
   saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === "production" ? true : false,
+    httpOnly: true
+  }
 }));
 
 // Mount the authRoutes middleware at the "/api/auth" path

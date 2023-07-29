@@ -63,19 +63,16 @@ export default function ProfileComponent() {
 
   async function profile() {
     try {
-      const response = await axios.get(`${getUserProfile}/${(session?._id)}`);
-      const data = response.data;
-      if (response.status !== 200) {
-        console.log(data.error);
-        setMessage(data.error);
-        return
-      }
-
-      console.log(data.user_profile)
+      const response = await axios.get(`${getUserProfile}/${(session?._id)}`, {
+        withCredentials: true,
+      });
+            const data = response.data;
+     
       setUserProfile(data.user_profile);
-    } catch (error) {
-      console.error(error, ' this happened');
+      setIsLoading(false)
+    } catch (error:any) {
       setMessage("Internal server error");
+      if(error.response.status === 401) router.push('/auth/login')
     }
   }
 
@@ -175,13 +172,12 @@ export default function ProfileComponent() {
 
   useEffect(() => {
     if(session && session?._id)
-        profile().then(() => setIsLoading(false));
+        profile();
     
   }, [session])
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  if (isLoading) return <div>Loading...</div>;
+  
 
   return (
     <>

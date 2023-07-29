@@ -146,7 +146,7 @@
     display: none;
   }
 }
-@media (min-width: 320px) and (max-width: 681px) {
+@media (min-width: 280px) and (max-width: 681px) {
   .logged_in-navbar, .logged_out-navbar {
     background-color: rgba(33, 37, 41, 0.748);
   }
@@ -175,7 +175,7 @@
     display: none;
   }
 }
-@media (min-width: 320px) and (max-width: 375px) {
+@media (min-width: 320px) and (max-width: 412px) {
   .logged_in-navbar .open, .logged_out-navbar .open {
     position: absolute;
     z-index: 3;

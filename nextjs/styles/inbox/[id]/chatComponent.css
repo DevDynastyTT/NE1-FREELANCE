@@ -81,14 +81,18 @@
   border: 1px solid #62646a;
 }
 
-@media (min-width: 300px) {
+@media (min-width: 280px) {
   .chat-navigation {
+    position: fixed;
+    width: 100%;
     display: flex;
     flex-direction: row;
     border-bottom: 1px solid #62646a;
+    background: linear-gradient(51deg, rgb(214, 27, 98) 0%, rgb(214, 27, 98) 10%, rgb(133, 186, 56) 100%, rgb(133, 186, 56) 100%);
+    color: white;
   }
   .chat-navigation .back-arrow-container {
-    padding: 3%;
+    padding: 6% 4% 4% 4%;
   }
   .chat-navigation .back-arrow-container .back-arrow {
     font-size: 1.5rem;
@@ -96,7 +100,7 @@
   }
   .chat-navigation .userInfoContainer {
     display: flex;
-    padding-top: 2%;
+    padding-top: 4%;
     flex-direction: column;
     height: 4rem;
   }
@@ -124,17 +128,14 @@
     margin-left: 12%;
     margin-top: -6%;
   }
-  .chat-main-container {
-    margin-top: 2%;
-  }
   .chat-main-container .chat-box {
     overflow-y: scroll;
     overflow-x: hidden;
     padding: 3%;
-    width: 95%;
-    height: 72vh;
+    height: 90vh;
     margin: 0 auto;
     width: 100%;
+    border-bottom: 1px solid;
   }
   .chat-main-container .message-container {
     display: flex;
@@ -155,9 +156,8 @@
   }
   .chat-main-container .message-form {
     display: flex;
-    padding-left: 3%;
-    padding-right: 3%;
-    height: 2.5rem;
+    padding: 3%;
+    height: 100%;
   }
   .chat-main-container .message-form .message-input {
     width: 100%;
@@ -178,8 +178,16 @@
     display: none;
   }
 }
-@media (min-width: 412px) {
+@media (min-width: 768px) {
+  .chat-navigation .back-arrow-container {
+    padding: 5% 4% 4% 4%;
+  }
   .chat-main-container .chat-box {
-    height: 65vh;
+    height: 88vh;
+  }
+  .chat-main-container .message-form {
+    padding-top: 2%;
+    padding-bottom: 2%;
+    height: 5.3rem;
   }
 }/*# sourceMappingURL=chatComponent.css.map */

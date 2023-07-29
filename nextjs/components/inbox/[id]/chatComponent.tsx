@@ -148,13 +148,12 @@ export default function ChatComponent() {
 
     return (
         <>
-            <GlobalNavbar session={session}/>
+            {/* <GlobalNavbar session={session}/> */}
 
             <ChatNavigationComponent 
               isTyping={isTyping}
               router={router} 
               receiverUsername={receiver?.username}/>
-
             <ChatBox 
               session={session} receiver={receiver}
               setReceivedMessages={setReceivedMessages}

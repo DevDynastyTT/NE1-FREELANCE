@@ -9,6 +9,7 @@
         border-bottom: 1px solid $primaryGrey;
         background: linear-gradient(51deg, rgba(214,27,98,1) 0%, rgba(214,27,98,1) 10%, rgba(133,186,56,1) 100%, rgba(133,186,56,1) 100%);
         color: white;
+        z-index: 2;
         .back-arrow-container{
             padding: 6% 4% 4% 4%;
             .back-arrow{

@@ -5,11 +5,11 @@ import { getUserSession } from "@utils/reuseableCode";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import {countCategories, countInvoiceDates, countInvoices, countJobs, countJobsInCategory, countServices, countUsers} from "@utils/APIRoutes";
-import PersonIcon from '@mui/icons-material/Person';
-import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices';
-import WorkIcon from '@mui/icons-material/Work';
-import ReceiptIcon from '@mui/icons-material/Receipt';
-import CategoryIcon from '@mui/icons-material/Category';
+// import PersonIcon from '@mui/icons-material/Person';
+// import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices';
+// import WorkIcon from '@mui/icons-material/Work';
+// import ReceiptIcon from '@mui/icons-material/Receipt';
+// import CategoryIcon from '@mui/icons-material/Category';
 
 export default function AdminComponent() {
 
@@ -25,6 +25,7 @@ export default function AdminComponent() {
   const [countingJobs, setCountingJobs] = useState(true)
   const [barChartData, setBarChartData] = useState({})
 
+  //fetch amount of jobs in a category count
   async function fetchJobInCategoryCount() {
     try {
       const response = await axios.get(countJobsInCategory);
@@ -41,6 +42,7 @@ export default function AdminComponent() {
     }
   }
 
+    //fetching category count
   async function fetchCategoryCount() {
     try {
       const response = await axios.get(countCategories);
@@ -52,6 +54,7 @@ export default function AdminComponent() {
     }
   }
 
+    //fetching job count
   async function fetchJobCount() {
     try {
       const response = await axios.get(countJobs);
@@ -63,6 +66,7 @@ export default function AdminComponent() {
     }
   }
 
+    //fetching user count
   async function fetchUserCount() {
     try {
       const response = await axios.get(countUsers);
@@ -74,6 +78,7 @@ export default function AdminComponent() {
     }
   }
 
+    //fetching invoice count
   async function fetchServiceCount() {
     try {
       const response = await axios.get(countServices);
@@ -85,6 +90,7 @@ export default function AdminComponent() {
     }
   }
 
+  //fetch invoice count
   async function fetchInvoiceCount() {
     try {
       const response = await axios.get(countInvoices);
@@ -96,6 +102,7 @@ export default function AdminComponent() {
     }
   }
 
+  //fetch amount of invoices on a date count
   async function fetchInvoiceCounts() {
     try {
       const response = await axios.get(countInvoiceDates);
@@ -113,6 +120,16 @@ export default function AdminComponent() {
       setSession(isAuthenticated)
     }
   }, []);
+  
+  useEffect(() => {
+    fetchJobInCategoryCount();
+    fetchCategoryCount();
+    fetchUserCount();
+    fetchServiceCount();
+    fetchJobCount();
+    fetchInvoiceCount();
+    fetchInvoiceCounts();
+  }, []);
 
   return (
     <>
@@ -121,27 +138,27 @@ export default function AdminComponent() {
         <div className="item-counts">
           <div className="count-box">
             <div className="count-label">Categories</div>
-            <div className="count-icon"><CategoryIcon /></div>
+            {/* <div className="count-icon"><CategoryIcon /></div> */}
             <div className="count-value">{categoryCount}</div>
           </div>
           <div className="count-box">
             <div className="count-label">No. of Services Available</div>
-            <div className="count-icon"><MiscellaneousServicesIcon /></div>
+            {/* <div className="count-icon"><MiscellaneousServicesIcon /></div> */}
             <div className="count-value">{serviceCount}</div>
           </div>
           <div className="count-box">
             <div className="count-label">Users Created</div>
-            <div className="count-icon"><PersonIcon /></div>
+            {/* <div className="count-icon"><PersonIcon /></div> */}
             <div className="count-value">{userCount}</div>
           </div>
           <div className="count-box">
             <div className="count-label">Total Jobs Created</div>
-            <div className="count-icon"><WorkIcon /></div>
+            {/* <div className="count-icon"><WorkIcon /></div> */}
             <div className="count-value">{jobCount}</div>
           </div>
           <div className="count-box">
             <div className="count-label">Invoices Generated</div>
-            <div className="count-icon"><ReceiptIcon /></div>
+            {/* <div className="count-icon"><ReceiptIcon /></div> */}
             <div className="count-value">{invoiceCount}</div>
           </div>
         </div>

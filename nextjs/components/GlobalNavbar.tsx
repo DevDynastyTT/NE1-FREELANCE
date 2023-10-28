@@ -114,9 +114,8 @@ export default function GlobalNavbar({session}:{session:SessionType | undefined}
                           {session?.isStaff && <li>
                             <Link 
                               className="dropdown-item" 
-                              href={'#'}>
-                              {/* href={'/auth/admin'}> */}
-                                Admin(Soon...)
+                              href={'/auth/admin'}>
+                                Admin
                             </Link>
                           </li>}
                         

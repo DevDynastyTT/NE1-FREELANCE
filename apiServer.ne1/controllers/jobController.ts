@@ -47,7 +47,6 @@ const hash = async (value) => {
   return hashedValue;
 };
 
-
 const getAllJobs = async (request, response) => {
   try {
     const jobs = await Jobs.aggregate([
@@ -94,11 +93,6 @@ const getAllJobs = async (request, response) => {
       return response.status(500).json({error: 'Internal Server Error'});
     }
 };
-
-
-
-
-
 
 const getImages = async (fileName:string): Promise<string> => {
   
@@ -259,9 +253,6 @@ const jobDetails = async (request, response) => {
     return response.status(500).json({ error: 'Internal Server Error' });
   }
 };
-
-
-
 
 const getSeller = async(request, response) => {
   const seller_id = request.params;

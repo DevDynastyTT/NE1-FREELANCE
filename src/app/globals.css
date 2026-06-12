@@ -1,0 +1,21 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  overflow-x: hidden;
+  font-family: 'Roboto Condensed', sans-serif;
+}
+:root {
+  background: linear-gradient(to bottom, #ccffcc, white);
+}
+button {
+  background-color: #fd8700;
+  color: white;
+  border: none;
+  border-radius: 10px;
+}

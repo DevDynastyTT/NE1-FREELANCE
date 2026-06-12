@@ -17,7 +17,7 @@ const invoiceSchema = new mongoose.Schema({
   },
   date: {
     type: Date,
-    default: Date.now()
+    default: Date.now
   },
   paymentDetails: {
     type: String,
@@ -26,5 +26,5 @@ const invoiceSchema = new mongoose.Schema({
   },
 });
 
-const Invoice = mongoose.model("Invoice", invoiceSchema);
+const Invoice = mongoose.models['Invoice'] || mongoose.model('Invoice', invoiceSchema);
 export default Invoice

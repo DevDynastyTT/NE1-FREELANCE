@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 import { connectToDB } from '@/lib/db';
 import Users from '@/models/userModel';
@@ -29,16 +29,18 @@ export async function POST(request: NextRequest) {
 
     await user.save();
 
-    const { password: _, ...userObj } = user.toObject();
+    const userObj = user.toObject() as Record<string, unknown>;
+    delete userObj.password;
 
     return NextResponse.json(
       { error: 'Profile updated', user: userObj },
       { status: 200 }
     );
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }
     );
   }
 }
+

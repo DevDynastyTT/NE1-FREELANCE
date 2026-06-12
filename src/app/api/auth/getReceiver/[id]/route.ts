@@ -11,16 +11,14 @@ export async function GET(
 
     const { id } = await params;
 
-    const user = await Users.findById(id).lean();
+    const user = await Users.findById(id).select('-password').lean();
 
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    const { password: _, ...receiver } = user as Record<string, unknown> & { password?: string };
-
-    return NextResponse.json({ receiver }, { status: 200 });
-  } catch (error) {
+    return NextResponse.json({ receiver: user }, { status: 200 });
+  } catch {
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }

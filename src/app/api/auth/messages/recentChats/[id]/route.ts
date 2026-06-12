@@ -30,14 +30,14 @@ export async function GET(
       }
     }
 
-    recentChats.sort((a, b) => {
-      const dateA = new Date(a.sentAt).getTime();
-      const dateB = new Date(b.sentAt).getTime();
+    recentChats.sort((chatA, chatB) => {
+      const dateA = new Date(chatA.sentAt).getTime();
+      const dateB = new Date(chatB.sentAt).getTime();
       return dateB - dateA;
     });
 
     return NextResponse.json({ chats: recentChats }, { status: 200 });
-  } catch (error) {
+  } catch (_e) {
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }

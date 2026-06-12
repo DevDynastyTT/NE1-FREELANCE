@@ -49,7 +49,7 @@ export async function GET(
   ]);
 
   if (!result || result.length === 0) {
-    return NextResponse.json({ jobDetails: null }, { status: 404 });
+    return NextResponse.json({ jobDetails: [] }, { status: 404 });
   }
 
   const job = result[0];
@@ -60,5 +60,5 @@ export async function GET(
     profilePicture: await getImageUrl(job.profilePicture || ''),
   };
 
-  return NextResponse.json({ jobDetails });
+  return NextResponse.json({ jobDetails: [jobDetails] });
 }

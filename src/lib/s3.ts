@@ -27,8 +27,8 @@ export async function getImageUrl(fileName: string): Promise<string> {
       expiresIn: 3600,
     });
     return signedUrl;
-  } catch (error: any) {
-    console.error("Error generating pre-signed URL:", error.message);
+  } catch (error: unknown) {
+    console.error("Error generating pre-signed URL:", error instanceof Error ? error.message : 'Unknown error');
     return fileName;
   }
 }
@@ -49,8 +49,8 @@ export async function uploadToS3(
     await s3Client.send(command);
     console.log("File uploaded successfully:", fileName);
     return fileName;
-  } catch (error: any) {
-    console.error("Error uploading to S3:", error.message);
+  } catch (error: unknown) {
+    console.error("Error uploading to S3:", error instanceof Error ? error.message : 'Unknown error');
     throw error;
   }
 }

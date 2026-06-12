@@ -1,102 +1,71 @@
 'use client'
 
-import { getAllServices } from '@/utils/APIRoutes';
-import {Services} from '@/utils/types';
-import { useEffect, useState } from 'react';
-import Image from 'next/image';
-import axios from 'axios';
+import ThumbnailImage from '@/components/ThumbnailImage';
+import { useRouter } from 'next/navigation';
+
+const SERVICES = [
+    {
+        label: 'Transportation',
+        tagline: 'Efficient car solutions',
+        image: '/images/transportation.jpeg',
+    },
+    {
+        label: 'Cleaning',
+        tagline: 'Get your space spotless',
+        image: '/images/cleaning.jpeg',
+    },
+    {
+        label: 'Esthetics',
+        tagline: 'Enhance your appearance',
+        image: '/images/esthetics.jpeg',
+    },
+    {
+        label: 'Administration',
+        tagline: 'Streamline your operations',
+        image: '/images/administration.jpeg',
+    },
+]
 
 export default function ServicesBanner() {
+    const router = useRouter();
 
-    const [services, setServices] = useState<Services[]>()
+    return (
+        <section className="py-16 px-6 max-w-7xl mx-auto">
+            <div className="mb-10">
+                <h2 className="text-3xl font-bold text-gray-900">Top Services</h2>
+                <p className="text-gray-500 mt-2">Browse our most popular categories</p>
+            </div>
 
-    async function fetchServiceInfo() {
-        try {
-        const response = await axios.get(getAllServices);
-        const data = response.data;
-        setServices(data.serviceInfo);
-        } catch (ex) {
-        console.log(ex);
-        }
-    }
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                {SERVICES.map((service) => (
+                    <div
+                        key={service.label}
+                        onClick={() => router.push(`/jobs?category=${encodeURIComponent(service.label)}`)}
+                        className="group relative rounded-2xl overflow-hidden cursor-pointer aspect-[3/4] shadow-md hover:shadow-xl transition-shadow"
+                    >
+                        <ThumbnailImage
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            src={service.image}
+                            alt={`${service.label} services`}
+                            fill
+                            sizes="(max-width: 768px) 50vw, 25vw"
+                        />
+                        {/* Gradient overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
 
-    useEffect(()=>{fetchServiceInfo()},[])
-
-    return(
-        <section className="services-section">
-            {/* Display loading message if services has not been fetched yet */}
-            <h2>{services ? 'Top Services' : "Top Services"}</h2>
-            {/* <h2>{services ? 'Top Services' : "Loading Services..."}</h2> */}
-
-            {/* Display each service */}
-            {/* {services && (
-                <div className="services">
-                {services.map((service, index) => (
-                    <div className={`service service${index++}`} key={index++}>
-
-                        <p className="service-tagline">{service.title}</p>
-                            <p className="service-title" id="transportation-title">{service.description}</p>
-
-                            <Image 
-                                className="service-Image" 
-                                src={`http://localhost:3000/images/${service.thumbnail}`} 
-                                alt="Transportation services Image"
-                            />
+                        {/* Text */}
+                        <div className="absolute bottom-0 left-0 right-0 p-4">
+                            <p className="text-white/80 text-xs font-medium mb-1">{service.tagline}</p>
+                            <p className="text-white text-lg font-bold">{service.label}</p>
                         </div>
+
+                        {/* Hover badge */}
+                        <div className="absolute top-3 right-3 bg-[#fd8700] text-white text-xs font-semibold px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                            Browse →
+                        </div>
+                    </div>
                 ))}
-                   
-
-                   
-                    </div>
-            )} */}
-                <div className="services-container">
-
-                    {/* Transportation Service */}
-                    <div className="service service1">
-
-                        <p className="service-tagline">Efficient Car Solutions!</p>
-                            <p className="service-title" id="cleaning-title">Transportation</p>
-
-                            <Image 
-                                className="service-Image" 
-                                src="/images/transportation.jpeg" 
-                                alt="Cleaning services Image"
-                            />
-                    </div>
-                    {/* Cleaning Service */}
-                    <div className="service service2">
-
-                                <p className="service-tagline">Get your area cleansed!</p>
-                                    <p className="service-title" id="cleaning-title">Cleaning</p>
-
-                                    <Image 
-                                        className="service-Image" 
-                                        src="/images/cleaning.jpeg" 
-                                        alt="Cleaning services Image"
-                                    />
-                    </div>
-                    {/* Esthetics Service */}
-                    <div className="service service3">
-
-                        <p className="service-tagline">Enhance your visual Appeal</p>
-                            <p className="service-title" id="esthetics-title">Esthetics</p>
-
-                            <Image 
-                                className="service-Image" 
-                                src="/images/esthetics.jpeg" 
-                                alt="ESthetics services Image"
-                            />
-                    </div>
-                    {/* Administrative Service */}
-                    <div className="service service4">
-
-                        <p className="service-tagline service-tagline-4">Streamline your Operations</p>
-                            <p className="service-title" id="administration-title">Administrations</p>
-
-                            <Image className="service-Image" src="/images/administration.jpeg" alt="Administration services Image"/>
-                    </div>
-                </div>
-          
-        </section> // End flexible-services
+            </div>
+        </section>
     )
 }

@@ -11,9 +11,10 @@ export async function POST(req: NextRequest) {
     const rating = await Ratings.findOne({ jobID, freeLancerID, userID });
 
     return NextResponse.json({ rating });
-  } catch (error: any) {
+  } catch (e) {
+    console.error('[GetRatings] Error:', e instanceof Error ? e.message : 'Unknown error');
     return NextResponse.json(
-      { error: error.message || 'Failed to get rating' },
+      { error: 'Internal Server Error' },
       { status: 500 }
     );
   }

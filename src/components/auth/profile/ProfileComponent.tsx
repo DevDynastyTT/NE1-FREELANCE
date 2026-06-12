@@ -5,349 +5,218 @@ import { getUserSession } from '@/utils/reuseableCode';
 import { updateUser, getUserProfile, updateProfile } from '@/utils/APIRoutes';
 import GlobalNavbar from '@/components/GlobalNavbar';
 import axios from 'axios';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, FormEvent } from 'react'
 import { usePathname } from 'next/navigation';
 import GlobalFooter from '@/components/GlobalFooter';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Separator } from '@/components/ui/separator';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function ProfileComponent() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const [session, setSession] = useState<SessionType>();
-  const [userProfile, setUserProfile] = useState<Profile>();
-  const [profilePictureURL, setProfilePictureURL] = useState<string>();
-  const [userBio, setBio] = useState<string>();
-  const [message, setMessage] = useState<string>();
-  const [values, setValues] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [isLoading, setIsLoading] = useState(true);
+    const router = useRouter();
+    const pathname = usePathname();
+    const [session, setSession] = useState<SessionType>();
+    const [userProfile, setUserProfile] = useState<Profile>();
+    const [userBio, setBio] = useState<string>();
+    const [message, setMessage] = useState<string>();
+    const [isLoading, setIsLoading] = useState(true);
+    const [values, setValues] = useState({ username: "", email: "", password: "", confirmPassword: "" });
 
-  const handleChange = (event: FormEvent<HTMLInputElement>) => {
-    setValues({ ...values, [event.currentTarget.name]: event.currentTarget.value });
-  };
+    const handleChange = (event: FormEvent<HTMLInputElement>) => {
+        setValues({ ...values, [event.currentTarget.name]: event.currentTarget.value });
+    };
 
-  const handleValidation = () => {
-    console.log('validating')
-    const { password, confirmPassword, username, email } = values;
-    console.log(password)
-
-    if (password || confirmPassword) {
-      if (password !== confirmPassword) {
-        alert("Password and confirm password should be same.")
-        return false;
-      } else if (password.length < 8) {
-        alert("Password should be equal or greater than 8 characters.")
-        return false;
-      }
-    }
-
-    return true;
-  };
-
-  async function handleLogOut() {
-    sessionStorage.removeItem('user')
-
-    if (pathname !== '/jobs') {
-      console.log('redirecting')
-      if (router) router.push("/jobs")
-    }
-    else
-      window.location.href = 'jobs'
-  }
-
-  async function profile() {
-    try {
-      const response = await axios.get(`${getUserProfile}/${(session?._id)}`, {
-        withCredentials: true,
-      });
-            const data = response.data;
-     
-      setUserProfile(data.user_profile);
-      setIsLoading(false)
-    } catch (error:any) {
-      setMessage("Internal server error");
-      if(error.response.status === 401) router.push('/auth/login')
-    }
-  }
-
-  async function handleProfileUploadFormSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const formData = new FormData();
-    formData.append('userID', (session && session?._id) ? session._id : '');
-    formData.append('bio', (userBio && userBio.length > 0) ? userBio : '');
-    formData.append('profile_picture', event.currentTarget.profilepicture.files[0]);
-
-    try {
-      if (!userBio) setBio('undefined');
-
-      const response = await axios.put(`${updateProfile}`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }, // Ensure the correct content type for FormData
-      });
-      const data = response.data
-      // Check the response status code
-      if (response.status !== 200) {
-        setMessage(data.error);
-        console.log(data.error);
-        return
-      }
-
-      setMessage(data.message);
-      // Fetch the pre-signed URL from the response data
-      const signedUrl = response.data.signedUrl;
-
-      // Use the pre-signed URL to fetch the image
-      const imageResponse = await axios.get(signedUrl, {
-        responseType: 'blob', // Set the response type to blob
-      });
-
-      // Create a URL for the image blob
-      const imageUrl = URL.createObjectURL(imageResponse.data);
-
-      // Set the image URL to display the image
-      setUserProfile(prevUserProfile => ({
-        userID: prevUserProfile ? prevUserProfile.userID : '',
-        bio: userProfile?.bio,
-        profilePicture: imageUrl,
-        creditCard: userProfile?.creditCard
-      }));
-
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async function handleUpdateUserSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-
-    console.log(`Form Data Accepted\nUsername: ${values.username}, Email: ${values.email}\npassword: ${values.password}, confirmPassword: ${values.confirmPassword}`)
-
-    if (handleValidation()) {
-      try {
-        console.log('Running updateUser function...')
-        console.log('passed validation')
-        const { email, username, password } = values;
-        const response = await axios.post(updateUser, {
-          userID: session?._id,
-          username,
-          email,
-          password,
-        })
-
-        const data = response.data
-
-        if (response.status !== 200) {
-          console.log(data.error)
-          setMessage(data.error)
-          return
+    const handleValidation = () => {
+        const { password, confirmPassword } = values;
+        if (password || confirmPassword) {
+            if (password !== confirmPassword) { setMessage("Passwords do not match."); return false; }
+            if (password.length < 8) { setMessage("Password must be at least 8 characters."); return false; }
         }
+        return true;
+    };
 
-        alert('You are going to be logged out in 2 seconds for changes to apply...')
-        setTimeout(() => {
-          handleLogOut().then(() => router.push('/auth/login'))
-        }, 1000)
-
-      } catch (error) {
-        console.log(error)
-      }
-    }
-  }
-
-  useEffect(() => {
-    const isAuthenticated = getUserSession()
-    if (!isAuthenticated) {
-      alert('Login to view your profile')
-      router.push('/auth/login')
-      return
+    async function handleLogOut() {
+        sessionStorage.removeItem('user')
+        if (pathname !== '/jobs') router.push("/jobs")
+        else window.location.href = 'jobs'
     }
 
-    setSession(isAuthenticated);
-  }, []);
+    async function profile() {
+        try {
+            const response = await axios.get(`${getUserProfile}/${session?._id}`, { withCredentials: true });
+            setUserProfile(response.data.user_profile);
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                if (error.response?.status === 401) router.push('/auth/login');
+                else if (error.response?.status !== 404) setMessage('Failed to load profile. Please refresh.');
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    }
 
-  useEffect(() => {
-    if(session && session?._id)
-        profile();
-    
-  }, [session])
+    async function handleProfileUploadFormSubmit(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        const formData = new FormData();
+        formData.append('userID', session?._id || '');
+        formData.append('bio', userBio || '');
+        formData.append('profile_picture', event.currentTarget.profilepicture.files[0]);
+        try {
+            const response = await axios.put(updateProfile, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+            const data = response.data
+            if (response.status !== 200) { setMessage(data.error); return; }
+            setMessage(data.message);
+            const imageResponse = await axios.get(response.data.signedUrl, { responseType: 'blob' });
+            const imageUrl = URL.createObjectURL(imageResponse.data);
+            setUserProfile(prev => ({ ...prev, userID: prev?.userID || '', bio: userProfile?.bio, profilePicture: imageUrl, creditCard: userProfile?.creditCard }));
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
-  if (isLoading) return <div>Loading...</div>;
-  
+    async function handleUpdateUserSubmit(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault()
+        if (!handleValidation()) return;
+        try {
+            const { email, username, password } = values;
+            const response = await axios.post(updateUser, { userID: session?._id, username, email, password })
+            const data = response.data
+            if (response.status !== 200) { setMessage(data.error); return; }
+            setMessage('Changes saved. You will be logged out shortly.')
+            setTimeout(() => { handleLogOut().then(() => router.push('/auth/login')) }, 2000)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
-  return (
-    <>
-      {(session && session?._id) && (
-        <>
-          <GlobalNavbar session={session} />
+    useEffect(() => {
+        const isAuthenticated = getUserSession()
+        if (!isAuthenticated) { router.push('/auth/login'); return; }
+        setSession(isAuthenticated);
+    }, []);
 
-          <main className="profile-main-container">
-                    <div className="profile-flex-container">
-                        <div className="left">
-        
-                        {/*Profile picture is stored here*/}
-                        <div className="top">
-    
-                            {/* Profile picture upload form */}
-                            <form 
-                                className="img-form" 
-                                onSubmit={handleProfileUploadFormSubmit} 
-                                encType="multipart/form-data"
-                            >
-    
-                                <div className="profile-pic">
-                                    {/* USER PROFILE PICTURE */}
-                                        <Image
-                                            className="profile-picture"
-                                            src={userProfile?.profilePicture ?? `/images/default.png`}
-                                            alt='profile picture'
-                                            width={100}
-                                            height={100}
-                                            unoptimized
-                                            placeholder="blur"
-                                            blurDataURL={`/images/default.png`}
-                                            priority
-                                        />
-                                   
-                                </div>
-                                
-                                <div className="bottom" style={{marginTop: "10%"}}>
-                                <br/>
-                                    <p className="username">{session?.username}</p>
-                                        {userProfile?.bio != "undefined" ? (
-                                            <textarea 
-                                                id="message-input" name="bio" 
-                                                onChange={(e) => setBio(e.target.value)}
-                                                placeholder={userProfile?.bio}/>
-                                        ): (
-                                            <textarea id="message-input" name="bio" 
-                                            onChange={(e) => setBio(e.target.value)}
-                                            placeholder="Tell us about yourself" />
-                                        )}
-    
-                                                {/* BUTTON TO UPLOAD PROFILE PICTURE */}
-                                                <label htmlFor="image-input" className="image-label">Update Profile Picture</label>
-                                                <br />
-                                                    <input 
-                                                        id="image-input" 
-                                                        type="file" 
-                                                        name="profilepicture" 
-                                                        accept="image/*"        
-                                                        className="btn btn-secondary image-btn" 
+    useEffect(() => {
+        if (session?._id) profile();
+    }, [session])
+
+    if (isLoading) return (
+        <div className="min-h-screen flex items-center justify-center">
+            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+    );
+
+    return (
+        <div className="flex flex-col flex-1">
+            {session?._id && (
+                <>
+                    <GlobalNavbar session={session} />
+
+                    <main className="min-h-screen bg-gray-50 py-12 px-6">
+                        <div className="max-w-5xl mx-auto">
+                            <h1 className="text-2xl font-bold text-gray-900 mb-8">My Profile</h1>
+
+                            {message && (
+                                <Alert variant={message.toLowerCase().includes('error') || message.toLowerCase().includes('match') || message.toLowerCase().includes('incorrect') ? 'destructive' : 'default'} className="mb-6">
+                                    <AlertDescription>{message}</AlertDescription>
+                                </Alert>
+                            )}
+
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                                {/* Left: Avatar & Bio */}
+                                <div className="space-y-6">
+                                    <Card className="shadow-sm">
+                                        <CardContent className="pt-6 flex flex-col items-center text-center">
+                                            <Avatar className="w-24 h-24 mb-4">
+                                                <AvatarImage src={userProfile?.profilePicture ?? '/images/default.png'} alt="Profile picture" />
+                                                <AvatarFallback>{session.username?.charAt(0).toUpperCase()}</AvatarFallback>
+                                            </Avatar>
+                                            <div className="flex items-center gap-2 justify-center flex-wrap">
+                                                <p className="font-semibold text-gray-900 text-lg">{session.username}</p>
+                                                {session.isStaff && (
+                                                    <span className="text-xs bg-[#fd8700] text-white px-2 py-0.5 rounded-full font-medium">Staff</span>
+                                                )}
+                                            </div>
+                                            <p className="text-muted-foreground text-sm mt-0.5">{session.email}</p>
+                                            {session.dateJoined && (
+                                                <p className="text-xs text-muted-foreground mt-1">
+                                                    Member since {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long' }).format(new Date(session.dateJoined))}
+                                                </p>
+                                            )}
+                                        </CardContent>
+                                    </Card>
+
+                                    <Card className="shadow-sm">
+                                        <CardHeader>
+                                            <CardTitle className="text-base">Update Avatar & Bio</CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <form onSubmit={handleProfileUploadFormSubmit} encType="multipart/form-data" className="space-y-4">
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="image-input">Profile Picture</Label>
+                                                    <Input id="image-input" type="file" name="profilepicture" accept="image/*" className="cursor-pointer" />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="bio">Bio</Label>
+                                                    <Textarea
+                                                        id="bio"
+                                                        name="bio"
+                                                        rows={3}
+                                                        placeholder={userProfile?.bio && userProfile.bio !== 'undefined' ? userProfile.bio : 'Tell us about yourself'}
+                                                        onChange={(e) => setBio(e.target.value)}
                                                     />
-                                        
-                                    <button 
-                                        className="btn btn-primary" 
-                                        type="submit" 
-                                        style={{height: "2.5rem"}}
-                                    >Save Profile Picture
-                                    </button>
-    
+                                                </div>
+                                                <Button type="submit" className="w-full">Save Changes</Button>
+                                            </form>
+                                        </CardContent>
+                                    </Card>
                                 </div>
-                                    
-    
-    
-    
-    
-    
-                            </form> 
-                            {/* End form */}
-                            
-                        </div>{/*End top div*/} 
-    
-                        <div className="bottom"></div>
-        
-        
-                        </div> {/* End left div */}
-        
-        
-                        <div className="right">
-        
-        
-                            <form className="update-profile-form" onSubmit={handleUpdateUserSubmit}>
-        
-                                <h1 className="profile-header">Change Profile Information</h1>
-        
-                                <div className="update-profile-form-container">
-                                    {(message && message?.length > 0) && (
-                                        <div className="alert alert-warning alert-dismissible fade show" role="alert">
-                                        <strong className="message">
-                                            <i className="fa-solid fa-triangle-exclamation"></i>
-                                        {message }</strong> 
-                                        <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div> 
-                                        )}
-        
-                                    <div className="mb-3">
-                                    <label htmlFor="username" className="form-label">Username:</label>
 
-                                    {session && Object.keys(session).length > 0 ? (
-                                        <input 
-                                            type="text" 
-                                            className="form-control inputs" 
-                                            id="username" 
-                                            name="username" 
-                                            placeholder={session.username}
-                                            onChange={(event) => handleChange(event)}
-                                            />
-                                    ):(
-                                        <input 
-                                            type="text" 
-                                            className="form-control inputs" 
-                                            id="username" 
-                                            name="username" 
-                                            placeholder="Username"
-                                            onChange={(event) => handleChange(event)} />
-                                    )}
-                                
-                                    </div>
-
-                                    <div className="mb-3">
-                                    <label htmlFor="email" className="form-label">Email:</label>
-                                    <input type="email" className="form-control inputs" id="email" name="email" placeholder={session.email}
-                                        onChange={(e) => handleChange(e)}
-/>
-                                    </div>
-
-                                    <div className="mb-3">
-                                    <label htmlFor="password" className="form-label">Password</label>
-                                    <input type="password" className="form-control inputs" id="password" name="password" placeholder="********"
-                                        onChange={(e) => handleChange(e)}
-/>
-                                    </div>
-
-                                    <div className="mb-3">
-                                    <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
-                                    <input type="password" className="form-control inputs" id="confirmPassword" name="confirmPassword" placeholder="********"
-                                        onChange={(e) => handleChange(e)}
-/>
-                                    </div>
-        
-                                    <div className="col-12">
-                                        <button 
-                                            className="btn btn-primary submit-btn" 
-                                            type="submit">Update Information
-                                        </button>
-                                    </div>
+                                {/* Right: Account Settings */}
+                                <div className="lg:col-span-2">
+                                    <Card className="shadow-sm">
+                                        <CardHeader>
+                                            <CardTitle>Account Information</CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <form onSubmit={handleUpdateUserSubmit} className="space-y-5">
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="username">Username</Label>
+                                                    <Input id="username" type="text" name="username" placeholder={session.username} onChange={handleChange} />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="email">Email</Label>
+                                                    <Input id="email" type="email" name="email" placeholder={session.email} onChange={handleChange} />
+                                                </div>
+                                                <Separator />
+                                                <p className="text-xs text-muted-foreground">Leave password fields blank to keep your current password.</p>
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="password">New Password</Label>
+                                                    <Input id="password" type="password" name="password" placeholder="••••••••" onChange={handleChange} />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                                                    <Input id="confirmPassword" type="password" name="confirmPassword" placeholder="••••••••" onChange={handleChange} />
+                                                </div>
+                                                <Button type="submit" className="w-full">Update Information</Button>
+                                            </form>
+                                        </CardContent>
+                                    </Card>
                                 </div>
-                                
-        
-                            </form> {/* End form */}
-        
-        
-                        </div>{/* End right div? */}
-        
-        
-                    </div>
-                        
-                </main>
 
-          <GlobalFooter />
-        </>
-      )}
-    </>
-  )
+                            </div>
+                        </div>
+                    </main>
+
+                    <GlobalFooter />
+                </>
+            )}
+        </div>
+    )
 }

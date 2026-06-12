@@ -22,9 +22,10 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ message: 'Rating updated', rating });
-  } catch (error: any) {
+  } catch (e) {
+    console.error('[UpdateRatings] Error:', e instanceof Error ? e.message : 'Unknown error');
     return NextResponse.json(
-      { error: error.message || 'Failed to update rating' },
+      { error: 'Internal Server Error' },
       { status: 500 }
     );
   }

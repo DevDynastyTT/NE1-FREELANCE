@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+'use client'
+import { useState, useEffect } from "react";
 import StarRating from "react-star-ratings";
 import axios from "axios";
 

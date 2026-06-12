@@ -15,9 +15,10 @@ export async function POST(req: NextRequest) {
     ]);
 
     return NextResponse.json(progress);
-  } catch (error: any) {
+  } catch (e) {
+    console.error('[GetFreelancerRatingsProgress] Error:', e instanceof Error ? e.message : 'Unknown error');
     return NextResponse.json(
-      { error: error.message || 'Failed to get ratings progress' },
+      { error: 'Internal Server Error' },
       { status: 500 }
     );
   }

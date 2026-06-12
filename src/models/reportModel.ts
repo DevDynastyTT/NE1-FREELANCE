@@ -30,5 +30,5 @@ const ReportJobSchema = new mongoose.Schema({
   }
 });
 
-const ReportJob = mongoose.model('ReportJob', ReportJobSchema);
+const ReportJob = mongoose.models['ReportJob'] || mongoose.model('ReportJob', ReportJobSchema);
 export default ReportJob

@@ -29,5 +29,5 @@ const jobSchema = new mongoose.Schema({
   },
 });
 
-const Jobs = mongoose.model('Jobs', jobSchema);
+const Jobs = mongoose.models['Jobs'] || mongoose.model('Jobs', jobSchema);
 export default Jobs

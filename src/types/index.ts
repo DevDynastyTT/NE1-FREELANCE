@@ -23,8 +23,8 @@ export type Ratings = {
   freeLancerID: string;
   userID: string;
   ratings: number;
-  feedback: string;
-  date: string;
+  feedback?: string;
+  date: Date | string;
 }
 
 export type AllRatings = Ratings & {
@@ -53,7 +53,6 @@ export type RecentChatsType = {
   newMessage?: string;
   username: string;
   email: string;
-  password?: string;
   isStaff: boolean;
   isActive: boolean;
   dateJoined: string;
@@ -68,7 +67,7 @@ export type Profile = {
 
 export type MessagesType = {
   content: string;
-  file?: string;
+  file?: string | { name: string; url: string };
   sender: string;
   receiver: string;
   isSender: boolean;

@@ -26,9 +26,17 @@ const UserSchema = new mongoose.Schema({
   dateJoined: {
     type: Date,
     default: Date.now
-  }
+  },
+  resetToken: {
+    type: String,
+    default: null,
+  },
+  resetTokenExpiry: {
+    type: Date,
+    default: null,
+  },
 });
 
-const Users = mongoose.model('users', UserSchema);
+const Users = mongoose.models.users || mongoose.model('users', UserSchema);
 
 export default Users;

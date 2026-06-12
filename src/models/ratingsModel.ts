@@ -33,5 +33,5 @@ const RatingsSchema = new mongoose.Schema({
   }
 });
 
-const Ratings = mongoose.model('Ratings', RatingsSchema);
+const Ratings = mongoose.models['Ratings'] || mongoose.model('Ratings', RatingsSchema);
 export default Ratings

@@ -1,67 +1,62 @@
 import Image from "next/image";
-function Reassurance(){
-    return(
-        <section className="reassurance-section">
-                <div className="pointers">
-                        <span className="sub-heading">
-                            <p className="bold">
-                                
-                                {/* Checkbox svg image */}
-                                <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M8 1.75C4.54822 1.75 1.75 4.54822 1.75 8C1.75 11.4518 4.54822 14.25 8 14.25C11.4518 14.25 14.25 11.4518 14.25 8C14.25 4.54822 11.4518 1.75 8 1.75ZM0.25 8C0.25 3.71979 3.71979 0.25 8 0.25C12.2802 0.25 15.75 3.71979 15.75 8C15.75 12.2802 12.2802 15.75 8 15.75C3.71979 15.75 0.25 12.2802 0.25 8Z"></path>
-                                    <path d="M11.5303 5.46967C11.8232 5.76256 11.8232 6.23744 11.5303 6.53033L7.53033 10.5303C7.23744 10.8232 6.76256 10.8232 6.46967 10.5303L4.46967 8.53033C4.17678 8.23744 4.17678 7.76256 4.46967 7.46967C4.76256 7.17678 5.23744 7.17678 5.53033 7.46967L7 8.93934L10.4697 5.46967C10.7626 5.17678 11.2374 5.17678 11.5303 5.46967Z"></path>
-                                </svg> 
-                                The finest for every financial plan
-                                </p>
-                            <p className="info">Obtain superior services at every budget level. No hourly charges, solely project-based pricing.</p>
-                        </span>
-                        
-                        <span className="sub-heading">
-                            <p className="bold">
-                                
-                                {/* Checkbox svg image */}
-                                <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M8 1.75C4.54822 1.75 1.75 4.54822 1.75 8C1.75 11.4518 4.54822 14.25 8 14.25C11.4518 14.25 14.25 11.4518 14.25 8C14.25 4.54822 11.4518 1.75 8 1.75ZM0.25 8C0.25 3.71979 3.71979 0.25 8 0.25C12.2802 0.25 15.75 3.71979 15.75 8C15.75 12.2802 12.2802 15.75 8 15.75C3.71979 15.75 0.25 12.2802 0.25 8Z"></path>
-                                    <path d="M11.5303 5.46967C11.8232 5.76256 11.8232 6.23744 11.5303 6.53033L7.53033 10.5303C7.23744 10.8232 6.76256 10.8232 6.46967 10.5303L4.46967 8.53033C4.17678 8.23744 4.17678 7.76256 4.46967 7.46967C4.76256 7.17678 5.23744 7.17678 5.53033 7.46967L7 8.93934L10.4697 5.46967C10.7626 5.17678 11.2374 5.17678 11.5303 5.46967Z"></path>
-                                </svg> Exemplary work executed expeditiously</p>
-                            <p className="info">Identify the appropriate freelancer to commence work on your venture within minutes.</p>
-                        </span>
-                        
-                        <span className="sub-heading">
-                            <p className="bold">
-                                
-                                {/* Checkbox svg image */}
-                                <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M8 1.75C4.54822 1.75 1.75 4.54822 1.75 8C1.75 11.4518 4.54822 14.25 8 14.25C11.4518 14.25 14.25 11.4518 14.25 8C14.25 4.54822 11.4518 1.75 8 1.75ZM0.25 8C0.25 3.71979 3.71979 0.25 8 0.25C12.2802 0.25 15.75 3.71979 15.75 8C15.75 12.2802 12.2802 15.75 8 15.75C3.71979 15.75 0.25 12.2802 0.25 8Z"></path>
-                                    <path d="M11.5303 5.46967C11.8232 5.76256 11.8232 6.23744 11.5303 6.53033L7.53033 10.5303C7.23744 10.8232 6.76256 10.8232 6.46967 10.5303L4.46967 8.53033C4.17678 8.23744 4.17678 7.76256 4.46967 7.46967C4.76256 7.17678 5.23744 7.17678 5.53033 7.46967L7 8.93934L10.4697 5.46967C10.7626 5.17678 11.2374 5.17678 11.5303 5.46967Z"></path>
-                                </svg> Safe and secure payments, every time</p>
-                            <p className="info">Have peace of mind knowing the amount you will pay upfront. Payments are not released until you have given your approval of the work.</p>
-                        </span>
-                        
-                        <span className="sub-heading">
-                            <p className="bold">
-                                
-                                {/* Checkbox svg image */}
-                                <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M8 1.75C4.54822 1.75 1.75 4.54822 1.75 8C1.75 11.4518 4.54822 14.25 8 14.25C11.4518 14.25 14.25 11.4518 14.25 8C14.25 4.54822 11.4518 1.75 8 1.75ZM0.25 8C0.25 3.71979 3.71979 0.25 8 0.25C12.2802 0.25 15.75 3.71979 15.75 8C15.75 12.2802 12.2802 15.75 8 15.75C3.71979 15.75 0.25 12.2802 0.25 8Z"></path>
-                                    <path d="M11.5303 5.46967C11.8232 5.76256 11.8232 6.23744 11.5303 6.53033L7.53033 10.5303C7.23744 10.8232 6.76256 10.8232 6.46967 10.5303L4.46967 8.53033C4.17678 8.23744 4.17678 7.76256 4.46967 7.46967C4.76256 7.17678 5.23744 7.17678 5.53033 7.46967L7 8.93934L10.4697 5.46967C10.7626 5.17678 11.2374 5.17678 11.5303 5.46967Z"></path>
-                                </svg> 24/7 assistance
-                            </p>
-                            <p className="info">Have queries? Our round-the-clock support team is on hand to assist you at any time, from any location.</p>
-                        </span>
-                    
+
+const FEATURES = [
+    {
+        title: 'Best value for every budget',
+        body: 'Superior services at every price point. No hourly charges — solely project-based pricing.',
+    },
+    {
+        title: 'Quality work, delivered fast',
+        body: 'Find the right freelancer and start your project within minutes.',
+    },
+    {
+        title: 'Secure payments, always',
+        body: 'Know exactly what you pay upfront. Funds only release once you approve the work.',
+    },
+    {
+        title: '24/7 support',
+        body: 'Our round-the-clock team is on hand to help you, anytime and anywhere.',
+    },
+]
+
+export default function Reassurance() {
+    return (
+        <section className="py-20 bg-gray-50">
+            <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-16">
+
+                {/* Left: image + heading */}
+                <div className="flex-1 text-center lg:text-left">
+                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-6">
+                        An abundance of freelance talent,<br />
+                        <span className="text-[#fd8700]">ready to work for you.</span>
+                    </h2>
+                    <div className="relative rounded-2xl overflow-hidden shadow-xl max-w-md mx-auto lg:mx-0">
+                        <Image
+                            src="/images/reassurance.jpg"
+                            alt="Freelancer at work"
+                            width={600}
+                            height={420}
+                            className="w-full h-auto object-cover"
+                        />
+                    </div>
                 </div>
 
-                <div className="image-container">
-                    <h3>An abundance of freelance skill readily accessible at your disposal</h3>
-                    <Image 
-                        className="image" 
-                        src="/images/reassurance.jpg"
-                        alt="man-image" 
-                    />
-
+                {/* Right: feature list */}
+                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    {FEATURES.map((feature) => (
+                        <div key={feature.title} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                            <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center mb-4">
+                                <svg className="w-4 h-4 text-[#fd8700]" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                                    <path d="M8 1.75C4.548 1.75 1.75 4.548 1.75 8c0 3.452 2.798 6.25 6.25 6.25 3.452 0 6.25-2.798 6.25-6.25C14.25 4.548 11.452 1.75 8 1.75zM.25 8C.25 3.72 3.72.25 8 .25S15.75 3.72 15.75 8 12.28 15.75 8 15.75.25 12.28.25 8z" />
+                                    <path d="M11.53 5.47a.75.75 0 010 1.06l-4 4a.75.75 0 01-1.06 0l-2-2a.75.75 0 011.06-1.06L7 8.94l3.47-3.47a.75.75 0 011.06 0z" />
+                                </svg>
+                            </div>
+                            <h3 className="text-gray-900 font-semibold text-base mb-2">{feature.title}</h3>
+                            <p className="text-gray-500 text-sm leading-relaxed">{feature.body}</p>
+                        </div>
+                    ))}
                 </div>
+            </div>
         </section>
     )
 }
-export default Reassurance;

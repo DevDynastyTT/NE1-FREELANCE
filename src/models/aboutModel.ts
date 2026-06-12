@@ -10,5 +10,5 @@ const aboutUsSchema = new mongoose.Schema({
     required: true
   }
 });
-const AboutUs = mongoose.model('AboutUs', aboutUsSchema);
+const AboutUs = mongoose.models['AboutUs'] || mongoose.model('AboutUs', aboutUsSchema);
 export default AboutUs

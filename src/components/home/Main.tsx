@@ -1,57 +1,47 @@
 'use client';
 
-import '@/styles/style.css';
 import Header from '@/components/home/Header';
 import ServicesBanner from '@/components/home/ServicesBanner';
 import Reassurance from '@/components/home/Reassurance';
 import GetStarted from '@/components/home/GetStarted';
 import GlobalFooter from '@/components/GlobalFooter';
-import { Metadata } from 'next';
 import { useEffect, useState } from 'react';
-import { fetchCategories, getUserSession } from '@/utils/reuseableCode';
-import { getCategories } from '@/utils/APIRoutes';
+import { getUserSession } from '@/utils/reuseableCode';
 import { useRouter } from 'next/navigation';
-import { JobCategory, SessionType } from '@/utils/types';
 
 
 export default function MainHomeComponent() {
   const router = useRouter();
 
-  const [session, setSession] = useState<SessionType | undefined>();
-  const [jobCategories, setJobCategories] = useState<JobCategory[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const isAuthenticated = getUserSession();
-    setSession(isAuthenticated);
 
     if (isAuthenticated) {
       router.push('/jobs');
     } else {
-      fetchCategories(setJobCategories, getCategories)
       setIsLoading(false);
-
     }
   }, [router]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-[#fd8700] border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
   }
 
   return (
-    <div className="Home">
+    <div className="flex flex-col flex-1">
       <Header />
-      <main className="home-main-container">
-        {/* Displays 4 SERVICES */}
+      <main className="flex-1">
         <ServicesBanner />
-        {/* Text ABOUT THE SERVICES */}
         <Reassurance />
-        {/* Login/Sign up banner */}
         <GetStarted />
-        <br />
-        <br />
-        <GlobalFooter />
       </main>
+      <GlobalFooter />
     </div>
   );
 }

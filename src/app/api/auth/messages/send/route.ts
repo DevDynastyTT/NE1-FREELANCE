@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import mongoose from 'mongoose';
 import { connectToDB } from '@/lib/db';
 import { uploadToS3 } from '@/lib/s3';
+import { publish } from '@/lib/events';
 import Users from '@/models/userModel';
 import Messages from '@/models/messagesModel';
 
@@ -65,14 +66,21 @@ export async function POST(request: NextRequest) {
       file: fileName || undefined,
     });
 
+    publish(receiverID, "message", {
+      senderID,
+      newMessage: content,
+      sender,
+      file: fileName || undefined,
+    });
+
     return NextResponse.json(
       { message: 'Message sent successfully', sentMessage },
       { status: 201 }
     );
-  } catch (error: any) {
-    console.error('Error sending message:', error);
+  } catch (e) {
+    console.error('[SendMessage] Error:', e instanceof Error ? e.message : 'Unknown error');
     return NextResponse.json(
-      { message: 'Internal server error', error: error.message },
+      { error: 'Internal Server Error' },
       { status: 500 }
     );
   }

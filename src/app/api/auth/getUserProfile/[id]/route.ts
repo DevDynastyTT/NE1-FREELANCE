@@ -36,9 +36,11 @@ export async function GET(
     ]);
 
     if (user_profile.length === 0) {
+      // Auto-create an empty profile on first visit
+      const created = await userProfiles.create({ userID: new mongoose.Types.ObjectId(id) });
       return NextResponse.json(
-        { error: 'Profile not found' },
-        { status: 404 }
+        { message: 'Profile fetched successfully', user_profile: created },
+        { status: 200 }
       );
     }
 
@@ -58,7 +60,7 @@ export async function GET(
       { message: 'Profile fetched successfully', user_profile: profile },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (_e) {
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }

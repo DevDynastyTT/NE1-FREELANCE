@@ -24,7 +24,10 @@ function getUserSession(): SessionType | undefined {
 }
 
 
-async function fetchCategories(setJobCategories:any, getCategories:any) {
+async function fetchCategories(
+  setJobCategories: (items: never[]) => void,
+  getCategories: string
+) {
 
   try{
 

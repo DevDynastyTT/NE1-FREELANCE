@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 import { connectToDB } from '@/lib/db';
+import { setSessionCookie } from '@/lib/auth';
 import Users from '@/models/userModel';
 
 export async function POST(request: NextRequest) {
@@ -35,12 +36,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid Password' }, { status: 400 });
     }
 
-    const { password: _, ...userObj } = user.toObject();
+    const userObj = user.toObject() as Record<string, unknown>;
+    delete userObj.password;
 
     user.isActive = true;
     await user.save();
 
-    return NextResponse.json({ user: userObj }, { status: 200 });
+    const response = NextResponse.json({ user: userObj }, { status: 200 });
+    setSessionCookie(response, {
+      userID: String(user._id),
+      email: user.email,
+      isStaff: user.isStaff,
+    });
+
+    return response;
   } catch (error) {
     console.error('[login] Error:', error instanceof Error ? error.message : 'Unknown error');
     return NextResponse.json(

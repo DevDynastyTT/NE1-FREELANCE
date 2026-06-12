@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectToDB } from '@/lib/db';
+import { clearSessionCookie } from '@/lib/auth';
 import Users from '@/models/userModel';
 
 export async function PUT(
@@ -13,8 +14,11 @@ export async function PUT(
 
     await Users.findByIdAndUpdate(id, { isActive: false });
 
-    return NextResponse.json({ success: true }, { status: 200 });
-  } catch (error) {
+    const response = NextResponse.json({ success: true }, { status: 200 });
+    clearSessionCookie(response);
+
+    return response;
+  } catch {
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }

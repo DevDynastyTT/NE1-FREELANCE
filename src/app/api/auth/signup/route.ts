@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 import fs from 'fs';
 import path from 'path';
 import { connectToDB } from '@/lib/db';
+import { setSessionCookie } from '@/lib/auth';
 import Users from '@/models/userModel';
 import userProfiles from '@/models/userProfileModel';
 
@@ -81,13 +82,22 @@ export async function POST(request: NextRequest) {
       bio: 'undefined',
     });
 
-    const { password: _, ...userObj } = user.toObject();
+    const userObj = user.toObject() as Record<string, unknown>;
+    delete userObj.password;
 
-    return NextResponse.json({ user: userObj }, { status: 200 });
-  } catch (error) {
+    const response = NextResponse.json({ user: userObj }, { status: 200 });
+    setSessionCookie(response, {
+      userID: String(user._id),
+      email: user.email,
+      isStaff: user.isStaff,
+    });
+
+    return response;
+  } catch {
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }
     );
   }
 }
+

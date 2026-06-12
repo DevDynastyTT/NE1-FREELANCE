@@ -20,9 +20,10 @@ export async function POST(req: NextRequest) {
       { message: 'Rating submitted successfully', rating },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (e) {
+    console.error('[RateFreelancer] Error:', e instanceof Error ? e.message : 'Unknown error');
     return NextResponse.json(
-      { error: error.message || 'Failed to submit rating' },
+      { error: 'Internal Server Error' },
       { status: 500 }
     );
   }

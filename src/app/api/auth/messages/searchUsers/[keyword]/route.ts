@@ -20,10 +20,10 @@ export async function GET(
     }).select('-password');
 
     return NextResponse.json({ users }, { status: 200 });
-  } catch (error: any) {
-    console.error('Error searching users:', error);
+  } catch (e) {
+    console.error('[SearchUsers] Error:', e instanceof Error ? e.message : 'Unknown error');
     return NextResponse.json(
-      { message: 'Internal server error', error: error.message },
+      { error: 'Internal Server Error' },
       { status: 500 }
     );
   }

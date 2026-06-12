@@ -1,7 +1,10 @@
-'use client'
-import { useParams } from 'next/navigation'
+import CheckoutComponent from '@/components/jobs/checkout/CheckoutComponent';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Checkout — NE1 Freelance',
+};
 
 export default function CheckoutPage() {
-  const params = useParams()
-  return <div>Checkout for job {params.id} — Coming soon</div>
+  return <CheckoutComponent />;
 }

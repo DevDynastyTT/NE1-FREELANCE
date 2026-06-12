@@ -58,10 +58,10 @@ export async function GET(
     }
 
     return NextResponse.json(messages, { status: 200 });
-  } catch (error: any) {
-    console.error('Error fetching messages:', error);
+  } catch (e) {
+    console.error('[ReceiveMessages] Error:', e instanceof Error ? e.message : 'Unknown error');
     return NextResponse.json(
-      { message: 'Internal server error', error: error.message },
+      { error: 'Internal Server Error' },
       { status: 500 }
     );
   }

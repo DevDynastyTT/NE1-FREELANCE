@@ -13,9 +13,10 @@ export async function POST(req: NextRequest) {
     const totalRating = ratings.reduce((sum, r) => sum + r.ratings, 0);
 
     return NextResponse.json({ totalRating, count: ratings.length });
-  } catch (error: any) {
+  } catch (e) {
+    console.error('[GetFreelancerRatings] Error:', e instanceof Error ? e.message : 'Unknown error');
     return NextResponse.json(
-      { error: error.message || 'Failed to get freelancer ratings' },
+      { error: 'Internal Server Error' },
       { status: 500 }
     );
   }

@@ -3,9 +3,10 @@ import mongoose from 'mongoose';
 const jobCategoriesSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true
+    required: true,
+    unique: true,
   }
 });
 
-const jobCategories = mongoose.model('JobCategories', jobCategoriesSchema);
+const jobCategories = mongoose.models['JobCategories'] || mongoose.model('JobCategories', jobCategoriesSchema);
 export default jobCategories

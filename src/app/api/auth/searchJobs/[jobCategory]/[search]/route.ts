@@ -4,8 +4,6 @@ import { getImageUrl } from '@/lib/s3';
 import Jobs from '@/models/jobsModel';
 import JobCategories from '@/models/jobCategoriesModel';
 import Users from '@/models/userModel';
-import mongoose from 'mongoose';
-
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ jobCategory: string; search: string }> }
@@ -36,7 +34,7 @@ export async function GET(
   const jobs = await Jobs.find(query);
 
   const job_list = await Promise.all(
-    jobs.map(async (job: any) => {
+    jobs.map(async (job) => {
       const user = await Users.findById(job.freeLancerID);
       return {
         _id: job._id,

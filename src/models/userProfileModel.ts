@@ -19,5 +19,5 @@ const userProfileSchema = new mongoose.Schema({
   }
 });
 
-const userProfiles = mongoose.model('userProfiles', userProfileSchema);
+const userProfiles = mongoose.models['userProfiles'] || mongoose.model('userProfiles', userProfileSchema);
 export default userProfiles

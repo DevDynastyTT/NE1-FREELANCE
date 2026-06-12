@@ -1,4 +1,3 @@
-import {NextRouter } from 'next/router';
 
 export type JobsType = {
   _id: string;
@@ -18,6 +17,7 @@ export type JobDetails = JobsType & {
 }
 
 export type JobCategory = {
+    _id?: string;
     name: string;
 }
 
@@ -62,6 +62,7 @@ export type RecentChatsType = {
   isStaff: boolean;
   isActive: boolean;
   dateJoined: string;
+  sentAt?: string;
 }
 
 
@@ -85,7 +86,3 @@ export type MessagesType = {
 
 
 
-export type RootLayoutProps = {
-  router: NextRouter;
-  children: React.ReactNode;
-}

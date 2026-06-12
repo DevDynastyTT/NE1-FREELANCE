@@ -21,7 +21,7 @@ export async function sendContactEmail(
   const currentDate = new Date();
   const formattedDate = `${currentDate.getMonth() + 1}/${currentDate.getDate()}/${currentDate.getFullYear().toString().substr(-2)}`;
 
-  const htmlTemplate = (isUserCopy: boolean) => `
+  const htmlTemplate = (_isUserCopy: boolean) => `
   <!DOCTYPE html>
   <html>
     <head>
@@ -117,6 +117,46 @@ export async function sendMessageNotification(
   });
 
   console.log("Message notification sent successfully");
+}
+
+export async function sendPasswordResetEmail(
+  userEmail: string,
+  resetLink: string
+): Promise<void> {
+  const serverEmail = process.env.NODEMAILER_API_SERVER_EMAIL!;
+  const transporter = createTransporter();
+
+  const html = `
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.5; background-color: #f4f4f4; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e1e1e1; background-color: #ffffff; }
+        h1 { font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #333333; }
+        p { font-size: 16px; margin-bottom: 10px; color: #555555; }
+        .btn { display: inline-block; background-color: #fd8700; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; margin: 16px 0; }
+        .note { font-size: 13px; color: #999999; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h1>Reset Your Password</h1>
+        <p>We received a request to reset the password for your NE1 Freelance account.</p>
+        <p>Click the button below to set a new password. This link expires in <strong>1 hour</strong>.</p>
+        <a href="${resetLink}" class="btn">Reset Password</a>
+        <p class="note">If you didn't request a password reset, you can safely ignore this email. Your password won't change.</p>
+        <p class="note">Or paste this link in your browser: ${resetLink}</p>
+      </div>
+    </body>
+  </html>`;
+
+  await transporter.sendMail({
+    from: serverEmail,
+    to: userEmail,
+    subject: 'NE1 Freelance — Reset your password',
+    html,
+  });
 }
 
 export async function sendInvoiceEmail(

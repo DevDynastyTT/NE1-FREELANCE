@@ -1,59 +1,57 @@
-import '@/styles/footer.css'
+import Link from 'next/link';
+import Image from 'next/image';
 
 export default function GlobalFooter() {
-    return(
-    // Site footer>
-    <footer className="site-footer">
-      <div className="container">
-        <div className="row">
-          <div className="col-sm-12 col-md-6">
-            <h6>About</h6>
-            <p className="text-justify">Scanfcode.com <i>CODE WANTS TO BE SIMPLE </i> is an initiative  to help the upcoming programmers with the code. Scanfcode focuses on providing the most efficient code or snippets as the code wants to be simple. We will help programmers build up concepts in different programming languages that include C, C++, Java, HTML, CSS, Bootstrap, JavaScript, PHP, Android, SQL and Algorithm.</p>
-          </div>
+    return (
+        <footer className="bg-gray-900 text-gray-400">
+            <div className="max-w-7xl mx-auto px-6 py-14">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
 
-          <div className="col-xs-6 col-md-3">
-            <h6>Categories</h6>
-            <ul className="footer-links">
-              <li><a href="http://scanfcode.com/category/c-language/">C</a></li>
-              <li><a href="http://scanfcode.com/category/front-end-development/">UI Design</a></li>
-              <li><a href="http://scanfcode.com/category/back-end-development/">PHP</a></li>
-              <li><a href="http://scanfcode.com/category/java-programming-language/">Java</a></li>
-              <li><a href="http://scanfcode.com/category/android/">Android</a></li>
-              <li><a href="http://scanfcode.com/category/templates/">Templates</a></li>
-            </ul>
-          </div>
+                    {/* Brand */}
+                    <div className="md:col-span-2">
+                        <Image
+                            src="/images/logo2.png"
+                            alt="NE1 Freelance"
+                            width={1560}
+                            height={160}
+                            className="h-10 w-auto object-contain mb-4 brightness-0 invert"
+                        />
+                        <p className="text-sm leading-relaxed max-w-xs">
+                            NE1 Freelance connects local businesses with trusted freelancers across transportation, cleaning, esthetics, and administration. Project-based pricing, zero surprises.
+                        </p>
+                    </div>
 
-          <div className="col-xs-6 col-md-3">
-            <h6>Quick Links</h6>
-            <ul className="footer-links">
-              <li><a href="http://scanfcode.com/about/">About Us</a></li>
-              <li><a href="http://scanfcode.com/contact/">Contact Us</a></li>
-              <li><a href="http://scanfcode.com/contribute-at-scanfcode/">Contribute</a></li>
-              <li><a href="http://scanfcode.com/privacy-policy/">Privacy Policy</a></li>
-              <li><a href="http://scanfcode.com/sitemap/">Sitemap</a></li>
-            </ul>
-          </div>
-        </div>
-        <hr/>
-      </div>
-      <div className="container">
-        <div className="row">
-          <div className="col-md-8 col-sm-6 col-xs-12">
-            <p className="copyright-text">Copyright &copy; 2017 All Rights Reserved by 
-         <a href="#">Scanfcode</a>.
-            </p>
-          </div>
+                    {/* Services */}
+                    <div>
+                        <h4 className="text-white font-semibold text-sm mb-4 uppercase tracking-wider">Services</h4>
+                        <ul className="space-y-3 text-sm">
+                            <li><Link href="/jobs" className="hover:text-white transition-colors">Transportation</Link></li>
+                            <li><Link href="/jobs" className="hover:text-white transition-colors">Cleaning</Link></li>
+                            <li><Link href="/jobs" className="hover:text-white transition-colors">Esthetics</Link></li>
+                            <li><Link href="/jobs" className="hover:text-white transition-colors">Administration</Link></li>
+                        </ul>
+                    </div>
 
-          <div className="col-md-4 col-sm-6 col-xs-12">
-            <ul className="social-icons">
-              <li><a className="facebook" href="#"><i className="fa fa-facebook"></i></a></li>
-              <li><a className="twitter" href="#"><i className="fa fa-twitter"></i></a></li>
-              <li><a className="dribbble" href="#"><i className="fa fa-dribbble"></i></a></li>
-              <li><a className="linkedin" href="#"><i className="fa fa-linkedin"></i></a></li>   
-            </ul>
-          </div>
-        </div>
-      </div>
-</footer>
+                    {/* Company */}
+                    <div>
+                        <h4 className="text-white font-semibold text-sm mb-4 uppercase tracking-wider">Company</h4>
+                        <ul className="space-y-3 text-sm">
+                            <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
+                            <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
+                            <li><Link href="/auth/login" className="hover:text-white transition-colors">Login</Link></li>
+                            <li><Link href="/auth/signup" className="hover:text-white transition-colors">Sign Up</Link></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+                    <p>&copy; {new Date().getFullYear()} NE1 Freelance. All rights reserved.</p>
+                    <div className="flex gap-6">
+                        <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
+                        <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
+                    </div>
+                </div>
+            </div>
+        </footer>
     )
 }

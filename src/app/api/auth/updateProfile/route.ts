@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import mongoose from 'mongoose';
 import { connectToDB } from '@/lib/db';
 import { uploadToS3, getImageUrl } from '@/lib/s3';
@@ -45,10 +45,11 @@ export async function PUT(request: NextRequest) {
       { message: 'Profile updated successfully', signedUrl },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (_e) {
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }
     );
   }
 }
+

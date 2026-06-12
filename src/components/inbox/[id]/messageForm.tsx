@@ -1,108 +1,82 @@
-import { faPaperPlane, faPaperclip } from '@fortawesome/free-solid-svg-icons'
+'use client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPaperPlane, faPaperclip } from '@fortawesome/free-solid-svg-icons'
 import { sendMessageRoute } from '@/utils/APIRoutes';
 import axios from 'axios';
-import { FormEvent, useRef } from 'react';
-import io from "socket.io-client"
+import { FormEvent, useRef, useState } from 'react';
+import { MessagesType, SessionType } from '@/utils/types';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
-const socket = io();
-export default function MessageForm(props:any) {
-    const fileInputRef = useRef<any>(null);
+type MessageFormProps = {
+    message: string;
+    setMessage: (value: string) => void;
+    setReceivedMessages: React.Dispatch<React.SetStateAction<MessagesType[]>>;
+    session?: SessionType;
+    receiver?: SessionType;
+};
 
-    async function sendMessage(event:FormEvent){
-    event.preventDefault()
-   
-    const formData = new FormData()
-    formData.append('file', fileInputRef.current?.files[0])
-    formData.append('content', props.message)
-    formData.append('sender', props.session.username)
-    formData.append('receiver', props.receiver.username)
-    formData.append('senderID', props.session._id)
-    formData.append('receiverID', props.receiver._id)
-    // If user if logged in and selected a person to chat with, send the message
-        try{
-            const response = await axios.post(sendMessageRoute, formData, {
-              headers: { 'Content-Type': 'multipart/form-data' }, // Ensure the correct content type for FormData
-            })
-            const data = response.data
-            
-            const messageData:any = {
-              message: props.message, 
-              sender: props.session.username,
-              receiver: props.receiver.username,
-              senderID: props.session._id,
-              receiverID: props.receiver._id,
-            }
+export default function MessageForm(props: MessageFormProps) {
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [text, setText] = useState('');
 
-            if(data.newMessage.file) {
-              messageData.file = {
-                name: data.newMessage.file,
-                url: data.newMessage.fileUrl
-              }
-            }
-            socket.emit('send-message', messageData)
+    async function sendMessage(event: FormEvent) {
+        event.preventDefault();
+        if (!text.trim() && !fileInputRef.current?.files?.[0]) return;
 
-            const receivedMessage = {
-              content: props.message,
-              file: messageData.file,
-              sender: props.session.username,
-              receiver: props.receiver.username,
-              isSender: true,
-              sentAt: new Date().toISOString(),
-            };
-            
-            //Append the new messages to the current messages array
-            props.setReceivedMessages((prevMessages:any) => [
-              ...prevMessages,
-              receivedMessage,
-            ]);
+        const formData = new FormData();
+        if (fileInputRef.current?.files?.[0]) formData.append('file', fileInputRef.current.files[0]);
+        formData.append('content', text);
+        formData.append('sender', props.session?.username || '');
+        formData.append('receiver', props.receiver?.username || '');
+        formData.append('senderID', props.session?._id || '');
+        formData.append('receiverID', props.receiver?._id || '');
 
-        }catch(error){
-          alert('Server down')
-          console.error(error)
-        }finally{
-          // Clear the input field
-          props.setMessage("");
-          fileInputRef.current.value = '';
-
+        try {
+            await axios.post(sendMessageRoute, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+            props.setReceivedMessages(prev => [...prev, {
+                content: text,
+                sender: props.session?.username || '',
+                receiver: props.receiver?.username || '',
+                isSender: true,
+                sentAt: new Date().toISOString(),
+            }]);
+        } catch (error) {
+            console.error('[MessageForm] Error:', error);
+        } finally {
+            setText('');
+            if (fileInputRef.current) fileInputRef.current.value = '';
         }
-}
-
-    function sendTypingAlert(){
-      if(props.session?._id && props.receiver._id)
-        socket.emit('typing-alert', ({
-          senderID: props.session._id, receiverID: props.receiver._id
-        }))
     }
 
-    
-  
-  return (
-    <form className="message-form" onSubmit={sendMessage} encType='multipart/form-data' >
-        <input
-          className="message-input"
-          type="text"        
-          ref={fileInputRef}
-          value={props.message}
-          placeholder="Enter a message"
-          // required
-          onChange={(e) => {
-            props.setMessage(e.target.value)
-            sendTypingAlert()
-          }}
-        />
+    function sendTypingAlert() {
+        if (props.session?._id && props.receiver?._id) {
+            axios.post('/api/auth/messages/typing', { senderID: props.session._id, receiverID: props.receiver._id }).catch(() => { });
+        }
+    }
 
-        <button className="file-upload-btn btn" type="button">
-          <input type="file" name="document" id="document" ref={fileInputRef} />
-          <label htmlFor="document">
-            <FontAwesomeIcon className="icon" icon={faPaperclip} />
-          </label>
-        </button>
+    return (
+        <form
+            className="bg-white border-t border-gray-200 px-4 py-3 flex items-center gap-3"
+            onSubmit={sendMessage}
+            encType="multipart/form-data"
+        >
+            <label htmlFor="document" className="cursor-pointer text-gray-400 hover:text-primary transition-colors p-2">
+                <FontAwesomeIcon icon={faPaperclip} className="w-4 h-4" />
+            </label>
+            <input type="file" name="document" id="document" ref={fileInputRef} className="hidden" />
 
+            <Input
+                className="flex-1 bg-gray-50 border-gray-200"
+                type="text"
+                value={text}
+                placeholder="Type a message..."
+                onChange={(event) => { setText(event.target.value); sendTypingAlert(); }}
+            />
 
-        <button className="send-btn btn" type="submit">
-          <FontAwesomeIcon className="icon" icon={faPaperPlane} />
-        </button>
-    </form>
-  )
+            <Button type="submit" size="icon" className="flex-shrink-0 rounded-full">
+                <FontAwesomeIcon icon={faPaperPlane} className="w-4 h-4" />
+            </Button>
+        </form>
+    )
 }

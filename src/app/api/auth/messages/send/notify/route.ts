@@ -37,10 +37,10 @@ export async function POST(request: NextRequest) {
       { message: 'Notification sent successfully' },
       { status: 200 }
     );
-  } catch (error: any) {
-    console.error('Error sending notification:', error);
+  } catch (e) {
+    console.error('[SendNotify] Error:', e instanceof Error ? e.message : 'Unknown error');
     return NextResponse.json(
-      { message: 'Internal server error', error: error.message },
+      { error: 'Internal Server Error' },
       { status: 500 }
     );
   }

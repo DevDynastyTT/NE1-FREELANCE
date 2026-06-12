@@ -11,9 +11,20 @@ export async function POST(req: NextRequest) {
     const ratings = await Ratings.aggregate([
       { $match: { freeLancerID, jobID } },
       {
+        $addFields: {
+          userObjId: {
+            $cond: {
+              if: { $regexMatch: { input: '$userID', regex: /^[a-f\d]{24}$/i } },
+              then: { $toObjectId: '$userID' },
+              else: null,
+            },
+          },
+        },
+      },
+      {
         $lookup: {
           from: 'users',
-          localField: 'userID',
+          localField: 'userObjId',
           foreignField: '_id',
           as: 'user',
         },
@@ -28,15 +39,16 @@ export async function POST(req: NextRequest) {
           ratings: 1,
           feedback: 1,
           date: 1,
-          username: '$user.username',
+          username: { $ifNull: ['$user.username', 'Anonymous'] },
         },
       },
     ]);
 
     return NextResponse.json(ratings);
-  } catch (error: any) {
+  } catch (e) {
+    console.error('[GetAllRatings] Error:', e instanceof Error ? e.message : 'Unknown error');
     return NextResponse.json(
-      { error: error.message || 'Failed to get all ratings' },
+      { error: 'Internal Server Error' },
       { status: 500 }
     );
   }

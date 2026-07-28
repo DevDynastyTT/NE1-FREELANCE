@@ -7,18 +7,18 @@
  */
 
 import mongoose, { Types } from 'mongoose';
-import '../src/models/userModel';
-import '../src/models/userProfileModel';
-import '../src/models/jobCategoriesModel';
-import '../src/models/jobsModel';
-import '../src/models/ratingsModel';
-import '../src/models/messagesModel';
-import '../src/models/invoiceModel';
-import '../src/models/reportModel';
-import '../src/models/serviceModel';
-import '../src/models/aboutModel';
-import '../src/models/contactModel';
-import '../src/models/creditCardModel';
+import '../models/userModel';
+import '../models/userProfileModel';
+import '../models/jobCategoriesModel';
+import '../models/jobsModel';
+import '../models/ratingsModel';
+import '../models/messagesModel';
+import '../models/invoiceModel';
+import '../models/reportModel';
+import '../models/serviceModel';
+import '../models/aboutModel';
+import '../models/contactModel';
+import '../models/creditCardModel';
 
 // ---------------------------------------------------------------------------
 // Virtual user IDs — no User documents are created, but every collection that

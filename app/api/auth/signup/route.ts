@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 import fs from 'fs';
 import path from 'path';
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
     ];
 
     const commonPasswordsFile = fs.readFileSync(
-      path.join(process.cwd(), 'src', 'lib', 'commonPasswords.txt'),
+      path.join(process.cwd(), 'lib', 'commonPasswords.txt'),
       'utf8'
     );
     const commonPasswords = commonPasswordsFile
